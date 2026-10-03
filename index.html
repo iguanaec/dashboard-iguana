@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Panel · Iguana</title>
+<meta name="description" content="Citas, clientes, dinero y asistente de IA de tu negocio en un solo lugar." />
+<meta name="theme-color" content="#ffffff" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232457d6'/%3E%3Cpath d='M9 12h14M12 8v3M20 8v3' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3Crect x='9' y='12' width='14' height='12' rx='2' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="styles.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/luxon3@6.1.11/index.global.min.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body data-state="loading">
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<!-- Iconos: un solo trazo (1.75) para todo el panel -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.8 2.6-6 6-6s6 2.2 6 6M16.5 5.5h5M19 3v5"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H19v14H6.5A2.5 2.5 0 0 1 4 16.5v-9Z"/><path d="M4 8h15M15.5 13.5h.01"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><path d="M12 3v3M9.5 3h5"/><rect x="4" y="7" width="16" height="13" rx="3.5"/><path d="M4 13H2M22 13h-2M9 16.5h6M8.8 12h.01M15.2 12h.01"/></symbol>
+    <symbol id="i-cog" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2-.7a7 7 0 0 0-.6-1.4l.9-1.9-2.1-2.1-1.9.9a7 7 0 0 0-1.4-.6L11.2 3h-3l-.7 1.7a7 7 0 0 0-1.4.6l-1.9-.9-2.1 2.1.9 1.9a7 7 0 0 0-.6 1.4l-1.7.7v3l1.7.7a7 7 0 0 0 .6 1.4l-.9 1.9 2.1 2.1 1.9-.9a7 7 0 0 0 1.4.6l.7 1.7h3l.7-1.7a7 7 0 0 0 1.4-.6l1.9.9 2.1-2.1-.9-1.9a7 7 0 0 0 .6-1.4l2-.7Z"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><path d="M4 21V9l8-5 8 5v12M4 21h16M9 21v-6h6v6M9 11h.01M15 11h.01"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7V3Z"/><path d="M14 3v5h4M10 13h5M10 17h5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ ACCESO ============ -->
+<div class="auth" id="auth">
+  <div class="auth-card">
+    <div class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-calendar"/></svg></div>
+    <h1 class="auth-title">Tu negocio, en un solo lugar</h1>
+    <p class="auth-lead">Citas, clientes, pagos y gastos. Entra o crea la cuenta de tu negocio.</p>
+
+    <div class="segmented" role="tablist" aria-label="Acceso">
+      <button class="segmented-btn" role="tab" id="loginTab" type="button" aria-selected="true" aria-controls="loginForm">Entrar</button>
+      <button class="segmented-btn" role="tab" id="registerTab" type="button" aria-selected="false" aria-controls="registerForm">Crear negocio</button>
+    </div>
+
+    <form class="stack" id="loginForm" role="tabpanel" aria-labelledby="loginTab">
+      <label class="field"><span class="field-label">Usuario</span><input name="username" autocomplete="username" required /></label>
+      <label class="field"><span class="field-label">Contraseña</span><input name="password" type="password" autocomplete="current-password" required /></label>
+      <p class="form-error" data-auth-error role="alert"></p>
+      <button class="btn btn-primary btn-block" type="submit">Entrar</button>
+    </form>
+
+    <form class="stack" id="registerForm" role="tabpanel" aria-labelledby="registerTab" hidden>
+      <label class="field"><span class="field-label">Nombre del negocio</span><input name="businessName" minlength="2" maxlength="120" required /></label>
+      <label class="field"><span class="field-label">Usuario</span><input name="username" maxlength="120" autocomplete="username" required /></label>
+      <label class="field"><span class="field-label">Contraseña</span><input name="password" type="password" minlength="8" autocomplete="new-password" required /><span class="field-help">Mínimo 8 caracteres.</span></label>
+      <fieldset class="choice-group">
+        <legend class="field-label">¿Cómo quieres que hable tu asistente?</legend>
+        <label class="choice"><input type="radio" name="communicationStyle" value="formal" required /><span>Formal</span></label>
+        <label class="choice"><input type="radio" name="communicationStyle" value="semiformal" required /><span>Semiformal</span></label>
+        <label class="choice"><input type="radio" name="communicationStyle" value="friend" required /><span>Amigo</span></label>
+      </fieldset>
+      <details class="disclosure">
+        <summary>Datos opcionales <small>(puedes completarlos después)</small></summary>
+        <div class="stack">
+          <label class="field"><span class="field-label">Dirección</span><textarea name="address" maxlength="300" rows="2"></textarea></label>
+          <label class="field"><span class="field-label">Instrucciones para llegar</span><textarea name="arrivalInstructions" maxlength="1000" rows="2"></textarea></label>
+          <label class="field"><span class="field-label">Política de cancelación</span><textarea name="cancellationPolicy" maxlength="1000" rows="2"></textarea></label>
+          <label class="field"><span class="field-label">Notas generales</span><textarea name="generalNotes" maxlength="1000" rows="2"></textarea></label>
+          <label class="field"><span class="field-label">Métodos de pago</span><input name="paymentMethods" maxlength="1000" placeholder="Efectivo, transferencia" /><span class="field-help">Separados por coma.</span></label>
+          <label class="field"><span class="field-label">PDF con información del negocio</span><input name="knowledgePdf" type="file" accept=".pdf,application/pdf" /><span class="field-help">Máximo 2 MB.</span></label>
+        </div>
+      </details>
+      <p class="form-error" data-auth-error role="alert"></p>
+      <button class="btn btn-primary btn-block" type="submit">Crear negocio</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APLICACIÓN ============ -->
+<div class="app" id="app">
+
+  <header class="topbar">
+    <a class="topbar-brand" href="#/calendario" aria-label="Ir al calendario">
+      <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-calendar"/></svg></span>
+      <span class="topbar-name" id="brandName">Mi negocio</span>
+    </a>
+    <div class="topbar-actions">
+      <span class="topbar-status" id="refreshStatus" aria-live="polite"></span>
+      <button class="icon-btn" id="refreshBtn" type="button" aria-label="Actualizar datos" title="Actualizar">
+        <svg class="icon"><use href="#i-refresh"/></svg>
+      </button>
+      <span class="topbar-user" id="userName"></span>
+      <button class="btn btn-quiet btn-sm" id="logoutBtn" type="button">
+        <svg class="icon"><use href="#i-logout"/></svg><span>Salir</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="nav" id="nav" aria-label="Principal">
+    <ul>
+      <li><a href="#/calendario" data-route="calendario"><svg class="icon"><use href="#i-calendar"/></svg><span>Calendario</span></a></li>
+      <li><a href="#/clientes" data-route="clientes"><svg class="icon"><use href="#i-users"/></svg><span>Clientes</span></a></li>
+      <li><a href="#/dinero" data-route="dinero"><svg class="icon"><use href="#i-wallet"/></svg><span>Dinero</span></a></li>
+      <li><a href="#/asistente" data-route="asistente"><svg class="icon"><use href="#i-bot"/></svg><span>Asistente IA</span></a></li>
+      <li><a href="#/ajustes" data-route="ajustes"><svg class="icon"><use href="#i-cog"/></svg><span>Ajustes</span></a></li>
+      <li class="nav-soon"><a href="#/facturar" data-route="facturar"><svg class="icon"><use href="#i-receipt"/></svg><span>Facturar</span><em class="tag">Pronto</em></a></li>
+      <li hidden id="moderatorNav"><a href="#/moderador" data-route="moderador"><svg class="icon"><use href="#i-building"/></svg><span>Empresas</span></a></li>
+    </ul>
+  </nav>
+
+  <main id="main">
+
+    <!-- Calendario -->
+    <section class="view" id="view-calendario" data-view="calendario" hidden>
+      <div class="view-head">
+        <div>
+          <h1 tabindex="-1">Calendario</h1>
+          <p>Las citas aparecen aquí cuando tus clientes agendan por WhatsApp o Telegram. Toca una para ver el detalle.</p>
+        </div>
+      </div>
+      <div class="card card-flush" id="calendar-card"><div id="calendar"></div></div>
+    </section>
+
+    <!-- Clientes -->
+    <section class="view" id="view-clientes" data-view="clientes" hidden>
+      <div class="view-head">
+        <div><h1 tabindex="-1">Clientes</h1><p>Tu directorio y el historial de cada persona.</p></div>
+        <button class="btn btn-primary" id="createCustomer" type="button"><svg class="icon"><use href="#i-plus"/></svg><span>Nuevo cliente</span></button>
+      </div>
+      <div class="split" id="customersSplit" data-mode="list">
+        <div class="card split-list">
+          <label class="search">
+            <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+            <input id="customerSearch" type="search" placeholder="Buscar por nombre o teléfono" aria-label="Buscar clientes" />
+          </label>
+          <div class="customer-list" id="customerList"><div class="skeleton-list" aria-hidden="true"><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="card split-detail" id="customerDetail" aria-live="polite">
+          <div class="empty">Selecciona un cliente para ver su historial.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dinero -->
+    <section class="view" id="view-dinero" data-view="dinero" hidden>
+      <div class="view-head">
+        <div><h1 tabindex="-1">Dinero</h1><p>Lo que has cobrado, lo que debes cobrar y lo que gastas.</p></div>
+      </div>
+      <div class="segmented segmented-wide" role="tablist" aria-label="Secciones de dinero">
+        <a class="segmented-btn" role="tab" href="#/dinero/resumen" data-tab="resumen">Resumen</a>
+        <a class="segmented-btn" role="tab" href="#/dinero/ingresos" data-tab="ingresos">Ingresos</a>
+        <a class="segmented-btn" role="tab" href="#/dinero/gastos" data-tab="gastos">Gastos</a>
+      </div>
+
+      <!-- Resumen -->
+      <div class="tab-panel" data-panel="resumen" hidden>
+        <div class="toolbar">
+          <label class="field field-inline"><span class="field-label">Mes</span><input id="dashboardMonth" type="month" required /></label>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><span class="kpi-label">Cobrado</span><strong class="kpi-value" id="dashboardIncome">$0,00</strong></div>
+          <div class="kpi"><span class="kpi-label">Gastos</span><strong class="kpi-value" id="dashboardExpenses">$0,00</strong></div>
+          <div class="kpi kpi-main"><span class="kpi-label">Ganancia neta</span><strong class="kpi-value" id="dashboardProfit">$0,00</strong></div>
+          <div class="kpi"><span class="kpi-label">Por cobrar</span><strong class="kpi-value" id="dashboardOutstanding">$0,00</strong></div>
+        </div>
+        <p class="kpi-note"><span id="dashboardServices">0</span> servicios en el mes · <span id="dashboardUnpaidPeople">0</span> personas con pagos pendientes</p>
+
+        <div class="charts">
+          <section class="card chart">
+            <h2>Ingresos y gastos</h2>
+            <div class="chart-canvas" id="dashboardPieChart"></div>
+            <div class="legend"><span><i class="dot dot-income"></i>Ingresos</span><span><i class="dot dot-expense"></i>Gastos</span></div>
+          </section>
+          <section class="card chart">
+            <h2>Servicios más pedidos</h2>
+            <div id="dashboardBarChart"></div>
+          </section>
+          <section class="card chart chart-wide">
+            <h2>Evolución diaria</h2>
+            <div class="chart-canvas" id="dashboardLineChart"></div>
+            <div class="legend"><span><i class="dot dot-income"></i>Ingresos</span><span><i class="dot dot-expense"></i>Gastos</span></div>
+          </section>
+        </div>
+
+        <section class="card">
+          <h2 class="card-title">Pagos pendientes</h2>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Cliente</th><th>Servicio</th><th>Fecha</th><th class="num">Pagado</th><th class="num">Pendiente</th></tr></thead>
+              <tbody id="dashboardUnpaidBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- Ingresos -->
+      <div class="tab-panel" data-panel="ingresos" hidden>
+        <div class="kpis kpis-4">
+          <div class="kpi"><span class="kpi-label">Valor de citas</span><strong class="kpi-value" id="incomeExpected">$0,00</strong></div>
+          <div class="kpi"><span class="kpi-label">Pagado</span><strong class="kpi-value" id="incomePaid">$0,00</strong></div>
+          <div class="kpi kpi-main"><span class="kpi-label">Por cobrar</span><strong class="kpi-value" id="incomeOutstanding">$0,00</strong></div>
+          <div class="kpi"><span class="kpi-label">Citas</span><strong class="kpi-value" id="incomeCount">0</strong></div>
+        </div>
+        <form class="card filters" id="incomeFilters" onsubmit="return false">
+          <label class="field"><span class="field-label">Cliente</span><input id="incomeCustomer" name="customer" type="search" maxlength="120" placeholder="Buscar cliente" /></label>
+          <label class="field"><span class="field-label">Estado de pago</span>
+            <select id="incomeStatus" name="status"><option value="">Todos</option><option value="paid">Pagado</option><option value="partial">Pago parcial</option><option value="unpaid">Sin pagar</option></select>
+          </label>
+          <details class="disclosure disclosure-plain filters-more" id="incomeMore">
+            <summary>Más filtros <small>(servicio y fechas)</small></summary>
+            <div class="filters-grid">
+              <label class="field"><span class="field-label">Servicio</span><select id="incomeService" name="service"><option value="">Todos los servicios</option></select></label>
+              <label class="field"><span class="field-label">Desde</span><input id="incomeFrom" name="from" type="date" /></label>
+              <label class="field"><span class="field-label">Hasta</span><input id="incomeTo" name="to" type="date" /></label>
+            </div>
+          </details>
+        </form>
+        <div class="card card-flush">
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Cita</th><th>Pago</th><th class="num">Valor</th><th class="num">Pagado</th><th class="num">Por cobrar</th></tr></thead>
+              <tbody id="incomeTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gastos -->
+      <div class="tab-panel" data-panel="gastos" hidden>
+        <div class="toolbar toolbar-split">
+          <div class="kpis kpis-2">
+            <div class="kpi"><span class="kpi-label">Total registrado</span><strong class="kpi-value" id="expenseTotal">$0,00</strong></div>
+            <div class="kpi"><span class="kpi-label">Gastos</span><strong class="kpi-value" id="expenseCount">0</strong></div>
+          </div>
+          <button class="btn btn-primary" id="newExpense" type="button"><svg class="icon"><use href="#i-plus"/></svg><span>Registrar gasto</span></button>
+        </div>
+        <div class="card card-flush">
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Proveedor</th><th>Pago</th><th>Comprobante</th><th class="num">Monto</th><th><span class="sr-only">Acciones</span></th></tr></thead>
+              <tbody id="expensesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Asistente IA -->
+    <section class="view" id="view-asistente" data-view="asistente" hidden>
+      <div class="view-head">
+        <div><h1 tabindex="-1">Asistente IA</h1><p>Elige cómo conversa tu asistente y qué información comparte con tus clientes.</p></div>
+      </div>
+      <form class="stack-lg" id="aiModeForm">
+        <section class="card">
+          <h2 class="card-title">1. ¿A quién atiende?</h2>
+          <div class="option-grid option-grid-2" role="radiogroup" aria-label="Rol del asistente">
+            <label class="option"><input type="radio" name="aiMode" value="client" /><span class="option-title">Atención al cliente</span><span class="option-text">Consulta servicios y disponibilidad, y gestiona citas.</span></label>
+            <label class="option"><input type="radio" name="aiMode" value="owner" checked /><span class="option-title">Asistente del dueño</span><span class="option-text">Además agenda citas y registra pagos y gastos por chat.</span></label>
+          </div>
+          <p class="note" id="aiModeDetail"></p>
+        </section>
+
+        <section class="card">
+          <h2 class="card-title">2. ¿Cómo habla?</h2>
+          <div class="option-grid" role="radiogroup" aria-label="Estilo de comunicación">
+            <label class="option"><input type="radio" name="communicationStyle" value="formal" /><span class="option-title">Formal</span><span class="option-text">Profesional y de usted.</span></label>
+            <label class="option"><input type="radio" name="communicationStyle" value="semiformal" checked /><span class="option-title">Semiformal</span><span class="option-text">Amable, cercano y profesional.</span></label>
+            <label class="option"><input type="radio" name="communicationStyle" value="friend" /><span class="option-title">Amigo</span><span class="option-text">Informal y espontáneo.</span></label>
+          </div>
+          <div class="preview" aria-live="polite">
+            <span class="preview-label" id="communicationStylePreviewLabel"></span>
+            <p class="preview-bubble" id="communicationStylePreviewMessage"></p>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2 class="card-title">3. Información de tu negocio</h2>
+          <p class="card-lead">Tu asistente usará estos datos para responder preguntas frecuentes.</p>
+          <div class="grid-2">
+            <label class="field"><span class="field-label">Teléfono</span><input id="contactPhone" type="text" maxlength="40" /></label>
+            <label class="field"><span class="field-label">Métodos de pago</span><input id="paymentMethods" type="text" placeholder="Efectivo, transferencia" /><span class="field-help">Separados por coma.</span></label>
+            <label class="field full"><span class="field-label">Saludo</span><textarea id="businessGreeting" maxlength="300" rows="2" placeholder="Hola, gracias por escribirnos…"></textarea></label>
+            <label class="field"><span class="field-label">Dirección</span><textarea id="businessAddress" maxlength="300" rows="3" placeholder="Dirección o referencia del local"></textarea></label>
+            <label class="field"><span class="field-label">Instrucciones para llegar</span><textarea id="arrivalInstructions" maxlength="1000" rows="3"></textarea></label>
+            <label class="field"><span class="field-label">Política de cancelación</span><textarea id="cancellationPolicy" maxlength="1000" rows="3"></textarea></label>
+            <label class="field"><span class="field-label">Notas generales</span><textarea id="generalNotes" maxlength="1000" rows="3"></textarea></label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2 class="card-title">4. Documentos de referencia <small>(opcional)</small></h2>
+          <p class="card-lead">Sube catálogos, precios o preguntas frecuentes para que responda con datos exactos.</p>
+          <div class="upload">
+            <input id="knowledgeFile" type="file" accept=".pdf,.txt,.md,.markdown,.csv,.json,application/pdf,text/plain,text/markdown,text/csv,application/json" aria-label="Elegir documento" />
+            <button class="btn" id="uploadKnowledge" type="button">Subir documento</button>
+          </div>
+          <p class="field-help">PDF (hasta 2 MB), TXT, Markdown, CSV o JSON. Texto de hasta 100 KB por documento y 500 KB en total.</p>
+          <ul class="doc-list" id="knowledgeList"></ul>
+        </section>
+
+        <div class="savebar">
+          <span class="savebar-msg" id="aiModeMessage" role="status" aria-live="polite"></span>
+          <button class="btn btn-primary" type="submit">Guardar cambios</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Ajustes -->
+    <section class="view" id="view-ajustes" data-view="ajustes" hidden>
+      <div class="view-head">
+        <div><h1 tabindex="-1">Ajustes</h1><p>Servicios, horario y reglas de reserva de tu negocio.</p></div>
+      </div>
+      <form class="stack-lg" id="settingsForm">
+        <section class="card">
+          <h2 class="card-title">Tu negocio</h2>
+          <label class="field"><span class="field-label">Nombre comercial</span><input id="businessName" type="text" maxlength="120" /></label>
+        </section>
+
+        <section class="card" id="servicesSection">
+          <h2 class="card-title">Servicios</h2>
+          <p class="card-lead">Lo que ofreces, cuánto dura y cuánto cuesta. Desactiva un servicio para que deje de agendarse.</p>
+          <div class="service-list" id="servicesList"></div>
+          <button class="btn btn-quiet" type="button" id="addService"><svg class="icon"><use href="#i-plus"/></svg><span>Agregar servicio</span></button>
+        </section>
+
+        <section class="card">
+          <h2 class="card-title">Horario de atención</h2>
+          <p class="card-lead">Activa los días que atiendes y define la hora de apertura y cierre.</p>
+          <div class="hours-list" id="businessHoursList"></div>
+        </section>
+
+        <section class="card">
+          <details class="disclosure disclosure-plain">
+            <summary>Reglas de reserva <small>(avanzado)</small></summary>
+            <div class="grid-2">
+              <label class="field"><span class="field-label">Duración de cada cita (min)</span><input id="appointmentDuration" type="number" min="15" max="480" step="15" required /></label>
+              <label class="field"><span class="field-label">Intervalo entre horarios (min)</span><input id="slotInterval" type="number" min="5" max="120" step="5" required /></label>
+              <label class="field"><span class="field-label">Anticipación mínima (min)</span><input id="minimumBookingNotice" type="number" min="0" max="43200" step="15" required /></label>
+              <label class="field"><span class="field-label">Máximo de días hacia adelante</span><input id="maximumAdvanceDays" type="number" min="1" max="365" required /></label>
+              <label class="field"><span class="field-label">Zona horaria</span><input id="businessTimezone" type="text" maxlength="100" value="America/Guayaquil" required /><span class="field-help">Formato IANA, por ejemplo America/Guayaquil.</span></label>
+              <label class="field"><span class="field-label">Días cerrados</span><input id="closedDates" type="text" placeholder="2026-12-25, 2027-01-01" /><span class="field-help">Fechas separadas por coma.</span></label>
+            </div>
+          </details>
+        </section>
+
+        <div class="savebar">
+          <span class="savebar-msg form-error" id="settingsError" role="alert"></span>
+          <button class="btn btn-primary" type="submit">Guardar cambios</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Facturar -->
+    <section class="view" id="view-facturar" data-view="facturar" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Facturar</h1></div></div>
+      <div class="card empty-big">
+        <svg class="icon icon-xl" aria-hidden="true"><use href="#i-receipt"/></svg>
+        <h2>Próximamente</h2>
+        <p>Muy pronto podrás crear y administrar tus facturas desde aquí.</p>
+        <a class="btn" href="#/dinero/ingresos">Ver ingresos por ahora</a>
+      </div>
+    </section>
+
+    <!-- Moderador -->
+    <section class="view" id="view-moderador" data-view="moderador" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Empresas</h1><p>Todos los negocios registrados en la plataforma.</p></div></div>
+      <section class="card stack">
+        <h2 class="card-title">Configuración global del asistente</h2>
+        <div class="switch-row">
+          <div><strong>Onboarding del bot</strong><p id="moderatorOnboardingDescription">Activa el flujo guiado para registrar nuevos negocios por chat.</p></div>
+          <label class="switch"><input id="moderatorOnboardingEnabled" type="checkbox" aria-describedby="moderatorOnboardingDescription" aria-label="Onboarding del bot" /><span class="switch-track" aria-hidden="true"></span></label>
+        </div>
+        <div class="switch-row">
+          <div><strong>Primeros pasos</strong><p id="moderatorFirstStepsDescription">Guía a los usuarios nuevos después de iniciar sesión.</p></div>
+          <label class="switch"><input id="moderatorFirstStepsEnabled" type="checkbox" aria-describedby="moderatorFirstStepsDescription" aria-label="Primeros pasos" /><span class="switch-track" aria-hidden="true"></span></label>
+        </div>
+        <p class="note" id="moderatorAiMessage" role="status" aria-live="polite"></p>
+      </section>
+      <div class="company-grid" id="companyGrid"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ DIÁLOGOS ============ -->
+
+<dialog class="dialog" id="apptDialog" aria-labelledby="apptTitle">
+  <header class="dialog-head">
+    <div><p class="eyebrow">Cita</p><h2 id="apptTitle" tabindex="-1"></h2></div>
+    <button class="icon-btn" type="button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-x"/></svg></button>
+  </header>
+  <div class="dialog-body stack">
+    <dl class="facts">
+      <div><dt>Fecha y hora</dt><dd id="modalDate"></dd></div>
+      <div><dt>Servicio</dt><dd id="modalService"></dd></div>
+      <div><dt>Contacto</dt><dd id="modalPhone"></dd></div>
+      <div><dt>Estado</dt><dd id="modalStatus"></dd></div>
+      <div><dt>Pago</dt><dd><span class="badge" id="modalPaymentStatus"></span> <span class="muted" id="modalPaymentSummary"></span></dd></div>
+    </dl>
+
+    <form class="subpanel stack" id="paymentPanel" hidden>
+      <h3>Registrar pago</h3>
+      <div class="grid-2">
+        <label class="field"><span class="field-label">Monto (USD)</span><input id="appointmentPaymentAmount" name="amount" type="number" min="0.01" step="0.01" required /></label>
+        <label class="field"><span class="field-label">Método de pago</span>
+          <select id="appointmentPaymentMethod" name="payment_method" required><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option><option>Otro</option></select>
+        </label>
+      </div>
+      <label class="field" id="appointmentBankField" hidden><span class="field-label">Banco</span>
+        <select id="appointmentPaymentBank" name="bank"><option value="">Selecciona el banco</option><option>Austro</option><option>Bolivariano</option><option>Guayaquil</option><option>Internacional</option><option>Pacífico</option><option>Pichincha</option><option>Produbanco</option></select>
+      </label>
+      <p class="form-error" id="paymentError" role="alert"></p>
+      <button class="btn btn-primary" type="submit">Guardar pago</button>
+    </form>
+
+    <div class="subpanel stack" id="reschedulePanel" hidden>
+      <h3>Reprogramar</h3>
+      <div class="grid-2">
+        <label class="field"><span class="field-label">Nueva fecha y hora</span><input id="rescheduleStart" type="datetime-local" /></label>
+        <label class="field"><span class="field-label">Servicio</span><select id="rescheduleService"></select></label>
+      </div>
+      <p class="form-error" id="appointmentError" role="alert"></p>
+      <button class="btn btn-primary" id="confirmReschedule" type="button">Confirmar cambio</button>
+    </div>
+  </div>
+  <footer class="dialog-foot" id="appointmentActions">
+    <button class="btn btn-danger-quiet" id="cancelAppointment" type="button">Cancelar cita</button>
+    <span class="spacer"></span>
+    <button class="btn" id="showReschedule" type="button">Reprogramar</button>
+    <button class="btn btn-primary" id="showPayment" type="button">Registrar pago</button>
+  </footer>
+</dialog>
+
+<dialog class="dialog dialog-sm" id="customerDialog" aria-labelledby="customerFormTitle">
+  <form id="customerForm" method="dialog">
+    <header class="dialog-head">
+      <h2 id="customerFormTitle">Nuevo cliente</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dialog-body stack">
+      <div class="grid-2">
+        <label class="field"><span class="field-label">Nombre</span><input id="customerFirstName" name="first_name" minlength="2" maxlength="80" required /></label>
+        <label class="field"><span class="field-label">Apellido</span><input id="customerLastName" name="last_name" minlength="2" maxlength="80" required /></label>
+      </div>
+      <label class="field"><span class="field-label">Teléfono</span><input id="customerPhone" name="phone" type="tel" maxlength="32" /></label>
+      <label class="field"><span class="field-label">Cédula o RUC</span><input id="customerCedulaRuc" name="cedula_ruc" maxlength="20" /></label>
+      <label class="field"><span class="field-label">Dirección</span><input id="customerAddress" name="address" maxlength="300" /></label>
+      <p class="form-error" id="customerFormError" role="alert"></p>
+    </div>
+    <footer class="dialog-foot">
+      <span class="spacer"></span>
+      <button class="btn" type="button" data-close>Cancelar</button>
+      <button class="btn btn-primary" type="submit">Guardar cliente</button>
+    </footer>
+  </form>
+</dialog>
+
+<dialog class="dialog" id="expenseDialog" aria-labelledby="expenseDialogTitle">
+  <form id="expenseForm" method="dialog">
+    <header class="dialog-head">
+      <h2 id="expenseDialogTitle">Registrar gasto</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Cerrar"><svg class="icon"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dialog-body stack">
+      <div class="grid-2">
+        <label class="field"><span class="field-label">Fecha</span><input id="expenseDate" name="expense_date" type="date" required /></label>
+        <label class="field"><span class="field-label">Monto (USD)</span><input id="expenseAmount" name="amount" type="number" min="0.01" max="10000000" step="0.01" placeholder="0.00" required /></label>
+      </div>
+      <label class="field"><span class="field-label">Descripción</span><input id="expenseDescription" name="description" minlength="2" maxlength="200" placeholder="Ej. Compra de productos de limpieza" required /></label>
+      <div class="grid-2">
+        <label class="field"><span class="field-label">Categoría</span>
+          <select id="expenseCategory" name="category" required>
+            <option value="">Selecciona</option><option>Insumos</option><option>Servicios básicos</option><option>Arriendo</option><option>Transporte</option><option>Marketing</option><option>Mantenimiento</option><option>Nómina</option><option>Impuestos</option><option>Otros</option>
+          </select>
+        </label>
+        <label class="field"><span class="field-label">Método de pago</span>
+          <select id="expensePaymentMethod" name="payment_method" required>
+            <option value="">Selecciona</option><option>Efectivo</option><option>Transferencia</option><option>Tarjeta de débito</option><option>Tarjeta de crédito</option><option>Cheque</option><option>Otro</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid-2" id="expenseTransferFields" hidden>
+        <label class="field"><span class="field-label">Banco</span>
+          <select id="expenseBank" name="bank"><option value="">Selecciona el banco</option><option>Austro</option><option>Bolivariano</option><option>Guayaquil</option><option>Internacional</option><option>Pacífico</option><option>Pichincha</option><option>Produbanco</option></select>
+        </label>
+        <label class="field"><span class="field-label">Comprobante bancario</span><input id="expenseReceipt" name="receipt" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" /><span class="field-help">Opcional. JPG, PNG, WebP o PDF, máximo 5 MB.</span></label>
+      </div>
+      <details class="disclosure disclosure-plain">
+        <summary>Más detalles <small>(opcional)</small></summary>
+        <div class="stack">
+          <div class="grid-2">
+            <label class="field"><span class="field-label">Proveedor</span><input id="expenseSupplier" name="supplier" maxlength="150" /></label>
+            <label class="field"><span class="field-label">Tipo de comprobante</span>
+              <select id="expenseDocumentType" name="document_type"><option value="">Sin comprobante</option><option>Factura</option><option>Nota de venta</option><option>Recibo</option><option>Liquidación de compra</option><option>Otro</option></select>
+            </label>
+          </div>
+          <label class="field"><span class="field-label">Número de comprobante</span><input id="expenseDocumentNumber" name="document_number" maxlength="100" placeholder="Ej. 001-001-000012345" /></label>
+          <label class="field"><span class="field-label">Notas</span><textarea id="expenseNotes" name="notes" maxlength="1000" rows="2"></textarea></label>
+        </div>
+      </details>
+      <p class="form-error" id="expenseMessage" role="alert"></p>
+    </div>
+    <footer class="dialog-foot">
+      <span class="spacer"></span>
+      <button class="btn" type="button" data-close>Cancelar</button>
+      <button class="btn btn-primary" type="submit">Guardar gasto</button>
+    </footer>
+  </form>
+</dialog>
+
+<dialog class="dialog dialog-sm" id="passwordDialog" aria-labelledby="passwordTitle">
+  <form id="passwordChangeForm" method="dialog">
+    <header class="dialog-head"><h2 id="passwordTitle">Protege tu cuenta</h2></header>
+    <div class="dialog-body stack">
+      <p>Tu cuenta se creó por chat. Antes de continuar, elige una contraseña nueva que solo tú conozcas.</p>
+      <label class="field"><span class="field-label">Nueva contraseña</span><input name="password" type="password" minlength="8" autocomplete="new-password" required /></label>
+      <label class="field"><span class="field-label">Confirmar contraseña</span><input name="confirmation" type="password" minlength="8" autocomplete="new-password" required /></label>
+      <p class="form-error" id="passwordChangeError" role="alert"></p>
+    </div>
+    <footer class="dialog-foot"><button class="btn btn-primary btn-block" type="submit">Cambiar contraseña y continuar</button></footer>
+  </form>
+</dialog>
+
+<dialog class="dialog dialog-sm" id="confirmDialog" aria-labelledby="confirmTitle">
+  <form method="dialog">
+    <div class="dialog-body stack">
+      <h2 id="confirmTitle"></h2>
+      <p id="confirmText"></p>
+    </div>
+    <footer class="dialog-foot">
+      <span class="spacer"></span>
+      <button class="btn" value="cancel" id="confirmCancel">Volver</button>
+      <button class="btn btn-primary" value="ok" id="confirmOk">Confirmar</button>
+    </footer>
+  </form>
+</dialog>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+</body>
+</html>
