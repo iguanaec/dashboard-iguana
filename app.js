@@ -79,6 +79,8 @@
   }
 
   async function apiFetch(path, options = {}) {
+    // Modo diseño: demo-api.js responde con datos de ejemplo, sin red.
+    if (window.demoFetch) return window.demoFetch(path, options);
     const { retryNetworkFailure = false, ...fetchOptions } = options;
     const request = () => fetch(`${API}${path}`, {
       ...fetchOptions,
