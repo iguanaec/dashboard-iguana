@@ -24,7 +24,28 @@ Cada sección tiene su propia URL, así el botón "atrás" y los enlaces directo
 - `#/facturar` — próximamente
 - `#/moderador` — solo para el super administrador
 
-## Probar en local
+## Verlo en tu computadora
 
-La API vive en el Worker. Fuera de `*.workers.dev` el panel llama a `http://127.0.0.1:8787`;
-para apuntar a otra URL define `window.APPOINTMENTS_API_BASE_URL` antes de cargar `app.js`.
+No abras `index.html` con doble clic: el panel necesita una API y, sin ella, solo muestra el acceso con un error de conexión.
+Para ver el diseño con datos de ejemplo (necesitas [Node.js](https://nodejs.org) 18 o superior):
+
+```bash
+node dev/mock-server.js
+```
+
+Abre <http://127.0.0.1:8787>. Entra con cualquier usuario y contraseña (la contraseña `bad` simula un error).
+Otras vistas de prueba, abriendo estas direcciones y luego recargando el panel:
+
+- <http://127.0.0.1:8787/__mock?role=super> — vista del super administrador
+- <http://127.0.0.1:8787/__mock?role=mustchange> — cambio de contraseña obligatorio
+- <http://127.0.0.1:8787/__mock?auth=0> — pantalla de acceso
+- <http://127.0.0.1:8787/__mock?role=admin> — volver a la vista normal
+
+Los datos son de ejemplo y no se guardan.
+
+## Conectarlo a tu API real
+
+Fuera de `*.workers.dev` el panel llama a `http://127.0.0.1:8787`. Para apuntar a otra URL define
+`window.APPOINTMENTS_API_BASE_URL` antes de cargar `app.js`. Ten en cuenta que la sesión usa cookies,
+así que el Worker tendría que permitir tu origen en CORS con credenciales; lo más simple es servir
+estos tres archivos desde el propio Worker.
