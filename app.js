@@ -12,6 +12,9 @@
 
   const $ = (id) => document.getElementById(id);
 
+  // Número de WhatsApp del asistente. Cámbialo aquí o define window.ASSISTANT_WHATSAPP_NUMBER antes de cargar app.js.
+  const ASSISTANT_WHATSAPP = String(window.ASSISTANT_WHATSAPP_NUMBER || '593959420676').replace(/\D/g, '');
+
   const state = {
     user: null,
     settings: null,
@@ -674,10 +677,10 @@
         cell('Fecha', formatDateTime(a.start_at)),
         cell('Cliente', a.customer_name),
         cell('Servicio', a.service_name),
-        cell('Cita', APPT_STATUS[a.appointment_status] || a.appointment_status),
+        cell('Cita', APPT_STATUS[a.appointment_status] || a.appointment_status, 'sm-hide'),
         h('td', { dataset: { label: 'Pago' } }, h('span', { class: `badge ${a.payment_status}`, text: PAY_STATUS[a.payment_status] })),
-        cell('Valor', a.price_cents == null ? 'Sin precio' : money(a.price_cents), 'num'),
-        cell('Pagado', money(a.paid_cents), 'num strong'),
+        cell('Valor', a.price_cents == null ? 'Sin precio' : money(a.price_cents), 'num sm-hide'),
+        cell('Pagado', money(a.paid_cents), 'num strong sm-hide'),
         cell('Por cobrar', money(a.outstanding_cents), 'num strong')));
     }
   }
@@ -719,15 +722,15 @@
     }
     for (const e of expenses) {
       const description = h('td', { dataset: { label: 'Descripción' } }, h('div', { class: 'cell-main' }, e.description, e.notes ? h('span', { class: 'sub', text: e.notes }) : null));
-      const doc = h('td', { dataset: { label: 'Comprobante' } }, h('div', { class: 'cell-main' },
+      const doc = h('td', { class: 'sm-hide', dataset: { label: 'Comprobante' } }, h('div', { class: 'cell-main' },
         [e.document_type, e.document_number].filter(Boolean).join(' · ') || '—',
         e.receipt_url ? h('a', { class: 'sub', href: e.receipt_url, target: '_blank', rel: 'noopener', text: 'Ver archivo' }) : null));
       body.append(h('tr', {},
         cell('Fecha', new Date(`${e.expense_date}T12:00:00`).toLocaleDateString('es-EC')),
         description,
         cell('Categoría', e.category),
-        cell('Proveedor', e.supplier),
-        cell('Pago', [e.payment_method, e.bank].filter(Boolean).join(' · ')),
+        cell('Proveedor', e.supplier, 'sm-hide'),
+        cell('Pago', [e.payment_method, e.bank].filter(Boolean).join(' · '), 'sm-hide'),
         doc,
         cell('Monto', currency(e.amount), 'num strong'),
         h('td', { class: 'actions-cell' },
@@ -877,7 +880,7 @@
         cell('Cliente', u.customer_name),
         cell('Servicio', u.service_name),
         cell('Fecha', u.start_at ? new Date(u.start_at).toLocaleDateString('es-EC', { timeZone: tz() }) : '—'),
-        cell('Pagado', currency(Number(u.paid_cents) / 100), 'num'),
+        cell('Pagado', currency(Number(u.paid_cents) / 100), 'num sm-hide'),
         cell('Pendiente', currency(Number(u.outstanding_cents) / 100), 'num strong')));
     }
   }
@@ -1294,8 +1297,8 @@
 
   function contactLink(a) {
     const digits = a.phone ? String(a.phone).replace(/\D/g, '') : '';
-    if (digits) return { href: `https://wa.me/${digits}`, label: 'Escribir por WhatsApp' };
-    if (a.telegram_username) return { href: `https://t.me/${a.telegram_username}`, label: 'Escribir por Telegram' };
+    if (digits) return { href: `https://wa.me/${digits}`, label: 'WhatsApp', full: 'Escribir por WhatsApp' };
+    if (a.telegram_username) return { href: `https://t.me/${a.telegram_username}`, label: 'Telegram', full: 'Escribir por Telegram' };
     return null;
   }
 
@@ -1348,7 +1351,7 @@
         todays.length ? progressRing(done, todays.length) : null),
       h('div', { class: 'next-actions' },
         h('button', { type: 'button', class: 'btn btn-primary', onclick: () => openAppointment(next), text: 'Ver detalle' }),
-        link ? h('a', { class: 'btn', href: link.href, target: '_blank', rel: 'noopener', text: link.label }) : null));
+        link ? h('a', { class: 'btn', href: link.href, target: '_blank', rel: 'noopener', 'aria-label': link.full, title: link.full }, icon('chat'), link.label) : null));
   }
 
   function renderToday(now, day, yesterday) {
@@ -1380,7 +1383,7 @@
 
     $('homeAppts').textContent = String(c.services_count);
     fillDelta($('homeApptsDelta'), c.services_count, l.services_count);
-    $('homeApptsNote').textContent = `Mismo período del mes pasado: ${l.services_count}`;
+    $('homeApptsNote').textContent = `Mes pasado: ${l.services_count}`;
     const month = bizDay(now.toISOString()).slice(0, 7);
     const mine = state.appointments.filter((a) => bizDay(startOf(a)).startsWith(month));
     const upcoming = mine.filter((a) => isConfirmed(a) && new Date(startOf(a)) > now).length;
@@ -1420,7 +1423,7 @@
     $('peakLead').textContent = `Tu día más fuerte es el ${WEEKDAYS_LONG[peakDay]}. Citas de los últimos 90 días.`;
     list.replaceChildren(...order.map((d) => h('li', { class: d === peakDay ? 'is-peak' : '', 'aria-label': `${WEEKDAYS_LONG[d]}: ${counts[d]} citas` },
       h('span', { class: 'peak-count', text: String(counts[d]) }),
-      h('span', { class: 'peak-bar', style: `height:${Math.max(4, (counts[d] / max) * 100)}px` }),
+      h('span', { class: 'peak-bar', style: `--h:${(counts[d] / max).toFixed(3)}` }),
       h('span', { class: 'peak-day', text: WEEKDAYS[d] }))));
     const fact = (label, value) => h('div', { class: 'fact' }, h('span', { text: label }), h('strong', { text: value }));
     const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1);
@@ -1535,6 +1538,7 @@
       if (link.dataset.route === view) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
+    document.body.dataset.page = view;
     $('navMore').classList.toggle('is-current', ['asistente', 'ajustes', 'facturar'].includes(view));
     document.title = `${VIEW_TITLES[view]} · ${$('brandName').textContent}`;
     if (changed) {
@@ -1604,6 +1608,9 @@
     $('userName').textContent = state.user.username;
     $('logoutBtn').setAttribute('aria-label', `Salir (${state.user.username})`);
     setState('in');
+    const fab = $('assistantFab');
+    fab.href = `https://wa.me/${ASSISTANT_WHATSAPP}?text=${encodeURIComponent('Hola')}`;
+    fab.hidden = session.user.role === 'super_admin';
 
     if (state.user.mustChangePassword) {
       openDialog($('passwordDialog'));

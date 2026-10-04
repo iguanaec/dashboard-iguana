@@ -27,6 +27,12 @@ Vistas especiales, agregando esto al final de la dirección del archivo:
 | `demo-api.js` | Datos de ejemplo que reemplazan a la API (solo para diseño) |
 | `images/` | Logo y íconos de Iguana (tomados de iguana.ec) |
 
+## Botón flotante de WhatsApp
+
+El botón verde abajo a la derecha abre el chat del asistente en WhatsApp. El número está al inicio de `app.js`
+(`ASSISTANT_WHATSAPP`); también puedes definir `window.ASSISTANT_WHATSAPP_NUMBER` antes de cargar `app.js`.
+Ejemplo con código de país y sin signos: `593959420676`.
+
 ## Navegación
 
 Cada sección tiene su propia dirección, así el botón "atrás" y los enlaces directos funcionan:

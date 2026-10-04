@@ -26,6 +26,7 @@
 <!-- Iconos: un solo trazo (1.75) para todo el panel -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M12 3.2a8.8 8.8 0 0 0-7.5 13.4L3.2 20.8l4.3-1.3A8.8 8.8 0 1 0 12 3.2Z"/><path d="M9.2 8.2c-.4.5-.6 1.1-.4 1.9.5 1.9 2.2 3.8 4.3 4.6.9.3 1.6.1 2.1-.4l.4-.8-1.9-1-.8.7c-.9-.3-1.9-1.2-2.3-2.2l.7-.8-.9-1.9-.8-.1Z" fill="currentColor" stroke="none"/></symbol>
     <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4v-9Z"/><path d="M10 20v-5h4v5"/></symbol>
     <symbol id="i-more" viewBox="0 0 24 24"><path d="M6 12h.01M12 12h.01M18 12h.01" stroke-width="3"/></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 14l5-5 5 5"/></symbol>
@@ -148,8 +149,7 @@
           <div id="nextBody"><div class="skeleton-list" aria-hidden="true"><i></i><i></i></div></div>
         </section>
         <section class="card money-card" aria-labelledby="todayLabel">
-          <div class="money-top"><p class="eyebrow" id="todayLabel">Hoy</p><span class="delta" id="homeIncomeDelta" hidden></span></div>
-          <p class="money-caption">Cobrado hoy</p>
+          <div class="money-top"><p class="eyebrow" id="todayLabel">Cobrado hoy</p><span class="delta" id="homeIncomeDelta" hidden></span></div>
           <strong class="money-value" id="homeIncomeToday">—</strong>
           <div class="money-tiles">
             <div class="tile"><span class="tile-label">Gastado hoy</span><strong id="homeExpenseToday">—</strong></div>
@@ -169,7 +169,7 @@
         <section class="card" aria-labelledby="profitTitle">
           <div class="card-head"><h2 id="profitTitle">Ganancia del mes</h2><span class="delta" id="homeProfitDelta" hidden></span></div>
           <strong class="stat-value" id="homeProfit">—</strong>
-          <p class="stat-note">Hasta hoy, vs el mismo período del mes pasado</p>
+          <p class="stat-note">Hasta hoy, vs mes pasado</p>
           <div class="stat-rows" id="homeProfitRows"></div>
         </section>
         <section class="card" aria-labelledby="apptsTitle">
@@ -468,6 +468,10 @@
     </section>
 
   </main>
+
+  <a class="fab" id="assistantFab" href="#" target="_blank" rel="noopener" aria-label="Abrir el asistente de WhatsApp" title="Asistente de WhatsApp">
+    <svg class="icon"><use href="#i-whatsapp"/></svg>
+  </a>
 </div>
 
 <!-- ============ DIÁLOGOS ============ -->
