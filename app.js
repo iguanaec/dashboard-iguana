@@ -26,10 +26,11 @@
     appointment: null,
     calendar: null,
     initialCompanies: null,
+    afterRoute: null,
   };
 
   const VIEW_TITLES = {
-    calendario: 'Calendario', clientes: 'Clientes', dinero: 'Dinero', asistente: 'Asistente IA',
+    inicio: 'Inicio', calendario: 'Calendario', clientes: 'Clientes', dinero: 'Dinero', asistente: 'Asistente IA',
     ajustes: 'Ajustes', facturar: 'Facturar', moderador: 'Empresas',
   };
   const MONEY_TABS = ['resumen', 'ingresos', 'gastos'];
@@ -64,8 +65,10 @@
     return svg;
   }
 
-  const money = (cents) => new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' }).format(Number(cents || 0) / 100);
-  const currency = (value) => new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' }).format(Number(value || 0));
+  const usd = new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' });
+  // Los negativos se escriben -$18,80 (no $-18,80)
+  const currency = (value) => { const n = Number(value || 0); return n < 0 ? `-${usd.format(-n)}` : usd.format(n); };
+  const money = (cents) => currency(Number(cents || 0) / 100);
   const tz = () => state.settings?.businessTimezone || 'America/Guayaquil';
 
   function toast(message, type = 'info') {
@@ -383,6 +386,11 @@
   }
 
   async function refreshAppointments() {
+    if (currentView === 'inicio') {
+      await Promise.all([loadHome(), loadServices()]);
+      stamp();
+      return;
+    }
     await Promise.all([loadAppointments(), loadServices()]);
     syncCalendar();
     stamp();
@@ -795,14 +803,14 @@
     const svg = chartSvg(`Ingresos ${money(income)} y gastos ${money(expenses)}`);
     const r = 72;
     const c = 2 * Math.PI * r;
-    svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#e9ecf1', 'stroke-width': 30 }));
+    svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#e6e8e3', 'stroke-width': 30 }));
     if (total > 0) {
       const incomeLen = (income / total) * c;
-      svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#2457d6', 'stroke-width': 30, 'stroke-dasharray': `${incomeLen} ${c - incomeLen}`, transform: 'rotate(-90 180 112)' }));
-      svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#c9731a', 'stroke-width': 30, 'stroke-dasharray': `${c - incomeLen} ${incomeLen}`, 'stroke-dashoffset': -incomeLen, transform: 'rotate(-90 180 112)' }));
+      svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#0c7a3e', 'stroke-width': 30, 'stroke-dasharray': `${incomeLen} ${c - incomeLen}`, transform: 'rotate(-90 180 112)' }));
+      svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#e0701f', 'stroke-width': 30, 'stroke-dasharray': `${c - incomeLen} ${incomeLen}`, 'stroke-dashoffset': -incomeLen, transform: 'rotate(-90 180 112)' }));
     }
-    svg.append(svgEl('text', { x: 180, y: 108, 'text-anchor': 'middle', fill: '#6b7486', 'font-size': 12 }, 'Movimiento total'));
-    svg.append(svgEl('text', { x: 180, y: 132, 'text-anchor': 'middle', fill: '#171c26', 'font-size': 20, 'font-weight': 600 }, currency(total / 100)));
+    svg.append(svgEl('text', { x: 180, y: 108, 'text-anchor': 'middle', fill: '#6c716d', 'font-size': 12 }, 'Movimiento total'));
+    svg.append(svgEl('text', { x: 180, y: 132, 'text-anchor': 'middle', fill: '#121212', 'font-size': 20, 'font-weight': 600 }, currency(total / 100)));
     box.replaceChildren(svg);
   }
 
@@ -830,20 +838,20 @@
     const left = 44, top = 16, width = 300, height = 175;
     for (let i = 0; i <= 4; i += 1) {
       const y = top + (height * i) / 4;
-      svg.append(svgEl('line', { x1: left, y1: y, x2: left + width, y2: y, stroke: '#eceff4' }));
-      svg.append(svgEl('text', { x: left - 6, y: y + 4, 'text-anchor': 'end', fill: '#6b7486', 'font-size': 10 }, currency((max * (4 - i)) / 4 / 100).replace(/[,.]00$/, '')));
+      svg.append(svgEl('line', { x1: left, y1: y, x2: left + width, y2: y, stroke: '#ecece8' }));
+      svg.append(svgEl('text', { x: left - 6, y: y + 4, 'text-anchor': 'end', fill: '#6c716d', 'font-size': 10 }, currency((max * (4 - i)) / 4 / 100).replace(/[,.]00$/, '')));
     }
     const at = (item, index, field) => ({
       x: activity.length === 1 ? left + width / 2 : left + (index * width) / (activity.length - 1),
       y: top + height - (Number(item[field]) / max) * height,
     });
-    for (const [field, color] of [['income_cents', '#2457d6'], ['expenses_cents', '#c9731a']]) {
+    for (const [field, color] of [['income_cents', '#0c7a3e'], ['expenses_cents', '#e0701f']]) {
       const pts = activity.map((item, i) => at(item, i, field));
       svg.append(svgEl('polyline', { points: pts.map((p) => `${p.x},${p.y}`).join(' '), fill: 'none', stroke: color, 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
       pts.forEach((p) => svg.append(svgEl('circle', { cx: p.x, cy: p.y, r: 3.5, fill: color, stroke: '#fff', 'stroke-width': 2 })));
     }
     for (const index of new Set([0, Math.floor((activity.length - 1) / 2), activity.length - 1])) {
-      svg.append(svgEl('text', { x: at(activity[index], index, 'income_cents').x, y: 216, 'text-anchor': 'middle', fill: '#6b7486', 'font-size': 10 }, `Día ${Number(activity[index].date.slice(8, 10))}`));
+      svg.append(svgEl('text', { x: at(activity[index], index, 'income_cents').x, y: 216, 'text-anchor': 'middle', fill: '#6c716d', 'font-size': 10 }, `Día ${Number(activity[index].date.slice(8, 10))}`));
     }
     box.replaceChildren(svg);
   }
@@ -1203,6 +1211,301 @@
   bindModeratorSwitch($('moderatorOnboardingEnabled'), 'onboardingEnabled', 'Onboarding del bot');
   bindModeratorSwitch($('moderatorFirstStepsEnabled'), 'firstStepsEnabled', 'Primeros pasos');
 
+  /* ---------- Inicio ---------- */
+
+  const WEEKDAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+  const WEEKDAYS_LONG = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  const pad2 = (n) => String(n).padStart(2, '0');
+
+  const bizParts = (iso) => zonedParts(new Date(iso), tz());
+  const bizDay = (iso) => { const p = bizParts(iso); return `${p.year}-${p.month}-${p.day}`; };
+  const bizTime = (iso) => { const p = bizParts(iso); return `${p.hour}:${p.minute}`; };
+  const startOf = (a) => a.start_at || a.date_iso;
+  const endTime = (a) => new Date(a.end_at || endOf(startOf(a)));
+  const isConfirmed = (a) => (a.status || 'confirmed') === 'confirmed';
+  const owedCents = (a) => (!isConfirmed(a) || a.price_cents == null ? 0 : Math.max(0, a.price_cents - (a.paid_cents || 0)));
+
+  function dayNumber(day) { const [y, m, d] = day.split('-').map(Number); return Date.UTC(y, m - 1, d); }
+  const daysBetween = (from, to) => Math.round((dayNumber(to) - dayNumber(from)) / 86400000);
+  function addDays(day, n) {
+    const d = new Date(dayNumber(day) + n * 86400000);
+    return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
+  }
+  function weekdayOf(iso) { return new Date(dayNumber(bizDay(iso))).getUTCDay(); }
+  function previousMonthRange(today) {
+    const [y, m, d] = today.split('-').map(Number);
+    const py = m === 1 ? y - 1 : y;
+    const pm = m === 1 ? 12 : m - 1;
+    const last = new Date(Date.UTC(py, pm, 0)).getUTCDate();
+    return { from: `${py}-${pad2(pm)}-01`, to: `${py}-${pad2(pm)}-${pad2(Math.min(d, last))}` };
+  }
+
+  async function dashboardRange(from, to) {
+    return parse(await apiFetch(`/api/dashboard?from=${from}&to=${to}`), 'No se pudo cargar el resumen.');
+  }
+
+  /** Chip "▲ 12% más": siempre flecha + palabra, nunca solo color. */
+  function fillDelta(el, current, previous, { goodWhenUp = true, suffix = '', hideWithoutPrevious = false } = {}) {
+    el.className = 'delta';
+    el.replaceChildren();
+    el.hidden = false;
+    if (!previous) {
+      if (hideWithoutPrevious || !current) { el.hidden = true; return; }
+      el.append('Nuevo');
+      return;
+    }
+    const pct = Math.round(((current - previous) / Math.abs(previous)) * 100);
+    if (pct === 0) { el.append('Sin cambios'); return; }
+    const up = pct > 0;
+    el.classList.add(up === goodWhenUp ? 'good' : 'bad');
+    el.append(icon(up ? 'up' : 'down'), `${Math.abs(pct)}% ${up ? 'más' : 'menos'}${suffix}`);
+  }
+
+  function deltaChip(current, previous, options) {
+    const chip = h('span');
+    fillDelta(chip, current, previous, options);
+    return chip;
+  }
+
+  function renderGreeting() {
+    const hour = Number(zonedParts(new Date(), tz()).hour);
+    const hello = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+    const name = state.user.username;
+    $('homeGreeting').textContent = `${hello}, ${name}`;
+    $('homeAvatar').textContent = name.slice(0, 1).toUpperCase();
+    const date = new Date().toLocaleDateString('es-EC', { weekday: 'long', day: 'numeric', month: 'long', timeZone: tz() });
+    $('homeDate').textContent = date.charAt(0).toUpperCase() + date.slice(1);
+  }
+
+  function whenLabel(a, now) {
+    const start = new Date(startOf(a));
+    if (start <= now) return 'En curso ahora';
+    const minutes = Math.round((start - now) / 60000);
+    const dayDiff = daysBetween(bizDay(now.toISOString()), bizDay(startOf(a)));
+    if (dayDiff === 0) {
+      if (minutes < 60) return `Hoy · en ${minutes} min`;
+      const hours = Math.floor(minutes / 60);
+      const rest = minutes % 60;
+      return `Hoy · en ${hours} h${rest ? ` ${rest} min` : ''}`;
+    }
+    if (dayDiff === 1) return 'Mañana';
+    return `${WEEKDAYS_LONG[weekdayOf(startOf(a))]} ${Number(bizDay(startOf(a)).slice(8))}`;
+  }
+
+  function contactLink(a) {
+    const digits = a.phone ? String(a.phone).replace(/\D/g, '') : '';
+    if (digits) return { href: `https://wa.me/${digits}`, label: 'Escribir por WhatsApp' };
+    if (a.telegram_username) return { href: `https://t.me/${a.telegram_username}`, label: 'Escribir por Telegram' };
+    return null;
+  }
+
+  function progressRing(done, total) {
+    const r = 50;
+    const c = 2 * Math.PI * r;
+    const svg = svgEl('svg', { viewBox: '0 0 120 120', 'aria-hidden': 'true' });
+    svg.append(svgEl('circle', { cx: 60, cy: 60, r, fill: 'none', stroke: '#e6e8e3', 'stroke-width': 12 }));
+    if (done > 0) {
+      svg.append(svgEl('circle', { cx: 60, cy: 60, r, fill: 'none', stroke: '#0c7a3e', 'stroke-width': 12, 'stroke-linecap': 'round', 'stroke-dasharray': `${(done / total) * c} ${c}`, transform: 'rotate(-90 60 60)' }));
+    }
+    return h('div', { class: 'ring', role: 'img', 'aria-label': `${done} de ${total} citas de hoy atendidas` },
+      svg, h('div', { class: 'ring-label' }, h('strong', { text: `${done}/${total}` }), h('span', { text: 'citas de hoy' })));
+  }
+
+  const upcomingAppointments = (now) => state.appointments
+    .filter((a) => isConfirmed(a) && endTime(a) > now)
+    .sort((x, y) => new Date(startOf(x)) - new Date(startOf(y)));
+
+  const owedAppointments = (now) => state.appointments
+    .filter((a) => owedCents(a) > 0 && new Date(startOf(a)) <= now)
+    .sort((x, y) => new Date(startOf(x)) - new Date(startOf(y)));
+
+  function renderNext(now) {
+    const body = $('nextBody');
+    const next = upcomingAppointments(now)[0];
+    if (!next) {
+      body.replaceChildren(h('div', { class: 'next-empty' },
+        h('strong', { text: 'No tienes citas próximas' }),
+        h('p', { text: 'Cuando alguien agende por WhatsApp o Telegram, aparecerá aquí.' }),
+        h('a', { class: 'btn', href: '#/calendario', text: 'Abrir calendario' })));
+      return;
+    }
+    const today = bizDay(now.toISOString());
+    const todays = state.appointments.filter((a) => isConfirmed(a) && bizDay(startOf(a)) === today);
+    const done = todays.filter((a) => endTime(a) <= now).length;
+    const minutes = Math.round((endTime(next) - new Date(startOf(next))) / 60000);
+    const pay = next.payment_status || 'unpaid';
+    const link = contactLink(next);
+    body.replaceChildren(
+      h('div', { class: 'next-grid' },
+        h('div', {},
+          h('span', { class: 'next-when', text: whenLabel(next, now) }),
+          h('div', { class: 'next-time', text: bizTime(startOf(next)) }),
+          h('div', { class: 'next-name', text: next.customer_name || next.patient_name || 'Cliente' }),
+          h('div', { class: 'next-meta', text: `${next.service_name || next.service || 'Servicio'} · ${minutes} min` }),
+          h('div', { class: 'next-badges' },
+            h('span', { class: `badge ${pay}`, text: PAY_STATUS[pay] }),
+            next.price_cents == null ? null : h('span', { class: 'chip', text: `${money(next.paid_cents || 0)} de ${money(next.price_cents)}` }))),
+        todays.length ? progressRing(done, todays.length) : null),
+      h('div', { class: 'next-actions' },
+        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => openAppointment(next), text: 'Ver detalle' }),
+        link ? h('a', { class: 'btn', href: link.href, target: '_blank', rel: 'noopener', text: link.label }) : null));
+  }
+
+  function renderToday(now, day, yesterday) {
+    $('homeIncomeToday').textContent = money(day.summary.income_cents);
+    fillDelta($('homeIncomeDelta'), day.summary.income_cents, yesterday.summary.income_cents, { suffix: ' que ayer', hideWithoutPrevious: true });
+    $('homeExpenseToday').textContent = money(day.summary.expenses_cents);
+    const owed = owedAppointments(now);
+    const total = owed.reduce((sum, a) => sum + owedCents(a), 0);
+    const people = new Set(owed.map((a) => a.customer_name)).size;
+    $('homeOutstanding').textContent = money(total);
+    $('homeOutstandingNote').textContent = people ? `${people} persona${people === 1 ? '' : 's'} te ${people === 1 ? 'debe' : 'deben'}` : 'Todo al día';
+  }
+
+  function statRow(label, value, chip) {
+    return h('div', { class: 'stat-row' }, h('span', { text: label }), h('span', { class: 'end' }, h('strong', { text: value }), chip));
+  }
+
+  function renderMonth(now, current, last) {
+    const c = current.summary;
+    const l = last.summary;
+    const profit = $('homeProfit');
+    profit.textContent = money(c.profit_cents);
+    profit.classList.toggle('negative', c.profit_cents < 0);
+    fillDelta($('homeProfitDelta'), c.profit_cents, l.profit_cents);
+    $('homeProfitRows').replaceChildren(
+      statRow('Ingresos', money(c.income_cents), deltaChip(c.income_cents, l.income_cents, { hideWithoutPrevious: true })),
+      statRow('Gastos', money(c.expenses_cents), deltaChip(c.expenses_cents, l.expenses_cents, { goodWhenUp: false, hideWithoutPrevious: true })),
+      statRow('Gastas por cada $1 que cobras', c.income_cents > 0 ? money(c.expenses_cents / c.income_cents * 100) : '—'));
+
+    $('homeAppts').textContent = String(c.services_count);
+    fillDelta($('homeApptsDelta'), c.services_count, l.services_count);
+    $('homeApptsNote').textContent = `Mismo período del mes pasado: ${l.services_count}`;
+    const month = bizDay(now.toISOString()).slice(0, 7);
+    const mine = state.appointments.filter((a) => bizDay(startOf(a)).startsWith(month));
+    const upcoming = mine.filter((a) => isConfirmed(a) && new Date(startOf(a)) > now).length;
+    const cancelled = mine.filter((a) => a.status === 'cancelled').length;
+    const ticket = c.services_count ? c.income_cents / c.services_count : 0;
+    const lastTicket = l.services_count ? l.income_cents / l.services_count : 0;
+    $('homeApptsRows').replaceChildren(
+      statRow('Cobrado por cita', ticket ? money(ticket) : '—', deltaChip(ticket, lastTicket, { hideWithoutPrevious: true })),
+      statRow('Por venir este mes', String(upcoming)),
+      statRow('Canceladas', String(cancelled)));
+  }
+
+  function renderPeak(now) {
+    const since = now.getTime() - 90 * 86400000;
+    const past = state.appointments.filter((a) => isConfirmed(a) && new Date(startOf(a)) <= now && new Date(startOf(a)).getTime() >= since);
+    const counts = Array(7).fill(0);
+    const hours = {};
+    for (const a of past) {
+      counts[weekdayOf(startOf(a))] += 1;
+      const hour = bizParts(startOf(a)).hour;
+      hours[hour] = (hours[hour] || 0) + 1;
+    }
+    const list = $('homePeak');
+    const facts = $('peakFacts');
+    if (past.length < 5) {
+      $('peakLead').textContent = 'Aún hay pocas citas para ver tendencias. Aquí aparecerán tus días y horas más fuertes.';
+      list.replaceChildren();
+      facts.replaceChildren();
+      return;
+    }
+    const order = [1, 2, 3, 4, 5, 6, 0];
+    const max = Math.max(...counts);
+    const peakDay = counts.indexOf(max);
+    const openDays = (state.settings.businessHours || []).filter((d) => d.enabled).map((d) => d.day);
+    const quiet = (openDays.length ? openDays : order).reduce((best, d) => (counts[d] < counts[best] ? d : best), openDays[0] ?? 1);
+    const peakHour = Object.entries(hours).sort((a, b) => b[1] - a[1])[0][0];
+    $('peakLead').textContent = `Tu día más fuerte es el ${WEEKDAYS_LONG[peakDay]}. Citas de los últimos 90 días.`;
+    list.replaceChildren(...order.map((d) => h('li', { class: d === peakDay ? 'is-peak' : '', 'aria-label': `${WEEKDAYS_LONG[d]}: ${counts[d]} citas` },
+      h('span', { class: 'peak-count', text: String(counts[d]) }),
+      h('span', { class: 'peak-bar', style: `height:${Math.max(4, (counts[d] / max) * 100)}px` }),
+      h('span', { class: 'peak-day', text: WEEKDAYS[d] }))));
+    const fact = (label, value) => h('div', { class: 'fact' }, h('span', { text: label }), h('strong', { text: value }));
+    const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+    facts.replaceChildren(
+      fact('Día más fuerte', cap(WEEKDAYS_LONG[peakDay])),
+      fact('Hora más pedida', `${peakHour}:00`),
+      fact('Día más tranquilo', cap(WEEKDAYS_LONG[quiet])),
+      fact('Citas por semana', (past.length / (90 / 7)).toFixed(1).replace('.', ',')));
+  }
+
+  function listRow(a, { whenTop, whenBottom, end }) {
+    return h('li', {}, h('button', { type: 'button', class: 'list-row', onclick: () => openRow(a) },
+      h('span', { class: 'when' }, h('span', { text: whenTop }), h('strong', { text: whenBottom })),
+      h('span', { class: 'list-main' },
+        h('strong', { text: a.customer_name || a.patient_name || 'Cliente' }),
+        h('span', { text: a.service_name || a.service || 'Servicio' })),
+      end));
+  }
+
+  function openRow(a) {
+    openAppointment(a);
+    const pay = $('showPayment');
+    if (owedCents(a) > 0 && !pay.hidden && !pay.disabled) pay.click();
+  }
+
+  function renderLists(now) {
+    const owed = owedAppointments(now);
+    const unpaid = $('homeUnpaid');
+    if (!owed.length) unpaid.replaceChildren(h('li', { class: 'list-empty', text: 'Nadie te debe nada. Todo cobrado.' }));
+    else {
+      unpaid.replaceChildren(...owed.slice(0, 4).map((a) => {
+        const day = bizDay(startOf(a));
+        const month = new Date(dayNumber(day)).toLocaleDateString('es-EC', { month: 'short', timeZone: 'UTC' }).replace('.', '');
+        return listRow(a, {
+          whenTop: month, whenBottom: String(Number(day.slice(8))),
+          end: h('span', { class: 'list-end' }, money(owedCents(a)), h('small', { text: 'por cobrar' })),
+        });
+      }));
+    }
+    const rest = upcomingAppointments(now).slice(1, 6);
+    const upcoming = $('homeUpcoming');
+    if (!rest.length) upcoming.replaceChildren(h('li', { class: 'list-empty', text: 'No hay más citas agendadas por ahora.' }));
+    else {
+      upcoming.replaceChildren(...rest.map((a) => listRow(a, {
+        whenTop: WEEKDAYS[weekdayOf(startOf(a))], whenBottom: bizTime(startOf(a)),
+        end: h('span', { class: 'list-end' }, h('span', { class: `badge ${a.payment_status || 'unpaid'}`, text: PAY_STATUS[a.payment_status || 'unpaid'] })),
+      })));
+    }
+  }
+
+  async function loadHome() {
+    renderGreeting();
+    const today = businessToday();
+    const previous = previousMonthRange(today);
+    const [current, last, day, yesterday] = await Promise.all([
+      dashboardRange(`${today.slice(0, 7)}-01`, today),
+      dashboardRange(previous.from, previous.to),
+      dashboardRange(today, today),
+      dashboardRange(addDays(today, -1), addDays(today, -1)),
+      loadAppointments(),
+    ]);
+    syncCalendar();
+    const now = new Date();
+    renderNext(now);
+    renderToday(now, day, yesterday);
+    renderMonth(now, current, last);
+    renderPeak(now);
+    renderLists(now);
+  }
+
+  document.querySelectorAll('[data-quick]').forEach((button) => button.addEventListener('click', () => {
+    const kind = button.dataset.quick;
+    if (kind === 'calendar') location.hash = '#/calendario';
+    if (kind === 'expense') { state.afterRoute = () => $('newExpense').click(); location.hash = '#/dinero/gastos'; }
+    if (kind === 'customer') { state.afterRoute = () => openCustomerEditor(); location.hash = '#/clientes'; }
+    if (kind === 'collect') {
+      const first = owedAppointments(new Date())[0];
+      if (first) openRow(first);
+      else toast('No tienes cobros pendientes.', 'success');
+    }
+  }));
+
+  $('navMore').addEventListener('click', () => openDialog($('moreDialog')));
+  document.querySelectorAll('#moreDialog a').forEach((link) => link.addEventListener('click', () => $('moreDialog').close()));
+
   /* ---------- Rutas ---------- */
 
   let routeToken = 0;
@@ -1218,7 +1521,7 @@
     const isModerator = state.user.role === 'super_admin';
     let { view, tab } = parseRoute();
     if (isModerator) view = 'moderador';
-    else if (!VIEW_TITLES[view] || view === 'moderador') view = 'calendario';
+    else if (!VIEW_TITLES[view] || view === 'moderador') view = 'inicio';
     if (view === 'dinero' && !MONEY_TABS.includes(tab)) tab = 'resumen';
     const canonical = `#/${view}${view === 'dinero' ? `/${tab}` : ''}`;
     if (location.hash !== canonical) history.replaceState(null, '', canonical);
@@ -1232,6 +1535,7 @@
       if (link.dataset.route === view) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
+    $('navMore').classList.toggle('is-current', ['asistente', 'ajustes', 'facturar'].includes(view));
     document.title = `${VIEW_TITLES[view]} · ${$('brandName').textContent}`;
     if (changed) {
       window.scrollTo({ top: 0, behavior: 'auto' });
@@ -1239,6 +1543,7 @@
     }
 
     try {
+      if (view === 'inicio') await loadHome();
       if (view === 'calendario') ensureCalendar();
       if (view === 'clientes') await loadCustomers();
       if (view === 'dinero') {
@@ -1261,6 +1566,9 @@
       }
       if (view === 'moderador') await Promise.all([loadCompanies(), loadModeratorSettings()]);
       stamp();
+      const after = state.afterRoute;
+      state.afterRoute = null;
+      if (after && token === routeToken) after();
     } catch (err) {
       if (token === routeToken) fail(err);
     }
@@ -1270,7 +1578,7 @@
     const btn = $('refreshBtn');
     btn.classList.add('is-loading');
     const done = () => btn.classList.remove('is-loading');
-    if (currentView === 'calendario') refreshAppointments().catch(fail).finally(done);
+    if (currentView === 'calendario' || currentView === 'inicio') refreshAppointments().catch(fail).finally(done);
     else renderRoute().finally(done);
   }
 
@@ -1320,7 +1628,7 @@
     if (state.settings) {
       await renderRoute();
       window.setInterval(() => {
-        if (document.visibilityState === 'visible' && currentView === 'calendario') {
+        if (document.visibilityState === 'visible' && (currentView === 'calendario' || currentView === 'inicio')) {
           refreshAppointments().catch(() => { $('refreshStatus').textContent = 'No se pudo actualizar'; });
         }
       }, 30_000);

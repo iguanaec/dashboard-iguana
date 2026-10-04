@@ -46,36 +46,68 @@
     { id: 3, first_name: 'Julián', last_name: 'Paredes', phone: '593984441122', cedula_ruc: '', address: '', telegram_username: '', contact_channel: 'whatsapp' },
     { id: 4, first_name: 'Carla', last_name: 'Mejía', phone: '', cedula_ruc: '', address: '', telegram_username: 'carlamj', contact_channel: 'telegram' },
     { id: 5, first_name: 'Daniela', last_name: 'Ortiz', phone: '593975554433', cedula_ruc: '', address: 'Cumbayá', telegram_username: '', contact_channel: 'whatsapp' },
+    { id: 6, first_name: 'Rosa', last_name: 'León', phone: '593975551111', cedula_ruc: '', address: '', telegram_username: '', contact_channel: 'whatsapp' },
+    { id: 7, first_name: 'Pablo', last_name: 'Ruiz', phone: '593975550000', cedula_ruc: '', address: '', telegram_username: '', contact_channel: 'whatsapp' },
+    { id: 8, first_name: 'Lucía', last_name: 'Montalvo', phone: '593984441199', cedula_ruc: '', address: '', telegram_username: '', contact_channel: 'whatsapp' },
   ].map((c) => ({ ...c, full_name: `${c.first_name} ${c.last_name}` }));
 
-  const appt = (id, customer, serviceId, day, hour, minute, status, origin, paid) => {
-    const service = services.find((s) => s.id === serviceId);
+  /* ----- Citas: 80 días de historial con días pico + agenda de hoy y próximos días ----- */
+  let seed = 20261004;
+  const rnd = () => {
+    seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  const pick = (list) => list[Math.floor(rnd() * list.length)];
+  const weekdayOfOffset = (offset) => new Date(`${dayString(offset)}T12:00:00Z`).getUTCDay();
+
+  const appointments = [];
+  const makeAppt = (customer, serviceId, day, hour, minute, status, origin, paid) => {
+    const service = services.find((x) => x.id === serviceId);
     const start = at(day, hour, minute);
     const price_cents = Math.round(service.price * 100);
-    const c = customers.find((x) => x.full_name === customer);
-    return {
-      id, customer_name: customer, service_id: serviceId, service_name: service.name,
-      start_at: start, end_at: plusMinutes(start, service.duration_minutes),
-      status, origin, phone: c.phone ? `${c.phone}@c.us` : '', telegram_username: c.phone ? '' : c.telegram_username,
-      price_cents, paid_cents: paid, payment_status: 'unpaid',
-    };
+    const paid_cents = paid === 'full' ? price_cents : paid === 'half' ? Math.round(price_cents / 2) : 0;
+    appointments.push({
+      id: appointments.length + 1, customer_name: customer.full_name, service_id: serviceId, service_name: service.name,
+      start_at: start, end_at: plusMinutes(start, service.duration_minutes), status, origin,
+      phone: customer.phone ? `${customer.phone}@c.us` : '', telegram_username: customer.phone ? '' : customer.telegram_username,
+      price_cents, paid_cents, payment_status: 'unpaid',
+    });
   };
 
-  const appointments = [
-    appt(1, 'Julián Paredes', 1, -8, 9, 0, 'confirmed', 'admin', 700),
-    appt(2, 'Marcela Vinueza', 2, -5, 15, 0, 'confirmed', 'whatsapp', 3500),
-    appt(3, 'Esteban Andrade', 1, -2, 10, 0, 'confirmed', 'whatsapp', 700),
-    appt(4, 'Daniela Ortiz', 3, -1, 16, 0, 'confirmed', 'chat', 1200),
-    appt(5, 'Esteban Andrade', 1, 0, 10, 0, 'confirmed', 'whatsapp', 0),
-    appt(6, 'Marcela Vinueza', 2, 0, 15, 30, 'confirmed', 'telegram', 1500),
-    appt(7, 'Carla Mejía', 3, 1, 11, 0, 'cancelled', 'telegram', 0),
-    appt(8, 'Daniela Ortiz', 3, 1, 14, 0, 'confirmed', 'chat', 0),
-    appt(9, 'Julián Paredes', 1, 3, 9, 0, 'confirmed', 'admin', 0),
-    appt(10, 'Esteban Andrade', 1, 3, 12, 0, 'confirmed', 'whatsapp', 0),
-    appt(11, 'Marcela Vinueza', 2, 3, 16, 0, 'confirmed', 'whatsapp', 0),
-    appt(12, 'Carla Mejía', 3, 3, 17, 30, 'confirmed', 'telegram', 0),
-    appt(13, 'Esteban Andrade', 1, 9, 10, 0, 'confirmed', 'whatsapp', 0),
-  ];
+  // Viernes y sábado son los días fuertes; el domingo no se atiende.
+  const dayWeight = [0, 1, 1.2, 1.4, 1.6, 2.6, 2];
+  const hourPool = [9, 10, 10, 11, 12, 14, 15, 15, 16, 17];
+  for (let day = -80; day <= -1; day += 1) {
+    const count = Math.floor(dayWeight[weekdayOfOffset(day)] * rnd() * 1.7 + 0.35);
+    const hours = [...new Set(Array.from({ length: count }, () => pick(hourPool)))];
+    for (const hour of hours) {
+      const r = rnd();
+      const status = r < 0.06 ? 'cancelled' : 'confirmed';
+      const q = rnd();
+      const paid = status === 'cancelled' ? 'none' : (day < -2 ? (q < 0.88 ? 'full' : q < 0.95 ? 'half' : 'none') : (q < 0.6 ? 'full' : q < 0.75 ? 'half' : 'none'));
+      makeAppt(pick(customers), pick([1, 1, 1, 2, 3, 3]), day, hour, 0, status, pick(['whatsapp', 'whatsapp', 'telegram', 'chat', 'admin']), paid);
+    }
+  }
+
+  // Hoy: una cita ya atendida, la próxima y una más tarde (siempre relativas a la hora actual).
+  const nowHour = ecuadorNow.getUTCHours();
+  const earlier = Math.min(17, Math.max(8, nowHour - 3));
+  makeAppt(customers[2], 1, 0, earlier, 0, 'confirmed', 'admin', 'full');
+  if (nowHour + 2 <= 19) {
+    makeAppt(customers[0], 1, 0, nowHour + 2, 30, 'confirmed', 'whatsapp', 'none');
+    if (nowHour + 5 <= 20) makeAppt(customers[1], 2, 0, nowHour + 5, 0, 'confirmed', 'telegram', 'half');
+  } else {
+    makeAppt(customers[0], 1, 1, 9, 30, 'confirmed', 'whatsapp', 'none');
+  }
+  makeAppt(customers[4], 3, 1, 11, 0, 'confirmed', 'chat', 'none');
+  makeAppt(customers[3], 3, 1, 14, 0, 'cancelled', 'telegram', 'none');
+  makeAppt(customers[6], 1, 2, 10, 0, 'confirmed', 'whatsapp', 'none');
+  makeAppt(customers[5], 2, 3, 15, 0, 'confirmed', 'whatsapp', 'none');
+  makeAppt(customers[7], 2, 4, 16, 0, 'confirmed', 'chat', 'none');
+  makeAppt(customers[0], 1, 8, 10, 0, 'confirmed', 'whatsapp', 'none');
+
   const derivePayment = (a) => {
     a.payment_status = a.paid_cents <= 0 ? 'unpaid' : (a.price_cents != null && a.paid_cents >= a.price_cents ? 'paid' : 'partial');
   };
@@ -93,11 +125,22 @@
     },
   };
 
-  let expenses = [
-    { id: 1, expense_date: dayString(-2), description: 'Compra de tintes', notes: 'Pedido mensual', category: 'Insumos', supplier: 'Distribuidora Andina', payment_method: 'Transferencia', bank: 'Pichincha', document_type: 'Factura', document_number: '001-001-000012345', amount: 18.5, receipt_url: '' },
-    { id: 2, expense_date: dayString(-4), description: 'Arriendo del local', notes: '', category: 'Arriendo', supplier: '', payment_method: 'Efectivo', bank: '', document_type: '', document_number: '', amount: 25, receipt_url: '' },
-    { id: 3, expense_date: dayString(-6), description: 'Servicio de luz', notes: '', category: 'Servicios básicos', supplier: 'Empresa Eléctrica', payment_method: 'Tarjeta de débito', bank: '', document_type: 'Recibo', document_number: '', amount: 8.4, receipt_url: '' },
+  const expenseTemplates = [
+    ['Compra de tintes', 'Insumos', 'Distribuidora Andina', 'Transferencia', 'Pichincha', 'Factura', 18.5],
+    ['Arriendo del local', 'Arriendo', '', 'Efectivo', '', '', 25],
+    ['Servicio de luz', 'Servicios básicos', 'Empresa Eléctrica', 'Tarjeta de débito', '', 'Recibo', 8.4],
+    ['Productos de limpieza', 'Insumos', 'Supermaxi', 'Efectivo', '', 'Factura', 14.8],
+    ['Publicidad en Instagram', 'Marketing', 'Meta', 'Tarjeta de crédito', '', '', 12],
+    ['Transporte de pedido', 'Transporte', '', 'Efectivo', '', '', 4.5],
+    ['Internet del local', 'Servicios básicos', 'Netlife', 'Transferencia', 'Guayaquil', 'Factura', 19.9],
   ];
+  let expenses = [];
+  const addExpense = (day, template) => {
+    const [description, category, supplier, payment_method, bank, document_type, amount] = template;
+    expenses.push({ id: expenses.length + 1, expense_date: dayString(day), description, notes: '', category, supplier, payment_method, bank, document_type, document_number: document_type === 'Factura' ? '001-001-0000' + (12000 + expenses.length) : '', amount, receipt_url: '' });
+  };
+  addExpense(0, expenseTemplates[3]);
+  [-8, -11, -14, -17, -20, -23, -27, -31, -34, -38, -42, -47, -52, -58].forEach((day, k) => addExpense(day, expenseTemplates[(k + 1) % expenseTemplates.length]));
 
   let documents = [{ id: 1, name: 'precios-2026.pdf', size_bytes: 48210, created_at: `${dayString(-14)} 10:00:00` }];
   let nextId = 100;

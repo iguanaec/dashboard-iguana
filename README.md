@@ -25,11 +25,13 @@ Vistas especiales, agregando esto al final de la dirección del archivo:
 | `styles.css` | Estilo claro, tokens de color/espacio y diseño responsive |
 | `app.js` | Lógica de la interfaz |
 | `demo-api.js` | Datos de ejemplo que reemplazan a la API (solo para diseño) |
+| `images/` | Logo y íconos de Iguana (tomados de iguana.ec) |
 
 ## Navegación
 
 Cada sección tiene su propia dirección, así el botón "atrás" y los enlaces directos funcionan:
 
+- `#/inicio` — lo primero que ves: próxima cita, cobrado y gastado hoy, ganancia y citas del mes vs el mes pasado, días más fuertes, por cobrar y próximas citas
 - `#/calendario` — citas (mes, semana, día)
 - `#/clientes` — directorio e historial
 - `#/dinero/resumen`, `#/dinero/ingresos`, `#/dinero/gastos`
