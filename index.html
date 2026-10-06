@@ -145,8 +145,11 @@
 
       <div class="home-hero">
         <section class="card next-card" aria-labelledby="nextLabel">
-          <p class="eyebrow" id="nextLabel">Tu próxima cita</p>
-          <div id="nextBody"><div class="skeleton-list" aria-hidden="true"><i></i><i></i></div></div>
+          <div class="next-head">
+            <p class="eyebrow" id="nextLabel">Tu próxima cita</p>
+            <span id="nextBadge"></span>
+          </div>
+          <div id="nextBody"><div class="skeleton-list" aria-hidden="true"><i></i></div></div>
         </section>
         <section class="card money-card" aria-labelledby="todayLabel">
           <div class="money-top"><p class="eyebrow" id="todayLabel">Cobrado hoy</p><span class="delta" id="homeIncomeDelta" hidden></span></div>
@@ -198,15 +201,30 @@
       </div>
     </section>
 
-    <!-- Calendario -->
+    <!-- Calendario: vista diaria (principal) y mensual -->
     <section class="view" id="view-calendario" data-view="calendario" hidden>
-      <div class="view-head">
-        <div>
-          <h1 tabindex="-1">Calendario</h1>
-          <p>Las citas aparecen aquí cuando tus clientes agendan por WhatsApp o Telegram. Toca una para ver el detalle.</p>
+      <div class="cal-head">
+        <div class="cal-title">
+          <div class="cal-date-row"><p class="eyebrow" id="calDate"></p><button class="cal-today-link" id="calTodayLink" type="button" hidden>Ir a hoy</button></div>
+          <h1 tabindex="-1" id="calTitle">Hoy</h1>
+        </div>
+        <div class="cal-controls">
+          <div class="cal-nav" id="calNav" role="group" aria-label="Cambiar de día">
+            <button class="icon-btn" id="calPrev" type="button" aria-label="Día anterior"><svg class="icon"><use href="#i-back"/></svg></button>
+            <button class="icon-btn" id="calNext" type="button" aria-label="Día siguiente"><svg class="icon icon-flip"><use href="#i-back"/></svg></button>
+          </div>
+          <div class="segmented segmented-sm" role="tablist" aria-label="Vista del calendario">
+            <button class="segmented-btn" id="calModeDay" role="tab" type="button" aria-selected="true">Día</button>
+            <button class="segmented-btn" id="calModeMonth" role="tab" type="button" aria-selected="false">Mes</button>
+          </div>
         </div>
       </div>
-      <div class="card card-flush" id="calendar-card"><div id="calendar"></div></div>
+
+      <div id="calDayView">
+        <div class="week" id="calWeek" role="group" aria-label="Días de la semana"></div>
+        <ol class="timeline" id="calTimeline" aria-label="Citas del día"></ol>
+      </div>
+      <div class="card card-flush" id="calMonthView" hidden><div id="calendar"></div></div>
     </section>
 
     <!-- Clientes -->

@@ -38,7 +38,7 @@ Ejemplo con código de país y sin signos: `593959420676`.
 Cada sección tiene su propia dirección, así el botón "atrás" y los enlaces directos funcionan:
 
 - `#/inicio` — lo primero que ves: próxima cita, cobrado y gastado hoy, ganancia y citas del mes vs el mes pasado, días más fuertes, por cobrar y próximas citas
-- `#/calendario` — citas (mes, semana, día)
+- `#/calendario` — vista diaria (principal): franja de la semana y línea de tiempo del día; la vista de mes está en el botón "Mes". En celular también se cambia de día deslizando
 - `#/clientes` — directorio e historial
 - `#/dinero/resumen`, `#/dinero/ingresos`, `#/dinero/gastos`
 - `#/asistente` — configuración del asistente de IA

@@ -91,16 +91,12 @@
     }
   }
 
-  // Hoy: una cita ya atendida, la próxima y una más tarde (siempre relativas a la hora actual).
+  // Hoy: agenda con horas fijas; lo que ya pasó aparece cobrado.
   const nowHour = ecuadorNow.getUTCHours();
-  const earlier = Math.min(17, Math.max(8, nowHour - 3));
-  makeAppt(customers[2], 1, 0, earlier, 0, 'confirmed', 'admin', 'full');
-  if (nowHour + 2 <= 19) {
-    makeAppt(customers[0], 1, 0, nowHour + 2, 30, 'confirmed', 'whatsapp', 'none');
-    if (nowHour + 5 <= 20) makeAppt(customers[1], 2, 0, nowHour + 5, 0, 'confirmed', 'telegram', 'half');
-  } else {
-    makeAppt(customers[0], 1, 1, 9, 30, 'confirmed', 'whatsapp', 'none');
-  }
+  [[9, 0, 2, 1], [10, 30, 0, 1], [12, 0, 1, 2], [15, 0, 5, 3], [16, 30, 6, 1]].forEach(([hour, minute, who, serviceId]) => {
+    makeAppt(customers[who], serviceId, 0, hour, minute, 'confirmed', pick(['whatsapp', 'telegram', 'chat', 'admin']), hour + 1 < nowHour ? 'full' : who % 2 ? 'half' : 'none');
+  });
+  makeAppt(customers[0], 1, 1, 9, 30, 'confirmed', 'whatsapp', 'none');
   makeAppt(customers[4], 3, 1, 11, 0, 'confirmed', 'chat', 'none');
   makeAppt(customers[3], 3, 1, 14, 0, 'cancelled', 'telegram', 'none');
   makeAppt(customers[6], 1, 2, 10, 0, 'confirmed', 'whatsapp', 'none');

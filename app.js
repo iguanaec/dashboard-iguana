@@ -30,6 +30,8 @@
     calendar: null,
     initialCompanies: null,
     afterRoute: null,
+    calDay: null,
+    calMode: 'day',
   };
 
   const VIEW_TITLES = {
@@ -332,47 +334,33 @@
       window.setTimeout(() => state.calendar.updateSize(), 0);
       return;
     }
-    const mobile = window.matchMedia('(max-width: 640px)').matches;
+    const compactMonth = window.matchMedia('(max-width: 560px)').matches;
     state.calendar = new FullCalendar.Calendar($('calendar'), {
-      initialView: mobile ? 'listWeek' : 'dayGridMonth',
+      initialView: 'dayGridMonth',
       locale: 'es',
       height: 'auto',
       timeZone: tz(),
       businessHours: businessHoursFor(state.settings),
-      nowIndicator: true,
       navLinks: true,
-      navLinkDayClick: 'listDay',
+      navLinkDayClick: (date) => selectDay(date.toISOString().slice(0, 10)),
+      dateClick: (info) => selectDay(info.dateStr.slice(0, 10)),
       dayMaxEvents: 3,
-      eventDisplay: 'block',
-      headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,listWeek,listDay' },
-      views: {
-        listWeek: { buttonText: 'Semana', noEventsContent: 'No hay citas esta semana.' },
-        listDay: { buttonText: 'Día', noEventsContent: 'No hay citas para este día.' },
-      },
-      buttonText: { today: 'Hoy', month: 'Mes' },
+      eventDisplay: compactMonth ? 'none' : 'block',
+      dayCellContent: compactMonth ? (arg) => {
+        const day = arg.date.toISOString().slice(0, 10);
+        const count = state.appointments.filter((a) => isConfirmed(a) && bizDay(startOf(a)) === day).length;
+        return { domNodes: [h('span', { class: 'month-num', text: arg.dayNumberText }),
+          count ? h('span', { class: 'month-dots', 'aria-label': `${count} cita${count === 1 ? '' : 's'}` }, Array.from({ length: Math.min(count, 4) }, () => h('i'))) : null].filter(Boolean) };
+      } : undefined,
+      headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
+      buttonText: { today: 'Hoy' },
       events: state.appointments.map(toEvent),
       eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: 'short' },
       eventContent(arg) {
-        if (arg.view.type !== 'dayGridMonth') return undefined;
         const a = arg.event.extendedProps;
         return { domNodes: [h('div', { class: 'fc-event-main-frame' },
           h('span', { class: 'fc-event-time', text: arg.timeText }),
           h('span', { class: 'fc-event-title', text: a.customer_name || a.patient_name || 'Cliente' }))] };
-      },
-      eventDidMount(info) {
-        if (!info.view.type.startsWith('list')) return;
-        const target = info.el.querySelector('.fc-list-event-title');
-        if (!target) return;
-        const a = info.event.extendedProps;
-        const chips = [
-          h('span', { class: 'chip', text: contactOf(a) }),
-          h('span', { class: `badge ${a.status === 'cancelled' ? 'cancelled' : ''}`, text: APPT_STATUS[a.status] || 'Confirmada' }),
-          h('span', { class: `badge ${a.payment_status || 'unpaid'}`, text: PAY_STATUS[a.payment_status] || 'Sin pagar' }),
-          a.price_cents == null ? null : h('span', { class: 'chip', text: `${money(a.paid_cents || 0)} de ${money(a.price_cents)}` }),
-        ];
-        target.replaceChildren(h('div', { class: 'list-appt' },
-          h('div', { class: 'list-appt-title', text: info.event.title }),
-          h('div', { class: 'list-appt-meta' }, chips)));
       },
       eventClick: (info) => openAppointment(info.event.extendedProps),
     });
@@ -380,6 +368,7 @@
   }
 
   function syncCalendar() {
+    renderCalendarDay();
     const cal = state.calendar;
     if (!cal) return;
     cal.setOption('timeZone', tz());
@@ -1325,7 +1314,9 @@
   function renderNext(now) {
     const body = $('nextBody');
     const next = upcomingAppointments(now)[0];
+    $('nextBadge').replaceChildren();
     if (!next) {
+      $('nextLabel').textContent = 'Próxima cita';
       body.replaceChildren(h('div', { class: 'next-empty' },
         h('strong', { text: 'No tienes citas próximas' }),
         h('p', { text: 'Cuando alguien agende por WhatsApp o Telegram, aparecerá aquí.' }),
@@ -1338,20 +1329,20 @@
     const minutes = Math.round((endTime(next) - new Date(startOf(next))) / 60000);
     const pay = next.payment_status || 'unpaid';
     const link = contactLink(next);
+    $('nextLabel').replaceChildren('Próxima cita · ', h('span', { class: 'next-when', text: whenLabel(next, now) }));
+    $('nextBadge').replaceChildren(
+      h('span', { class: `badge ${pay}`, text: PAY_STATUS[pay] }),
+      next.price_cents == null ? null : h('span', { class: 'chip next-money', text: `${money(next.paid_cents || 0)} de ${money(next.price_cents)}` }));
     body.replaceChildren(
-      h('div', { class: 'next-grid' },
-        h('div', {},
-          h('span', { class: 'next-when', text: whenLabel(next, now) }),
-          h('div', { class: 'next-time', text: bizTime(startOf(next)) }),
+      h('div', { class: 'next-row' },
+        h('div', { class: 'next-time', text: bizTime(startOf(next)) }),
+        h('div', { class: 'next-info' },
           h('div', { class: 'next-name', text: next.customer_name || next.patient_name || 'Cliente' }),
-          h('div', { class: 'next-meta', text: `${next.service_name || next.service || 'Servicio'} · ${minutes} min` }),
-          h('div', { class: 'next-badges' },
-            h('span', { class: `badge ${pay}`, text: PAY_STATUS[pay] }),
-            next.price_cents == null ? null : h('span', { class: 'chip', text: `${money(next.paid_cents || 0)} de ${money(next.price_cents)}` }))),
+          h('div', { class: 'next-meta', text: `${next.service_name || next.service || 'Servicio'} · ${minutes} min` })),
         todays.length ? progressRing(done, todays.length) : null),
       h('div', { class: 'next-actions' },
         h('button', { type: 'button', class: 'btn btn-primary', onclick: () => openAppointment(next), text: 'Ver detalle' }),
-        link ? h('a', { class: 'btn', href: link.href, target: '_blank', rel: 'noopener', 'aria-label': link.full, title: link.full }, icon('chat'), link.label) : null));
+        link ? h('a', { class: 'btn', href: link.href, target: '_blank', rel: 'noopener', 'aria-label': link.full, title: link.full }, icon('chat'), h('span', { class: 'btn-label', text: link.label })) : null));
   }
 
   function renderToday(now, day, yesterday) {
@@ -1509,6 +1500,120 @@
   $('navMore').addEventListener('click', () => openDialog($('moreDialog')));
   document.querySelectorAll('#moreDialog a').forEach((link) => link.addEventListener('click', () => $('moreDialog').close()));
 
+  /* ---------- Calendario: vista diaria (principal) y mensual ---------- */
+
+  const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
+  function selectDay(day) {
+    state.calDay = day;
+    setCalMode('day');
+  }
+
+  function setCalMode(mode) {
+    state.calMode = mode;
+    const day = mode === 'day';
+    $('calDayView').hidden = !day;
+    $('calMonthView').hidden = day;
+    $('calNav').hidden = !day;
+    $('calModeDay').setAttribute('aria-selected', String(day));
+    $('calModeMonth').setAttribute('aria-selected', String(!day));
+    if (day) {
+      renderCalendarDay();
+      return;
+    }
+    $('calTitle').textContent = 'Calendario';
+    $('calDate').textContent = '';
+    $('calTodayLink').hidden = true;
+    ensureCalendar();
+    state.calendar.gotoDate(state.calDay || businessToday());
+  }
+
+  function renderCalendarDay() {
+    if (!state.calDay) state.calDay = businessToday();
+    if (state.calMode !== 'day') return;
+    const day = state.calDay;
+    const today = businessToday();
+    const now = new Date();
+    const diff = daysBetween(today, day);
+    const weekday = new Date(dayNumber(day)).getUTCDay();
+
+    $('calTitle').textContent = diff === 0 ? 'Hoy' : diff === 1 ? 'Mañana' : diff === -1 ? 'Ayer'
+      : `${capitalize(WEEKDAYS_LONG[weekday])} ${Number(day.slice(8))}`;
+    const sameYear = day.slice(0, 4) === today.slice(0, 4);
+    $('calDate').textContent = new Date(dayNumber(day)).toLocaleDateString('es-EC', { day: 'numeric', month: 'long', ...(sameYear ? {} : { year: 'numeric' }), timeZone: 'UTC' });
+    $('calTodayLink').hidden = diff === 0;
+
+    // Franja de la semana (lunes a domingo); los días con citas llevan un punto
+    const monday = addDays(day, -((weekday + 6) % 7));
+    const perDay = new Map();
+    for (const a of state.appointments) {
+      if (!isConfirmed(a)) continue;
+      const d = bizDay(startOf(a));
+      perDay.set(d, (perDay.get(d) || 0) + 1);
+    }
+    $('calWeek').replaceChildren(...Array.from({ length: 7 }, (_, i) => {
+      const d = addDays(monday, i);
+      const idx = (i + 1) % 7;
+      const count = perDay.get(d) || 0;
+      return h('button', {
+        type: 'button',
+        class: `week-day${count ? ' has' : ''}${d === today ? ' is-today' : ''}`,
+        'aria-current': d === day ? 'date' : null,
+        'aria-label': `${WEEKDAYS_LONG[idx]} ${Number(d.slice(8))}${count ? `, ${count} cita${count === 1 ? '' : 's'}` : ''}`,
+        onclick: () => { state.calDay = d; renderCalendarDay(); },
+      }, h('small', { text: WEEKDAYS[idx] }), h('strong', { text: String(Number(d.slice(8))) }), h('span', { class: 'week-dot' }));
+    }));
+
+    // Línea de tiempo del día
+    const list = state.appointments.filter((a) => bizDay(startOf(a)) === day)
+      .sort((x, y) => new Date(startOf(x)) - new Date(startOf(y)));
+    const current = diff === 0 ? list.find((a) => isConfirmed(a) && endTime(a) > now) : null;
+    if (!list.length) {
+      const later = state.appointments.filter((a) => isConfirmed(a) && bizDay(startOf(a)) > day).map(startOf).sort()[0];
+      $('calTimeline').replaceChildren(h('li', { class: 'tl-empty' },
+        h('strong', { text: 'Sin citas este día' }),
+        h('p', { text: 'Aquí verás las citas ordenadas por hora.' }),
+        later ? h('button', { type: 'button', class: 'btn btn-sm', onclick: () => { state.calDay = bizDay(later); renderCalendarDay(); }, text: 'Ir a la próxima cita' }) : null));
+      return;
+    }
+    $('calTimeline').replaceChildren(...list.map((a) => {
+      const cancelled = a.status === 'cancelled';
+      const pay = a.payment_status || 'unpaid';
+      const minutes = Math.round((endTime(a) - new Date(startOf(a))) / 60000);
+      return h('li', { class: `tl-item${a === current ? ' is-now' : ''}${cancelled ? ' is-cancelled' : ''}` },
+        h('span', { class: 'tl-node', 'aria-hidden': 'true' }),
+        h('button', { type: 'button', class: 'tl-card', onclick: () => openAppointment(a) },
+          h('span', { class: 'tl-top' },
+            h('strong', { class: 'tl-name', text: a.customer_name || a.patient_name || 'Cliente' }),
+            h('span', { class: 'tl-time', text: bizTime(startOf(a)) })),
+          h('span', { class: 'tl-sub', text: `${a.service_name || a.service || 'Servicio'} · ${minutes} min` }),
+          h('span', { class: 'tl-meta' },
+            cancelled ? h('span', { class: 'badge cancelled', text: 'Cancelada' }) : h('span', { class: `badge ${pay}`, text: PAY_STATUS[pay] }),
+            a.price_cents == null || cancelled ? null : h('span', { class: 'tl-money', text: `${money(a.paid_cents || 0)} de ${money(a.price_cents)}` }))));
+    }));
+  }
+
+  $('calPrev').addEventListener('click', () => { state.calDay = addDays(state.calDay, -1); renderCalendarDay(); });
+  $('calNext').addEventListener('click', () => { state.calDay = addDays(state.calDay, 1); renderCalendarDay(); });
+  $('calTodayLink').addEventListener('click', () => { state.calDay = businessToday(); renderCalendarDay(); });
+  $('calModeDay').addEventListener('click', () => setCalMode('day'));
+  $('calModeMonth').addEventListener('click', () => setCalMode('month'));
+
+  // Deslizar a los lados cambia de día (siempre hay flechas visibles como alternativa)
+  (() => {
+    let startX = 0;
+    let startY = 0;
+    const view = $('calDayView');
+    view.addEventListener('touchstart', (event) => { startX = event.changedTouches[0].clientX; startY = event.changedTouches[0].clientY; }, { passive: true });
+    view.addEventListener('touchend', (event) => {
+      const dx = event.changedTouches[0].clientX - startX;
+      const dy = event.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8) return;
+      state.calDay = addDays(state.calDay, dx < 0 ? 1 : -1);
+      renderCalendarDay();
+    }, { passive: true });
+  })();
+
   /* ---------- Rutas ---------- */
 
   let routeToken = 0;
@@ -1548,7 +1653,10 @@
 
     try {
       if (view === 'inicio') await loadHome();
-      if (view === 'calendario') ensureCalendar();
+      if (view === 'calendario') {
+        if (changed || !state.calDay) state.calDay = businessToday();
+        setCalMode(state.calMode);
+      }
       if (view === 'clientes') await loadCustomers();
       if (view === 'dinero') {
         document.querySelectorAll('[data-tab]').forEach((link) => link.setAttribute('aria-selected', String(link.dataset.tab === tab)));
