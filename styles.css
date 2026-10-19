@@ -855,8 +855,8 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
   .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: var(--gap); }
   #view-inicio { display: flex; flex-direction: column; }
   .home-hello { order: 0; }
-  .bento { order: 1; }
-  .quick { order: 2; }
+  .quick { order: 1; }
+  .bento { order: 2; }
   .home-grid { order: 3; }
   .bento > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
   .b-next { order: 1; }
@@ -913,7 +913,7 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
   .b-appts .stat-row:nth-child(n+2) { display: none; }
 
   .quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ig-space-2); margin: 0 0 var(--gap); width: 100%; }
-  .quick-btn { flex-direction: column; justify-content: center; gap: 4px; min-height: 76px; padding: 8px 2px; border-radius: var(--ig-radius-lg); font-size: 11.5px; line-height: 1.2; text-align: center; }
+  .quick-btn { flex-direction: column; justify-content: center; gap: 4px; min-height: 70px; padding: 6px 2px; border-radius: var(--ig-radius-lg); font-size: 11.5px; line-height: 1.2; text-align: center; }
   .quick-icon { width: 34px; height: 34px; }
 
   .home-grid { gap: var(--gap); }
