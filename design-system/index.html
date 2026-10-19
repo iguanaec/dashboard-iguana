@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Iguana Design System</title>
+<meta name="description" content="Tokens, componentes y patrones reutilizables de Iguana: claro, redondeado y sin líneas rectas." />
+<meta name="theme-color" content="#f1f5f2" />
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="components.css" />
+<link rel="stylesheet" href="docs.css" />
+<script src="ig.js" defer></script>
+<script src="docs.js" defer></script>
+</head>
+<body class="ig-root">
+
+<!-- Iconos del sistema: trazo 1.75, puntas y uniones redondeadas -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4v-9Z"/><path d="M10 20v-5h4v5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.8 2.6-6 6-6s6 2.2 6 6M16.5 5.5h5M19 3v5"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H19v14H6.5A2.5 2.5 0 0 1 4 16.5v-9Z"/><path d="M4 8h15M15.5 13.5h.01"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><path d="M12 3v3M9.5 3h5"/><rect x="4" y="7" width="16" height="13" rx="4.5"/><path d="M4 13H2M22 13h-2M9 16.5h6M8.8 12h.01M15.2 12h.01"/></symbol>
+    <symbol id="i-cog" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2-.7a7 7 0 0 0-.6-1.4l.9-1.9-2.1-2.1-1.9.9a7 7 0 0 0-1.4-.6L11.2 3h-3l-.7 1.7a7 7 0 0 0-1.4.6l-1.9-.9-2.1 2.1.9 1.9a7 7 0 0 0-.6 1.4l-1.7.7v3l1.7.7a7 7 0 0 0 .6 1.4l-.9 1.9 2.1 2.1 1.9-.9a7 7 0 0 0 1.4.6l.7 1.7h3l.7-1.7a7 7 0 0 0 1.4-.6l1.9.9 2.1-2.1-.9-1.9a7 7 0 0 0 .6-1.4l2-.7Z"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 14l5-5 5 5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-arrow-ur" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4V6Z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19h14"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.6"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4 3 19h18L12 4Z"/><path d="M12 10v4M12 17h.01"/></symbol>
+  </defs>
+</svg>
+
+<div class="doc">
+
+  <!-- ============ Navegación ============ -->
+  <aside class="doc-side" aria-label="Secciones">
+    <div class="doc-brand"><img src="../images/apple-touch-icon.png" alt="" /><div><strong>Iguana DS</strong><span>v0.1.0 · claro</span></div></div>
+    <nav class="doc-nav" id="docNav">
+      <a href="#principios">Principios</a>
+      <a href="#color">Color</a>
+      <a href="#tipografia">Tipografía</a>
+      <a href="#forma">Forma</a>
+      <a href="#espacio">Espacio y sombra</a>
+      <a href="#movimiento">Movimiento</a>
+      <a href="#iconos">Iconos</a>
+      <a href="#componentes">Componentes</a>
+      <a href="#patron">Patrón: Inicio</a>
+      <a href="#accesibilidad">Accesibilidad</a>
+      <a href="#uso">Cómo usarlo</a>
+    </nav>
+  </aside>
+
+  <main class="doc-main" id="main">
+
+    <!-- ============ Portada ============ -->
+    <header class="doc-hero ig-spark ig-card--inverse">
+      <p class="ig-eyebrow">Iguana Design System · v0.1.0</p>
+      <h1>Claro, suave y <em>sin líneas rectas</em>.</h1>
+      <p>Un solo sistema para el panel, la web y lo que venga: tokens de color con la cromática verde de Iguana, formas redondeadas, colores que la gente ya entiende (verde bien, rojo mal, ámbar ojo) y elementos que responden al tocar.</p>
+      <div class="doc-hero__chips">
+        <span class="ig-chip ig-chip--inverse">WCAG 2.1 AA</span>
+        <span class="ig-chip ig-chip--inverse">Tokens CSS + JSON</span>
+        <span class="ig-chip ig-chip--inverse">Móvil primero</span>
+        <span class="ig-chip ig-chip--inverse">Sin dependencias</span>
+      </div>
+    </header>
+
+    <!-- ============ Principios ============ -->
+    <section class="doc-section" id="principios">
+      <h2>Principios</h2>
+      <p class="lead">Cinco reglas que explican todas las decisiones del sistema. Si dudas, vuelve aquí.</p>
+      <div class="doc-grid">
+        <article class="ig-card"><p class="ig-eyebrow">01</p><h3>Claro primero</h3><p class="ig-muted">Fondo verde‑gris muy suave, tarjetas blancas y mucho aire. Lo importante se destaca con tamaño y un toque de lima, no con adornos.</p></article>
+        <article class="ig-card"><p class="ig-eyebrow">02</p><h3>Sin líneas rectas</h3><p class="ig-muted">Nada de divisores, tablas con rejilla ni bordes de tarjeta. Se separa con espacio, tono y sombra suave. Todo tiene esquinas redondeadas; los conectores son punteados.</p></article>
+        <article class="ig-card"><p class="ig-eyebrow">03</p><h3>Una cromática</h3><p class="ig-muted">Verde Iguana como protagonista, lima como resalte y neutros con un toque verde. Sin cafés ni beige. Los datos usan la misma familia.</p></article>
+        <article class="ig-card"><p class="ig-eyebrow">04</p><h3>Colores que ya conoces</h3><p class="ig-muted">Verde = bien, rojo = error o pérdida, ámbar = atención, azul = información. Nunca se usa solo el color: siempre va con icono o palabra.</p></article>
+        <article class="ig-card"><p class="ig-eyebrow">05</p><h3>Todo responde</h3><p class="ig-muted">Al pasar el cursor o tocar, cada cosa reacciona: se eleva, se desliza, gira o cuenta. Movimiento con sentido, 160–400 ms, y respeta “reducir movimiento”.</p></article>
+      </div>
+    </section>
+
+    <!-- ============ Color ============ -->
+    <section class="doc-section" id="color">
+      <h2>Color</h2>
+      <p class="lead">Haz clic en cualquier muestra para copiar su valor. Cada color tiene un nombre de token; los componentes usan solo los <b>semánticos</b>.</p>
+
+      <div class="doc-sub"><h3>Marca · verde Iguana</h3><p>Ancla <code>#0C7A3E</code> (600). El 900 es el botón principal y las superficies oscuras; el 50–100 son fondos suaves.</p><div class="swatches" data-group="green"></div></div>
+      <div class="doc-sub"><h3>Resalte · lima</h3><p>La “energía” de la marca. Solo para lo que debe verse primero: elemento activo, tarjeta destacada, el día pico. Siempre con texto oscuro encima.</p><div class="swatches" data-group="lime"></div></div>
+      <div class="doc-sub"><h3>Neutros · mist</h3><p>Grises con un toque verde: se sienten de la misma familia y no tiran a beige ni café como el gris cálido anterior.</p><div class="swatches" data-group="gray"></div></div>
+
+      <div class="doc-sub"><h3>Semánticos reconocibles</h3><p>Los que cualquier persona ya entiende de otras apps. Se usan con moderación y siempre con icono o texto.</p>
+        <div class="doc-grid doc-grid--3">
+          <div class="doc-sub"><h4 style="margin:0">Rojo · error, pérdida, eliminar</h4><div class="swatches" data-group="red"></div></div>
+          <div class="doc-sub"><h4 style="margin:0">Ámbar · atención, pendiente</h4><div class="swatches" data-group="amber"></div></div>
+          <div class="doc-sub"><h4 style="margin:0">Azul · información</h4><div class="swatches" data-group="blue"></div></div>
+        </div>
+        <div class="doc-demo">
+          <span class="ig-chip ig-chip--success ig-chip--dot">Pagado</span>
+          <span class="ig-chip ig-chip--warning ig-chip--dot">Sin pagar</span>
+          <span class="ig-chip ig-chip--danger ig-chip--dot">Cancelada</span>
+          <span class="ig-chip ig-chip--info ig-chip--dot">Nuevo</span>
+          <span class="ig-delta ig-delta--up"><svg class="ig-icon"><use href="#i-up"/></svg>18% más</span>
+          <span class="ig-delta ig-delta--down"><svg class="ig-icon"><use href="#i-down"/></svg>12% menos</span>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Roles semánticos</h3><p>Lo que realmente usan los componentes.</p><div class="swatches" data-group="roles"></div></div>
+      <div class="doc-sub"><h3>Datos y gráficos</h3><p>Ingresos en verde y gastos en grafito: así el rojo se reserva para “error” y no se confunde. Lima y ámbar solo como resalte, con contorno oscuro (no alcanzan 3:1 solos sobre blanco).</p><div class="swatches" data-group="data"></div></div>
+
+      <div class="doc-sub"><h3>Colores retirados</h3><p>Los que no funcionaban y qué los reemplaza.</p>
+        <div class="doc-grid doc-grid--2">
+          <div class="retired"><i style="background:#7A5200"></i><s>#7A5200</s><p><b>Texto café</b> de “sin pagar”. Ahora: texto tinta sobre ámbar claro, con punto ámbar.</p></div>
+          <div class="retired"><i style="background:#E0701F"></i><s>#E0701F</s><p><b>Naranja‑café</b> de gastos. Ahora: grafito <code>--ig-data-2</code>.</p></div>
+          <div class="retired"><i style="background:#FDF1D8"></i><s>#FDF1D8</s><p><b>Crema</b> de advertencia. Ahora: amarillo claro limpio <code>--ig-amber-100</code>.</p></div>
+          <div class="retired"><i style="background:#F1F1EE"></i><s>#F1F1EE</s><p><b>Fondo beige</b>. Ahora: verde‑gris <code>--ig-gray-50</code>.</p></div>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Pares aprobados</h3><p>Contraste real calculado en esta página con los valores vigentes. AA pide 4,5:1 para texto y 3:1 para controles y gráficos.</p><div class="contrast" id="contrast"></div></div>
+    </section>
+
+    <!-- ============ Tipografía ============ -->
+    <section class="doc-section" id="tipografia">
+      <h2>Tipografía</h2>
+      <p class="lead"><b>Plus Jakarta Sans</b> para todo y <b>JetBrains Mono</b> en etiquetas pequeñas y cifras de apoyo. Los números siempre en cifras tabulares.</p>
+      <div class="doc-grid" style="gap:8px">
+        <div class="type-row"><code>--ig-text-5xl · 64/800</code><span class="ig-display">$7.110,12</span></div>
+        <div class="type-row"><code>--ig-text-3xl · 36/800</code><span style="font-size:36px;font-weight:800;letter-spacing:-.04em">Bienvenido, Esteban</span></div>
+        <div class="type-row"><code>--ig-text-2xl · 28/700</code><span class="ig-title">Resumen financiero</span></div>
+        <div class="type-row"><code>--ig-text-xl · 22/700</code><span style="font-size:22px;font-weight:700;letter-spacing:-.02em">Ingresos del mes</span></div>
+        <div class="type-row"><code>--ig-text-lg · 18/700</code><span style="font-size:18px;font-weight:700">Próximas citas</span></div>
+        <div class="type-row"><code>--ig-text-base · 15/400</code><span>Texto de lectura: claro, con interlineado de 1,5 y no más de 70 caracteres por línea.</span></div>
+        <div class="type-row"><code>--ig-text-sm · 13/500</code><span style="font-size:13px;font-weight:500" class="ig-muted">Texto de apoyo, notas y ayudas bajo los campos.</span></div>
+        <div class="type-row"><code>mono 12 · etiqueta</code><span class="ig-eyebrow">Tu próxima cita · hoy · en 29 min</span></div>
+      </div>
+    </section>
+
+    <!-- ============ Forma ============ -->
+    <section class="doc-section" id="forma">
+      <h2>Forma</h2>
+      <p class="lead">Todo es redondeado. Cuanto más grande el contenedor, más grande el radio. Para los fondos decorativos hay una forma orgánica (<code>--ig-radius-blob</code>).</p>
+      <div class="doc-demo doc-demo--tonal" style="justify-content:space-around">
+        <div class="shape"><i style="border-radius:var(--ig-radius-xs)"></i>xs · 8</div>
+        <div class="shape"><i style="border-radius:var(--ig-radius-sm)"></i>sm · 12</div>
+        <div class="shape"><i style="border-radius:var(--ig-radius-md)"></i>md · 16</div>
+        <div class="shape"><i style="border-radius:var(--ig-radius-lg)"></i>lg · 24</div>
+        <div class="shape"><i style="border-radius:var(--ig-radius-xl)"></i>xl · 32</div>
+        <div class="shape"><i style="border-radius:var(--ig-radius-pill)"></i>pill</div>
+        <div class="shape"><i style="border-radius:var(--ig-radius-blob)"></i>blob</div>
+      </div>
+
+      <div class="doc-sub"><h3>Cómo evitar las líneas rectas</h3>
+        <div class="doc-grid doc-grid--2">
+          <div class="dd dd--dont"><h4><span class="ig-chip ig-chip--danger">No</span> Divisores y bordes</h4><div class="dd__art"><div class="bad-card">Cobrado hoy<hr>Gastado hoy</div></div><p>Líneas finas entre secciones y tarjetas con borde cuadrado.</p></div>
+          <div class="dd dd--do"><h4><span class="ig-chip ig-chip--success">Sí</span> Tono, espacio y sombra</h4><div class="dd__art"><div class="ig-card" style="width:100%;display:grid;gap:10px">Cobrado hoy<div class="ig-card ig-card--tonal" style="padding:12px 16px;border-radius:20px">Gastado hoy</div></div></div><p>Se separa con superficies tonales y esquinas grandes. Si hace falta un separador: <code>.ig-dotrule</code>.</p></div>
+          <div class="dd dd--dont"><h4><span class="ig-chip ig-chip--danger">No</span> Tablas con rejilla</h4><div class="dd__art"><table class="bad-table"><tr><td>Rosa</td><td>$17,50</td></tr><tr><td>Marcela</td><td>$7,00</td></tr></table></div><p>Celdas con borde y esquinas vivas.</p></div>
+          <div class="dd dd--do"><h4><span class="ig-chip ig-chip--success">Sí</span> Filas como cápsulas</h4><div class="dd__art"><ul class="ig-list" style="width:100%"><li class="ig-row"><span class="ig-avatar ig-avatar--sm">R</span><span class="ig-row__main"><span class="ig-row__title">Rosa León</span></span><span class="ig-amount">$17,50</span></li><li class="ig-row"><span class="ig-avatar ig-avatar--sm">M</span><span class="ig-row__main"><span class="ig-row__title">Marcela V.</span></span><span class="ig-amount">$7,00</span></li></ul></div><p>Cada fila es una pieza redondeada que reacciona al pasar el cursor.</p></div>
+        </div>
+        <div class="doc-demo"><span class="ig-eyebrow">Separador decorativo</span><div class="ig-dotrule" style="width:100%;margin:0"></div></div>
+      </div>
+    </section>
+
+    <!-- ============ Espacio y sombra ============ -->
+    <section class="doc-section" id="espacio">
+      <h2>Espacio y sombra</h2>
+      <p class="lead">Base de 4 px. Las sombras son suaves y teñidas de verde: dan profundidad sin dibujar bordes.</p>
+      <div class="doc-grid doc-grid--2">
+        <div class="doc-demo doc-demo--col" id="spaceDemo"></div>
+        <div class="doc-demo doc-demo--tonal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-content:center">
+          <div class="elev" style="box-shadow:var(--ig-shadow-1)">shadow-1<br><small class="ig-muted">reposo</small></div>
+          <div class="elev" style="box-shadow:var(--ig-shadow-2)">shadow-2<br><small class="ig-muted">hover</small></div>
+          <div class="elev" style="box-shadow:var(--ig-shadow-3)">shadow-3<br><small class="ig-muted">flotante</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Movimiento ============ -->
+    <section class="doc-section" id="movimiento">
+      <h2>Movimiento</h2>
+      <p class="lead">Rápido y con carácter. Los resortes (<i>spring</i>) se usan para lo que “rebota” al aparecer; las curvas de salida suave para el resto.</p>
+      <div class="doc-demo doc-demo--col">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="ig-btn ig-btn--primary ig-btn--sm" id="replay" type="button">Reproducir</button><span class="ig-muted">Duraciones: instant 90 · fast 160 · base 240 · slow 400 · slower 640 ms</span></div>
+        <div id="easeDemo" style="display:grid;gap:10px"></div>
+      </div>
+      <div class="doc-grid doc-grid--3">
+        <div class="ig-card ig-card--tonal"><h3>Pasar el cursor</h3><p class="ig-muted">Sube 1–4 px y la sombra crece. Los iconos de acción giran o se agrandan con resorte.</p></div>
+        <div class="ig-card ig-card--tonal"><h3>Presionar</h3><p class="ig-muted">Se encoge a 0,97 durante 90 ms: se siente físico y confirma el toque.</p></div>
+        <div class="ig-card ig-card--tonal"><h3>Aparecer</h3><p class="ig-muted">Menús, avisos y diálogos entran con escala 0,94 y resorte. Las hojas móviles suben desde abajo.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ Iconos ============ -->
+    <section class="doc-section" id="iconos">
+      <h2>Iconos</h2>
+      <p class="lead">Trazo de 1,75 px, puntas y uniones redondeadas, 20 px por defecto. Un solo estilo: siempre contorno, nunca relleno mezclado. Clic para copiar el nombre.</p>
+      <div class="icon-grid" id="iconGrid"></div>
+    </section>
+
+    <!-- ============ Componentes ============ -->
+    <section class="doc-section" id="componentes">
+      <h2>Componentes</h2>
+      <p class="lead">Todos son interactivos: pasa el cursor, presiona, usa el teclado.</p>
+
+      <div class="doc-sub"><h3>Botones</h3>
+        <div class="doc-demo">
+          <button class="ig-btn ig-btn--primary" type="button">Principal</button>
+          <button class="ig-btn ig-btn--accent" type="button">Resalte</button>
+          <button class="ig-btn ig-btn--secondary" type="button">Secundario</button>
+          <button class="ig-btn" type="button">Contorno</button>
+          <button class="ig-btn ig-btn--ghost" type="button">Fantasma</button>
+          <button class="ig-btn ig-btn--danger" type="button">Eliminar</button>
+          <button class="ig-btn ig-btn--primary ig-btn--sm" type="button">Pequeño</button>
+          <button class="ig-btn ig-btn--primary ig-btn--lg" type="button">Grande</button>
+          <button class="ig-btn ig-btn--primary ig-btn--icon" type="button" aria-label="Agregar"><svg class="ig-icon"><use href="#i-plus"/></svg></button>
+          <button class="ig-btn ig-btn--primary" type="button" id="loadingBtn">Guardar (toca)</button>
+          <button class="ig-arrow-btn" type="button" aria-label="Abrir"><svg class="ig-icon ig-icon--lg"><use href="#i-arrow-ur"/></svg></button>
+        </div>
+        <pre class="doc-code">&lt;button class="<b>ig-btn ig-btn--primary</b>"&gt;Guardar&lt;/button&gt;
+&lt;button class="ig-btn ig-btn--primary" <b>aria-busy="true"</b>&gt;Guardar&lt;/button&gt;   <i>&lt;!-- estado de carga --&gt;</i>
+&lt;button class="<b>ig-arrow-btn</b>" aria-label="Abrir"&gt;…&lt;/button&gt;</pre>
+      </div>
+
+      <div class="doc-sub"><h3>Chips, estados y cambios</h3>
+        <div class="doc-demo">
+          <span class="ig-chip">Neutro</span><span class="ig-chip ig-chip--brand">Marca</span>
+          <span class="ig-chip ig-chip--success ig-chip--dot">Pagado</span><span class="ig-chip ig-chip--warning ig-chip--dot">Sin pagar</span>
+          <span class="ig-chip ig-chip--danger ig-chip--dot">Cancelada</span><span class="ig-chip ig-chip--info ig-chip--dot">Nuevo</span>
+          <button class="ig-chip" type="button" aria-pressed="false">Filtro</button><button class="ig-chip" type="button" aria-pressed="true">Seleccionado</button>
+          <span class="ig-delta ig-delta--up"><svg class="ig-icon"><use href="#i-up"/></svg>73,6% más</span>
+          <span class="ig-delta ig-delta--down"><svg class="ig-icon"><use href="#i-down"/></svg>12% menos</span><span class="ig-delta">Sin cambios</span>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Control segmentado y menú</h3>
+        <div class="doc-demo">
+          <div class="ig-segmented" aria-label="Periodo">
+            <button class="ig-segmented__btn" type="button" aria-selected="false">Hoy</button>
+            <button class="ig-segmented__btn" type="button" aria-selected="true">Semana</button>
+            <button class="ig-segmented__btn" type="button" aria-selected="false">Mes</button>
+          </div>
+          <div class="ig-segmented ig-segmented--accent" aria-label="Vista">
+            <button class="ig-segmented__btn" type="button" aria-selected="true">Día</button>
+            <button class="ig-segmented__btn" type="button" aria-selected="false">Mes</button>
+          </div>
+          <div class="ig-menu-wrap">
+            <button class="ig-select-chip" type="button"><span data-ig-label>Semanal</span><svg class="ig-icon ig-icon--sm"><use href="#i-chevron-down"/></svg></button>
+            <div class="ig-menu">
+              <button class="ig-menu__item" type="button" data-value="d" aria-checked="false">Diario<svg class="ig-icon ig-icon--sm"><use href="#i-check"/></svg></button>
+              <button class="ig-menu__item" type="button" data-value="w" aria-checked="true">Semanal<svg class="ig-icon ig-icon--sm"><use href="#i-check"/></svg></button>
+              <button class="ig-menu__item" type="button" data-value="m" aria-checked="false">Mensual<svg class="ig-icon ig-icon--sm"><use href="#i-check"/></svg></button>
+            </div>
+          </div>
+          <span class="ig-muted" id="segOut">El selector se desliza con resorte; usa ← →.</span>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Interruptor, casillas y campos</h3>
+        <div class="doc-grid doc-grid--2">
+          <div class="doc-demo doc-demo--col">
+            <label class="ig-check"><span class="ig-switch"><input type="checkbox" checked /><span class="ig-switch__track"></span></span>Recordatorios por WhatsApp</label>
+            <label class="ig-check"><input type="checkbox" checked />Mostrar cobros pendientes</label>
+            <label class="ig-check"><input type="radio" name="r" checked />Atención al cliente</label>
+            <label class="ig-check"><input type="radio" name="r" />Asistente del dueño</label>
+          </div>
+          <div class="doc-demo doc-demo--col">
+            <div class="ig-field"><label class="ig-label" for="f1">Nombre del cliente</label><input class="ig-input" id="f1" placeholder="Ej. Rosa León" /></div>
+            <div class="ig-field" id="f2wrap"><label class="ig-label" for="f2">Monto (USD)</label><input class="ig-input" id="f2" inputmode="decimal" placeholder="0,00" /><span class="ig-help" id="f2help">Escribe un valor para validarlo.</span></div>
+            <label class="ig-search"><svg class="ig-icon"><use href="#i-search"/></svg><input class="ig-input" placeholder="Buscar por nombre o teléfono" aria-label="Buscar" /></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Tarjetas</h3>
+        <div class="doc-grid doc-grid--2">
+          <div class="ig-card"><div class="ig-card__head"><span class="ig-card__title">Estándar</span><span class="ig-chip">Nuevo</span></div><p class="ig-muted">Blanca, esquinas de 32 px, sombra suave.</p></div>
+          <div class="ig-card ig-card--interactive" tabindex="0"><div class="ig-card__head"><span class="ig-card__title">Interactiva</span><button class="ig-arrow-btn ig-arrow-btn--sm" type="button" aria-label="Abrir"><svg class="ig-icon"><use href="#i-arrow-ur"/></svg></button></div><p class="ig-muted">Se eleva al pasar el cursor.</p></div>
+          <div class="ig-card ig-card--brand"><span class="ig-card__title">Tono de marca</span><p class="ig-muted">Para ayudas y recomendaciones.</p></div>
+          <div class="ig-card ig-card--tonal"><span class="ig-card__title">Tonal</span><p class="ig-muted">Para agrupar dentro de otra tarjeta.</p></div>
+          <div class="ig-card ig-card--highlight ig-spark"><div class="ig-stat"><span class="ig-stat__label">Destacada</span><span class="ig-stat__value">Lima</span></div></div>
+          <div class="ig-card ig-card--inverse ig-spark"><div class="ig-stat"><span class="ig-stat__label">Inversa</span><span class="ig-stat__value">Verde 900</span></div></div>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Dato destacado con contador</h3>
+        <div class="doc-demo" style="gap:var(--ig-space-8)">
+          <div class="ig-stat"><span class="ig-stat__label">Cobrado este mes</span><span class="ig-stat__value" id="countA">$0</span><span class="ig-delta ig-delta--up" style="width:fit-content"><svg class="ig-icon"><use href="#i-up"/></svg>18% más que el mes pasado</span></div>
+          <div class="ig-stat"><span class="ig-stat__label">Citas</span><span class="ig-stat__value" id="countB">0</span><span class="ig-stat__note">Mes pasado: 41</span></div>
+          <button class="ig-btn ig-btn--secondary ig-btn--sm" type="button" id="replayCount">Repetir animación</button>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Progreso, anillo e indicador</h3>
+        <div class="doc-grid doc-grid--3">
+          <div class="ig-card"><div class="ig-card__head"><span class="ig-card__title">Lineal</span></div><div class="ig-progress"><span class="ig-progress__fill" id="progFill" style="--_v:0%"></span></div><p class="ig-muted" style="margin-top:12px">Meta del mes: <b id="progText">0%</b></p></div>
+          <div class="ig-card" style="display:grid;place-items:center;gap:8px"><span class="ig-card__title">Anillo</span><div id="ringDemo"></div></div>
+          <div class="ig-card"><div class="ig-card__head"><span class="ig-card__title">Balance</span></div><div id="gaugeDemo"></div>
+            <label class="ig-label" for="gaugeRange" style="display:block;margin-top:8px">Probar valor</label><input id="gaugeRange" type="range" min="0" max="100" value="22" style="width:100%;accent-color:var(--ig-green-600)" /></div>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Gráficos</h3>
+        <p>Barras redondeadas con selección, línea suave con cursor y matriz de puntos. Sin rejillas: el valor se lee al tocar.</p>
+        <div class="doc-grid doc-grid--2">
+          <div class="ig-card"><div class="ig-card__head"><span class="ig-card__title">Ingresos por mes</span><span class="ig-chip ig-chip--success">+73,6%</span></div><div id="barsDemo"></div></div>
+          <div class="ig-card"><div class="ig-card__head"><span class="ig-card__title">Ingresos y gastos</span></div><div id="lineDemo"></div><div class="ig-legend" style="margin-top:12px"><span><i style="background:var(--ig-data-1)"></i>Ingresos</span><span><i style="background:var(--ig-data-2)"></i>Gastos</span></div></div>
+          <div class="ig-card" style="grid-column:1/-1"><div class="ig-card__head"><span class="ig-card__title">Gastos por categoría y día</span></div><div id="matrixDemo"></div><div class="ig-legend" style="margin-top:14px"><span><i style="background:var(--ig-data-heat-0)"></i>Nada</span><span><i style="background:var(--ig-data-heat-1)"></i>Poco</span><span><i style="background:var(--ig-data-heat-2)"></i>Medio</span><span><i style="background:var(--ig-data-heat-3)"></i>Mucho</span></div></div>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Filas, avatares y acciones</h3>
+        <div class="doc-grid doc-grid--2">
+          <ul class="ig-list" id="rowsDemo">
+            <li class="ig-row"><span class="ig-avatar">RL</span><span class="ig-row__main"><span class="ig-row__title">Rosa León</span><span class="ig-row__meta">Tinte completo · 31 jul</span></span><span class="ig-row__end"><span class="ig-row__actions"><button class="ig-round-btn ig-round-btn--ok" type="button" aria-label="Marcar como cobrado"><svg class="ig-icon ig-icon--sm"><use href="#i-check"/></svg></button><button class="ig-round-btn ig-round-btn--no" type="button" aria-label="Descartar"><svg class="ig-icon ig-icon--sm"><use href="#i-x"/></svg></button></span><span class="ig-amount ig-amount--pos">+$17,50</span></span></li>
+            <li class="ig-row"><span class="ig-avatar ig-avatar--accent">MV</span><span class="ig-row__main"><span class="ig-row__title">Compra de tintes</span><span class="ig-row__meta">Insumos · hoy</span></span><span class="ig-row__end"><span class="ig-amount ig-amount--neg">−$84,50</span></span></li>
+            <li class="ig-row"><span class="ig-avatar ig-avatar--dark">JP</span><span class="ig-row__main"><span class="ig-row__title">Julián Paredes</span><span class="ig-row__meta">Corte de cabello · ayer</span></span><span class="ig-row__end"><span class="ig-chip ig-chip--success ig-chip--dot">Pagado</span></span></li>
+          </ul>
+          <div class="doc-demo doc-demo--col" style="justify-content:center">
+            <div style="display:flex;align-items:center;gap:16px"><span class="ig-avatar ig-avatar--sm">E</span><span class="ig-avatar">EA</span><span class="ig-avatar ig-avatar--lg ig-avatar--accent">EA</span><span class="ig-avatar-group"><span class="ig-avatar ig-avatar--sm">A</span><span class="ig-avatar ig-avatar--sm ig-avatar--accent">B</span><span class="ig-avatar ig-avatar--sm ig-avatar--dark">C</span><span class="ig-avatar ig-avatar--sm">+4</span></span></div>
+            <p class="ig-muted" style="margin:0">Los importes llevan signo (+ / −) además de color. Las acciones aparecen al pasar el cursor y siempre visibles en pantallas táctiles.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Navegación</h3>
+        <div class="doc-grid doc-grid--2">
+          <div class="ig-sidebar" id="sidebarDemo">
+            <a class="ig-nav-item" href="#componentes" aria-current="page"><svg class="ig-icon"><use href="#i-home"/></svg>Inicio</a>
+            <a class="ig-nav-item" href="#componentes"><svg class="ig-icon"><use href="#i-calendar"/></svg>Calendario</a>
+            <a class="ig-nav-item" href="#componentes"><svg class="ig-icon"><use href="#i-users"/></svg>Clientes</a>
+            <a class="ig-nav-item" href="#componentes"><svg class="ig-icon"><use href="#i-wallet"/></svg>Dinero</a>
+            <a class="ig-nav-item" href="#componentes"><svg class="ig-icon"><use href="#i-receipt"/></svg>Facturar<span class="ig-chip">Pronto</span></a>
+          </div>
+          <div class="phone"><div class="phone__body"><span class="ig-eyebrow">Barra inferior móvil</span><p class="ig-muted" style="margin:0">Pegada al borde con esquinas superiores curvas. La sección activa es un cuadrado redondeado, no una píldora.</p></div>
+            <nav class="ig-tabbar" id="tabbarDemo" aria-label="Demostración">
+              <a class="ig-tabbar__item" href="#componentes" aria-current="page"><span class="ig-tabbar__icon"><svg class="ig-icon"><use href="#i-home"/></svg></span>Inicio</a>
+              <a class="ig-tabbar__item" href="#componentes"><span class="ig-tabbar__icon"><svg class="ig-icon"><use href="#i-calendar"/></svg></span>Calendario</a>
+              <a class="ig-tabbar__item" href="#componentes"><span class="ig-tabbar__icon"><svg class="ig-icon"><use href="#i-users"/></svg></span>Clientes</a>
+              <a class="ig-tabbar__item" href="#componentes"><span class="ig-tabbar__icon"><svg class="ig-icon"><use href="#i-wallet"/></svg></span>Dinero</a>
+            </nav></div>
+        </div>
+        <div class="doc-demo"><div class="ig-tabs" role="tablist" id="tabsDemo"><button class="ig-tab" role="tab" type="button" aria-selected="true">Resumen</button><button class="ig-tab" role="tab" type="button" aria-selected="false">Ingresos</button><button class="ig-tab" role="tab" type="button" aria-selected="false">Gastos</button><button class="ig-tab" role="tab" type="button" aria-selected="false">Calendario</button></div></div>
+      </div>
+
+      <div class="doc-sub"><h3>Diálogo, hoja inferior y avisos</h3>
+        <div class="doc-demo">
+          <button class="ig-btn ig-btn--primary" type="button" id="openDialog">Abrir diálogo</button>
+          <button class="ig-btn" type="button" id="openSheet">Abrir hoja (móvil)</button>
+          <button class="ig-btn ig-btn--secondary" type="button" id="toastOk">Aviso de éxito</button>
+          <button class="ig-btn ig-btn--danger" type="button" id="toastErr">Aviso de error</button>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Estados vacíos y carga</h3>
+        <div class="doc-grid doc-grid--2">
+          <div class="ig-card"><div class="ig-empty"><div class="ig-empty__art"><svg class="ig-icon"><use href="#i-calendar"/></svg></div><h3>Sin citas este día</h3><p>Aquí verás tus citas ordenadas por hora.</p><button class="ig-btn ig-btn--secondary ig-btn--sm" type="button">Ir a la próxima cita</button></div></div>
+          <div class="ig-card" style="display:grid;gap:12px"><span class="ig-skeleton" style="width:40%"></span><span class="ig-skeleton" style="height:46px;border-radius:20px"></span><span class="ig-skeleton" style="height:46px;border-radius:20px"></span><span class="ig-skeleton" style="width:60%"></span></div>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Semana y línea de tiempo</h3>
+        <div class="doc-grid doc-grid--2" style="align-items:start">
+          <div style="display:grid;gap:16px"><div class="ig-week" id="weekDemo"></div><p class="ig-muted" style="margin:0">Toca un día. Los días con citas llevan un punto.</p></div>
+          <ol class="ig-timeline">
+            <li class="ig-timeline__item ig-timeline__item--now"><span class="ig-timeline__node"></span><button class="ig-timeline__card" type="button"><span style="display:flex;justify-content:space-between;gap:8px"><b>Julián Paredes</b><span class="ig-eyebrow" style="color:var(--ig-lime-300)">09:00</span></span><span style="opacity:.8;font-size:14px">Corte de cabello · 60 min</span></button></li>
+            <li class="ig-timeline__item"><span class="ig-timeline__node"></span><button class="ig-timeline__card" type="button"><span style="display:flex;justify-content:space-between;gap:8px"><b>Esteban Andrade</b><span class="ig-eyebrow">10:30</span></span><span class="ig-muted" style="font-size:14px">Corte de cabello · 60 min</span></button></li>
+            <li class="ig-timeline__item"><span class="ig-timeline__node"></span><button class="ig-timeline__card" type="button"><span style="display:flex;justify-content:space-between;gap:8px"><b>Marcela Vinueza</b><span class="ig-eyebrow">12:00</span></span><span class="ig-muted" style="font-size:14px">Tinte completo · 90 min</span></button></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="doc-sub"><h3>Banner con acción</h3>
+        <div class="ig-banner"><span class="ig-blob"></span><div style="position:relative"><span class="ig-chip ig-chip--accent" style="background:var(--ig-lime-300);color:var(--ig-gray-900);margin-bottom:12px">Nuevo</span><h4 class="ig-banner__title" style="margin:0">Activa tu <em>asistente</em> de WhatsApp</h4></div><button class="ig-arrow-btn" type="button" aria-label="Activar"><svg class="ig-icon ig-icon--lg"><use href="#i-arrow-ur"/></svg></button></div>
+      </div>
+    </section>
+
+    <!-- ============ Patrón ============ -->
+    <section class="doc-section" id="patron">
+      <h2>Patrón · Inicio financiero</h2>
+      <p class="lead">Vista previa de cómo se ve el panel armado solo con piezas del sistema, siguiendo la referencia pero con nuestra cromática. Es lo que construiremos después de aprobar el sistema.</p>
+      <div class="dash">
+        <aside class="dash-side">
+          <div class="doc-brand" style="padding:var(--ig-space-3)"><img src="../images/logo-iguana.webp" alt="Iguana" style="width:auto;height:30px;border-radius:0" /></div>
+          <h3>Hola,<br>Esteban</h3>
+          <p class="ig-muted" style="margin:0 var(--ig-space-3) var(--ig-space-2)">Resumen de hoy, martes 6 de octubre.</p>
+          <nav style="display:grid;gap:2px" aria-label="Demostración">
+            <a class="ig-nav-item" href="#patron" aria-current="page"><svg class="ig-icon"><use href="#i-home"/></svg>Inicio</a>
+            <a class="ig-nav-item" href="#patron"><svg class="ig-icon"><use href="#i-calendar"/></svg>Calendario</a>
+            <a class="ig-nav-item" href="#patron"><svg class="ig-icon"><use href="#i-users"/></svg>Clientes</a>
+            <a class="ig-nav-item" href="#patron"><svg class="ig-icon"><use href="#i-wallet"/></svg>Dinero</a>
+            <a class="ig-nav-item" href="#patron"><svg class="ig-icon"><use href="#i-bot"/></svg>Asistente IA</a>
+          </nav>
+          <div class="promo ig-spark"><strong>Tu asistente atiende por WhatsApp</strong><span style="position:relative;font-size:13px">Responde y agenda por ti, 24/7.</span><button class="ig-btn ig-btn--primary ig-btn--sm" type="button" style="width:fit-content;position:relative">Abrir chat</button></div>
+        </aside>
+        <div class="dash-main">
+          <div class="dash-top">
+            <div class="ig-tabs" role="tablist" id="dashTabs"><button class="ig-tab" role="tab" type="button" aria-selected="true">Inicio</button><button class="ig-tab" role="tab" type="button" aria-selected="false">Ingresos</button><button class="ig-tab" role="tab" type="button" aria-selected="false">Gastos</button></div>
+            <div style="display:flex;align-items:center;gap:8px"><button class="ig-round-btn" type="button" aria-label="Notificaciones"><svg class="ig-icon ig-icon--sm"><use href="#i-bell"/></svg></button><span class="ig-avatar ig-avatar--accent">EA</span></div>
+          </div>
+          <div class="dash-grid">
+            <article class="ig-card c-7"><div class="ig-card__head"><span class="ig-eyebrow">Tu próxima cita · hoy · en 29 min</span><span class="ig-chip ig-chip--warning ig-chip--dot">Sin pagar</span></div>
+              <div class="dash-big"><div style="display:flex;align-items:center;gap:20px;min-width:0"><span class="ig-display" style="font-size:56px">09:00</span><div style="min-width:0"><h3 style="margin:0;font-size:22px;letter-spacing:-.02em">Julián Paredes</h3><span class="ig-muted">Corte de cabello · 60 min</span></div></div><button class="ig-arrow-btn" type="button" aria-label="Ver detalle"><svg class="ig-icon ig-icon--lg"><use href="#i-arrow-ur"/></svg></button></div>
+              <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap"><button class="ig-btn ig-btn--primary" type="button">Ver detalle</button><button class="ig-btn" type="button"><svg class="ig-icon"><use href="#i-chat"/></svg>WhatsApp</button></div></article>
+            <article class="ig-card ig-card--highlight ig-spark c-5"><div class="ig-card__head"><span class="ig-eyebrow" style="color:rgba(18,27,22,.7)">Cobrado hoy</span><span class="ig-delta ig-delta--up" style="background:#fff"><svg class="ig-icon"><use href="#i-up"/></svg>18% más que ayer</span></div>
+              <div class="ig-stat ig-stat--xl"><span class="ig-stat__value" id="dashToday">$0</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px"><div class="ig-card ig-card--tonal" style="background:rgba(255,255,255,.55);padding:12px 16px;border-radius:22px"><span class="ig-stat__label">Gastado hoy</span><br><b style="font-size:20px">$14,80</b></div><div class="ig-card ig-card--tonal" style="background:rgba(255,255,255,.55);padding:12px 16px;border-radius:22px"><span class="ig-stat__label">Por cobrar</span><br><b style="font-size:20px">$116,00</b></div></div></article>
+
+            <article class="ig-card c-4"><div class="ig-card__head"><span class="ig-card__title">Gastos por día</span><div class="ig-menu-wrap"><button class="ig-select-chip" type="button"><span data-ig-label>Semanal</span><svg class="ig-icon ig-icon--sm"><use href="#i-chevron-down"/></svg></button><div class="ig-menu ig-menu--right"><button class="ig-menu__item" data-value="w" type="button" aria-checked="true">Semanal<svg class="ig-icon ig-icon--sm"><use href="#i-check"/></svg></button><button class="ig-menu__item" data-value="m" type="button" aria-checked="false">Mensual<svg class="ig-icon ig-icon--sm"><use href="#i-check"/></svg></button></div></div></div><div id="dashMatrix"></div></article>
+            <article class="ig-card c-8"><div class="ig-card__head"><span class="ig-card__title">Ingresos del mes</span><span class="ig-delta ig-delta--up"><svg class="ig-icon"><use href="#i-up"/></svg>73,6% más que el mes pasado</span></div><div id="dashBars"></div></article>
+
+            <article class="ig-card c-6"><div class="ig-card__head"><span class="ig-card__title">Por cobrar</span><a class="ig-link" href="#patron">Ver todo</a></div>
+              <ul class="ig-list"><li class="ig-row"><span class="ig-avatar">RL</span><span class="ig-row__main"><span class="ig-row__title">Rosa León</span><span class="ig-row__meta">Tinte completo · 31 jul</span></span><span class="ig-row__end"><span class="ig-row__actions"><button class="ig-round-btn ig-round-btn--ok" type="button" aria-label="Cobrar"><svg class="ig-icon ig-icon--sm"><use href="#i-check"/></svg></button></span><span class="ig-amount">$17,50</span></span></li><li class="ig-row"><span class="ig-avatar">MV</span><span class="ig-row__main"><span class="ig-row__title">Marcela Vinueza</span><span class="ig-row__meta">Corte de cabello · 8 ago</span></span><span class="ig-row__end"><span class="ig-row__actions"><button class="ig-round-btn ig-round-btn--ok" type="button" aria-label="Cobrar"><svg class="ig-icon ig-icon--sm"><use href="#i-check"/></svg></button></span><span class="ig-amount">$7,00</span></span></li></ul></article>
+            <article class="ig-card c-6"><div class="ig-card__head"><span class="ig-card__title">Balance del mes</span></div><div id="dashGauge"></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Accesibilidad ============ -->
+    <section class="doc-section" id="accesibilidad">
+      <h2>Accesibilidad</h2>
+      <p class="lead">Se valida con cada cambio de token. Lo mínimo que cumple todo componente:</p>
+      <ul class="checklist">
+        <li><svg class="ig-icon"><use href="#i-check"/></svg>Texto con contraste ≥ 4,5:1 y controles/gráficos ≥ 3:1 (ver “Pares aprobados”).</li>
+        <li><svg class="ig-icon"><use href="#i-check"/></svg>El color nunca va solo: estados, deltas e importes llevan icono, signo o palabra.</li>
+        <li><svg class="ig-icon"><use href="#i-check"/></svg>Zonas táctiles de 44 px o más y 8 px entre ellas.</li>
+        <li><svg class="ig-icon"><use href="#i-check"/></svg>Foco visible con resplandor suave y contorno; todo se maneja con teclado (flechas en selectores, menús y gráficos).</li>
+        <li><svg class="ig-icon"><use href="#i-check"/></svg>Se respeta <code>prefers-reduced-motion</code>: las animaciones pasan a cambios instantáneos.</li>
+        <li><svg class="ig-icon"><use href="#i-check"/></svg>Campos con etiqueta visible, ayuda y error con icono y texto, 16 px mínimo en móvil.</li>
+      </ul>
+    </section>
+
+    <!-- ============ Uso ============ -->
+    <section class="doc-section" id="uso">
+      <h2>Cómo usarlo</h2>
+      <p class="lead">Tres archivos y una clase. Funciona en cualquier app, sin compilar nada.</p>
+      <pre class="doc-code">&lt;link rel="stylesheet" href="design-system/<b>tokens.css</b>"&gt;
+&lt;link rel="stylesheet" href="design-system/<b>components.css</b>"&gt;
+&lt;script src="design-system/<b>ig.js</b>" defer&gt;&lt;/script&gt;
+
+&lt;body class="<b>ig-root</b>"&gt;   <i>&lt;!-- fuente, color de fondo y texto --&gt;</i></pre>
+      <div class="doc-grid doc-grid--3">
+        <div class="ig-card"><h3>Reglas</h3><p class="ig-muted">Usa solo tokens <code>--ig-color-*</code> en tus estilos. Si necesitas un color nuevo, se agrega al sistema, no a tu pantalla.</p></div>
+        <div class="ig-card"><h3>Otras apps</h3><p class="ig-muted"><code>tokens.json</code> se genera con <code>node design-system/export-tokens.mjs</code> a partir de <code>tokens.css</code>, para llevarlo a Figma, React Native o Flutter.</p></div>
+        <div class="ig-card"><h3>Siguientes pasos</h3><p class="ig-muted">Modo oscuro (mismos tokens semánticos), componentes de formulario avanzados y sincronía con Figma.</p></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Diálogos de demostración -->
+<dialog class="ig-dialog" id="dlg" aria-labelledby="dlgT">
+  <div class="ig-dialog__head"><div><p class="ig-eyebrow">Cita</p><h2 id="dlgT" style="margin:0">Julián Paredes</h2></div><button class="ig-round-btn" type="button" data-close aria-label="Cerrar"><svg class="ig-icon ig-icon--sm"><use href="#i-x"/></svg></button></div>
+  <div class="ig-dialog__body"><p class="ig-muted">Martes 6 de octubre · 09:00 – 10:00<br>Corte de cabello · <span class="ig-chip ig-chip--warning ig-chip--dot">Sin pagar</span></p></div>
+  <div class="ig-dialog__foot"><button class="ig-btn ig-btn--danger" type="button" data-close>Cancelar cita</button><button class="ig-btn ig-btn--primary" type="button" data-close>Registrar pago</button></div>
+</dialog>
+<dialog class="ig-dialog ig-dialog--sheet" id="sheet" aria-labelledby="sheetT">
+  <span class="ig-dialog__grab" aria-hidden="true"></span>
+  <div class="ig-dialog__head"><h2 id="sheetT" style="margin:0">Registrar gasto</h2><button class="ig-round-btn" type="button" data-close aria-label="Cerrar"><svg class="ig-icon ig-icon--sm"><use href="#i-x"/></svg></button></div>
+  <div class="ig-dialog__body" style="display:grid;gap:14px"><div class="ig-field"><label class="ig-label" for="s1">Descripción</label><input class="ig-input" id="s1" placeholder="Ej. Productos de limpieza" /></div><div class="ig-field"><label class="ig-label" for="s2">Monto (USD)</label><input class="ig-input" id="s2" placeholder="0,00" /></div></div>
+  <div class="ig-dialog__foot"><button class="ig-btn" type="button" data-close>Cancelar</button><button class="ig-btn ig-btn--primary" type="button" data-close>Guardar gasto</button></div>
+</dialog>
+
+</body>
+</html>
