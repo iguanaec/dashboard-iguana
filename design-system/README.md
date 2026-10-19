@@ -1,4 +1,4 @@
-# Iguana Design System · v0.1.0
+# Iguana Design System · v0.2.0
 
 Sistema de diseño reutilizable de Iguana: **claro, redondeado y sin líneas rectas**.
 Funciona en cualquier app web sin compilar nada.
@@ -39,7 +39,7 @@ Los iconos están en el sprite de `index.html`; cópialos a tu página para usar
 
 ## Cromática
 
-Verde Iguana `#0C7A3E` como ancla; lima `#C6F36E` como resalte; neutros "mist" (grises con toque verde, sin beige ni café);
+Verde lima Iguana `#A8FF6C` como color principal (botones, activo, destacado, siempre con tinta oscura); verdes 600/700 para texto e iconos sobre blanco y 900 para superficies oscuras; neutros "mist" (grises con toque verde, sin beige ni café);
 rojo, ámbar y azul con valores estándar y siempre acompañados de texto o icono.
 Ingresos en verde y gastos en grafito, para reservar el rojo al error.
 Todos los pares de texto/fondo y controles cumplen WCAG 2.1 AA (la tabla "Pares aprobados" de la documentación lo calcula en vivo).

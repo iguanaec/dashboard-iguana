@@ -15,6 +15,7 @@ const js = ['ig.js', 'docs.js'].map(read).join('\n;\n');
 html = html
   .replace(/<link rel="stylesheet" href="(tokens|components|docs)\.css" \/>\n?/g, '')
   .replace(/<script src="(ig|docs)\.js" defer><\/script>\n?/g, '')
+  .replace('<script src="icons.js"></script>', () => `<script>\n${read('icons.js')}\n</script>`)
   .replace('</head>', () => `<style>\n${css}\n</style>\n</head>`)
   .replace('</body>', () => `<script>\n${js.replace(/<\/script/gi, '<\\/script')}\n</script>\n</body>`)
   .replace('href="../images/favicon-32.png"', () => `href="${b64('../images/favicon-32.png', 'image/png')}"`)

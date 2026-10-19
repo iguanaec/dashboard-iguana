@@ -9,6 +9,8 @@ Abre `index.html` con doble clic. No necesitas instalar nada ni tener servidor.
 Funciona con **datos de ejemplo** (`demo-api.js`): no usa ninguna API y nada se guarda; al recargar todo vuelve al inicio.
 Solo necesitas internet para cargar la fuente y el calendario.
 
+¿Prefieres un solo archivo? `panel-iguana.html` trae todo embebido (estilos, scripts, imágenes). Se regenera con `node build-demo.mjs`.
+
 Vistas especiales, agregando esto al final de la dirección del archivo:
 
 | Dirección | Qué muestra |
@@ -22,14 +24,16 @@ Vistas especiales, agregando esto al final de la dirección del archivo:
 | Archivo | Qué contiene |
 | --- | --- |
 | `index.html` | Estructura: acceso, navegación, vistas y diálogos |
-| `styles.css` | Estilo claro, tokens de color/espacio y diseño responsive |
+| `styles.css` | Estilos propios del panel, construidos sobre el design system |
+| `design-system/` | Iguana Design System: tokens, componentes, iconos y documentación (ver su README) |
+| `panel-iguana.html` | El panel completo en un solo archivo (generado) |
 | `app.js` | Lógica de la interfaz |
 | `demo-api.js` | Datos de ejemplo que reemplazan a la API (solo para diseño) |
 | `images/` | Logo y íconos de Iguana (tomados de iguana.ec) |
 
 ## Botón flotante de WhatsApp
 
-El botón verde abajo a la derecha abre el chat del asistente en WhatsApp. El número está al inicio de `app.js`
+El botón verde lima abajo a la derecha abre el chat del asistente en WhatsApp. El número está al inicio de `app.js`
 (`ASSISTANT_WHATSAPP`); también puedes definir `window.ASSISTANT_WHATSAPP_NUMBER` antes de cargar `app.js`.
 Ejemplo con código de país y sin signos: `593959420676`.
 

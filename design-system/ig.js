@@ -1,5 +1,5 @@
 /* =========================================================
-   Iguana Design System — comportamientos  ·  v0.1.0
+   Iguana Design System — comportamientos  ·  v0.2.0
    JavaScript sin dependencias. Expone window.IG.
    Todo respeta prefers-reduced-motion y funciona con teclado.
    ========================================================= */
@@ -232,6 +232,56 @@
     window.addEventListener('resize', function () { show(active); });
   }
 
+  /* ---------- Línea mínima (sparkline) con punto final ---------- */
+  function trend(root, config) {
+    var W = 320, H = config.height || 96, pad = 10;
+    var values = config.values;
+    var labels = config.labels || values.map(function (v, i) { return String(i + 1); });
+    var color = config.color || cssVar('--ig-data-1');
+    var format = config.format || function (n) { return money.format(n); };
+    var max = Math.max.apply(null, values.concat([1])) * 1.1;
+    var x = function (i) { return pad + (values.length === 1 ? (W - pad * 2) / 2 : (i * (W - pad * 2)) / (values.length - 1)); };
+    var y = function (v) { return pad + (1 - v / max) * (H - pad * 2); };
+    var pts = values.map(function (v, i) { return { x: x(i), y: y(v) }; });
+    var id = 'ig-trend-' + (config.id || Math.random().toString(36).slice(2, 7));
+    var chart = svg('svg', { class: 'ig-trendline', viewBox: '0 0 ' + W + ' ' + H, role: 'img', tabindex: '0', 'aria-label': config.label || 'Tendencia' });
+    var gradient = svg('linearGradient', { id: id, x1: 0, y1: 0, x2: 0, y2: 1 });
+    gradient.append(svg('stop', { offset: '0%', 'stop-color': color, 'stop-opacity': config.fill == null ? '.35' : config.fill }), svg('stop', { offset: '100%', 'stop-color': color, 'stop-opacity': '0' }));
+    var defs = svg('defs'); defs.append(gradient);
+    var d = pts.length > 1 ? smoothPath(pts) : 'M' + pts[0].x + ',' + pts[0].y + ' L' + pts[0].x + ',' + pts[0].y;
+    chart.append(defs,
+      svg('path', { d: d + ' L' + pts[pts.length - 1].x + ',' + (H - pad) + ' L' + pts[0].x + ',' + (H - pad) + ' Z', fill: 'url(#' + id + ')' }),
+      svg('path', { d: d, fill: 'none', stroke: color, 'stroke-width': 3.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+    var dot = svg('circle', { r: 6, fill: config.dotFill || '#fff', stroke: color, 'stroke-width': 3.5 });
+    chart.append(dot);
+    var tip = el('div', { class: 'ig-tooltip', role: 'status' });
+    var active = values.length - 1;
+    function show(index) {
+      active = Math.max(0, Math.min(values.length - 1, index));
+      dot.setAttribute('cx', x(active)); dot.setAttribute('cy', y(values[active]));
+      tip.textContent = labels[active] + ' · ' + format(values[active]);
+      var box = chart.getBoundingClientRect();
+      var half = tip.offsetWidth / 2 + 4;
+      tip.style.left = Math.max(half, Math.min(box.width - half, (x(active) / W) * box.width)) + 'px';
+      tip.style.top = ((y(values[active]) / H) * box.height - 12) + 'px';
+      chart.setAttribute('aria-valuetext', tip.textContent);
+    }
+    chart.addEventListener('pointermove', function (event) {
+      var box = chart.getBoundingClientRect();
+      var vx = ((event.clientX - box.left) / box.width) * W;
+      show(Math.round(((vx - pad) / (W - pad * 2)) * (values.length - 1)));
+    });
+    chart.addEventListener('pointerleave', function () { show(values.length - 1); });
+    chart.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowRight') { event.preventDefault(); show(active + 1); }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); show(active - 1); }
+    });
+    root.replaceChildren(chart, tip);
+    root.classList.add('ig-chart');
+    requestAnimationFrame(function () { show(active); });
+    window.addEventListener('resize', function () { show(active); });
+  }
+
   /* ---------- Gauge en segmentos redondeados ---------- */
   function gauge(root, config) {
     var N = config.segments || 30, W = 260, H = 140, R = 112, cx = W / 2, cy = 128;
@@ -327,5 +377,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { auto(); });
   else auto();
 
-  window.IG = { segmented: segmented, menu: menu, countUp: countUp, bars: bars, line: line, gauge: gauge, ring: ring, matrix: matrix, toast: toast, auto: auto, money: function (n) { return money.format(n); } };
+  window.IG = { segmented: segmented, menu: menu, countUp: countUp, bars: bars, line: line, trend: trend, gauge: gauge, ring: ring, matrix: matrix, toast: toast, auto: auto, money: function (n) { return money.format(n); } };
 })();

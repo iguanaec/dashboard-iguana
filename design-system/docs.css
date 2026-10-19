@@ -8,7 +8,7 @@
 .doc-nav { display: grid; gap: 2px; }
 .doc-nav a { display: flex; align-items: center; min-height: 40px; padding: 0 var(--ig-space-4); border-radius: var(--ig-radius-md); color: var(--ig-color-text-muted); font-size: var(--ig-text-sm); font-weight: var(--ig-weight-semibold); text-decoration: none; transition: background var(--ig-dur-fast) var(--ig-ease-out), color var(--ig-dur-fast) var(--ig-ease-out); }
 .doc-nav a:hover { background: var(--ig-color-surface-tonal); color: var(--ig-color-text); }
-.doc-nav a[aria-current="true"] { background: var(--ig-color-action); color: #fff; }
+.doc-nav a[aria-current="true"] { background: var(--ig-color-action); color: var(--ig-color-action-text); }
 .doc-nav .doc-nav__group { margin: var(--ig-space-3) 0 var(--ig-space-1) var(--ig-space-4); }
 
 .doc-main { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ig-space-12); min-width: 0; }

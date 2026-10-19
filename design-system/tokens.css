@@ -1,5 +1,5 @@
 /* =========================================================
-   Iguana Design System — tokens  ·  v0.1.0
+   Iguana Design System — tokens  ·  v0.2.0
    Fuente única de verdad. Todo lo demás (components.css, tokens.json,
    la documentación) se alimenta de estas variables.
 
@@ -15,41 +15,43 @@
      1. PRIMITIVOS
      --------------------------------------------------------- */
 
-  /* Marca · verde Iguana (ancla #0C7A3E = 600) */
-  --ig-green-50:  #EDF7F1;
-  --ig-green-100: #D5EDDF;
-  --ig-green-200: #AEDBC2;
-  --ig-green-300: #7FC5A0;
-  --ig-green-400: #46A877;
-  --ig-green-500: #1F8F58;
-  --ig-green-600: #0C7A3E;
-  --ig-green-700: #0A6334;
-  --ig-green-800: #0B4D2B;
-  --ig-green-900: #0B3F24;
-  --ig-green-950: #072616;
+  /* Marca · verde lima Iguana (ancla #A8FF6C = 400).
+     Del 50 al 400 son fondos y resaltes; del 600 al 950, texto y superficies oscuras. */
+  --ig-green-50:  #F4FFEA;
+  --ig-green-100: #E6FFCF;
+  --ig-green-200: #CFFFA6;
+  --ig-green-300: #BDFF88;
+  --ig-green-400: #A8FF6C;   /* color principal */
+  --ig-green-500: #7FDB41;
+  --ig-green-600: #4EA11A;   /* ≥3:1 sobre blanco: iconos, gráficos, controles */
+  --ig-green-700: #38760F;   /* ≥4.5:1 sobre blanco: texto de marca, enlaces */
+  --ig-green-800: #29560C;
+  --ig-green-900: #17330B;   /* superficie oscura: hero, tarjeta inversa */
+  --ig-green-950: #0C1D06;
 
-  /* Resalte · lima (energía: solo para lo que hay que ver primero) */
-  --ig-lime-50:  #F6FDE3;
-  --ig-lime-100: #EAFAC4;
-  --ig-lime-200: #DAF59A;
-  --ig-lime-300: #C6F36E;
-  --ig-lime-400: #AEE24A;
-  --ig-lime-500: #93C92F;
+  /* Resalte · lima. Es la misma familia que el verde (alias): se conserva el nombre
+     para las tarjetas y botones que "hay que ver primero". */
+  --ig-lime-50:  var(--ig-green-50);
+  --ig-lime-100: var(--ig-green-100);
+  --ig-lime-200: var(--ig-green-200);
+  --ig-lime-300: var(--ig-green-400);
+  --ig-lime-400: var(--ig-green-500);
+  --ig-lime-500: var(--ig-green-600);
 
-  /* Neutros "mist": gris con un toque verde. Sin tonos beige ni café. */
+  /* Neutros "mist": gris con un toque lima. Sin tonos beige ni café. */
   --ig-gray-0:   #FFFFFF;
-  --ig-gray-25:  #F7FAF8;
-  --ig-gray-50:  #F1F5F2;
-  --ig-gray-100: #E7EDE9;
-  --ig-gray-200: #D5DEDA;
-  --ig-gray-300: #B7C4BE;
-  --ig-gray-400: #7C8B84;   /* ≥3:1 sobre blanco: bordes de controles */
-  --ig-gray-500: #5B6A63;   /* ≥4.5:1 sobre blanco, fondo y tonal */
-  --ig-gray-600: #4B5851;
-  --ig-gray-700: #34403A;
-  --ig-gray-800: #1F2A24;
-  --ig-gray-900: #121B16;
-  --ig-gray-950: #0B120E;
+  --ig-gray-25:  #F9FBF5;
+  --ig-gray-50:  #F2F6EC;
+  --ig-gray-100: #E7EDDF;
+  --ig-gray-200: #D6DFCB;
+  --ig-gray-300: #B9C5AD;
+  --ig-gray-400: #7B8871;   /* ≥3:1 sobre blanco: bordes de controles */
+  --ig-gray-500: #5A6651;   /* ≥4.5:1 sobre blanco, fondo y tonal */
+  --ig-gray-600: #4A5543;
+  --ig-gray-700: #353E30;
+  --ig-gray-800: #222A1E;
+  --ig-gray-900: #151B12;
+  --ig-gray-950: #0C100A;
 
   /* Semánticos que la gente ya reconoce en otras apps */
   --ig-red-50:  #FEECEC;   /* error · pérdida · eliminar */
@@ -86,8 +88,8 @@
   --ig-color-surface-soft:    var(--ig-gray-25);    /* campos, filas sobre blanco */
   --ig-color-surface-brand:   var(--ig-green-50);
   --ig-color-surface-inverse: var(--ig-green-900);  /* hero oscuro, botón principal */
-  --ig-color-surface-highlight: var(--ig-lime-300); /* tarjeta destacada */
-  --ig-color-scrim:           rgba(7, 38, 22, .55);
+  --ig-color-surface-highlight: var(--ig-green-400); /* tarjeta destacada */
+  --ig-color-scrim:           rgba(12, 29, 6, .55);
 
   /* Texto */
   --ig-color-text:            var(--ig-gray-900);
@@ -96,23 +98,25 @@
   --ig-color-text-inverse:    var(--ig-gray-0);
   --ig-color-text-on-highlight: var(--ig-gray-900);
   --ig-color-text-brand:      var(--ig-green-700);
-  --ig-color-link:            var(--ig-green-600);
+  --ig-color-link:            var(--ig-green-700);
 
   /* Marca y acciones */
   --ig-color-brand:           var(--ig-green-600);
   --ig-color-brand-hover:     var(--ig-green-700);
-  --ig-color-action:          var(--ig-green-900);   /* botón principal */
-  --ig-color-action-hover:    var(--ig-green-800);
-  --ig-color-action-text:     var(--ig-gray-0);
-  --ig-color-accent:          var(--ig-lime-300);    /* botón de resalte, seleccionado */
-  --ig-color-accent-hover:    var(--ig-lime-400);
+  --ig-color-action:          var(--ig-green-400);   /* botón principal: verde lima con tinta oscura */
+  --ig-color-action-hover:    var(--ig-green-500);
+  --ig-color-action-text:     var(--ig-gray-900);
+  --ig-color-action-dark:     var(--ig-green-900);   /* botón oscuro, sobre fondos lima */
+  --ig-color-action-dark-text: var(--ig-green-400);
+  --ig-color-accent:          var(--ig-green-400);   /* seleccionado, resalte */
+  --ig-color-accent-hover:    var(--ig-green-500);
 
   /* Controles */
   --ig-color-control-border:       var(--ig-gray-400);
   --ig-color-control-border-hover: var(--ig-gray-500);
   --ig-color-control-fill:         var(--ig-gray-25);
   --ig-color-control-off:          var(--ig-gray-400);
-  --ig-color-focus:                rgba(12, 122, 62, .35);
+  --ig-color-focus:                rgba(78, 161, 26, .38);
 
   /* Retroalimentación (siempre acompañada de icono o texto, nunca solo color) */
   --ig-color-success:         var(--ig-green-700);
@@ -131,7 +135,7 @@
   --ig-data-2: var(--ig-gray-800);    /* gastos, serie de contraste */
   --ig-data-3: var(--ig-teal-500);
   --ig-data-4: var(--ig-blue-500);
-  --ig-data-5: var(--ig-lime-300);    /* solo resalte, con contorno oscuro */
+  --ig-data-5: var(--ig-green-400);    /* solo resalte, con contorno oscuro */
   --ig-data-6: var(--ig-amber-400);   /* solo resalte, con contorno oscuro */
   --ig-data-track: var(--ig-gray-200);
   --ig-data-heat-0: var(--ig-gray-100);
@@ -153,9 +157,9 @@
   --ig-radius-blob: 62% 38% 54% 46% / 48% 56% 44% 52%;   /* formas orgánicas decorativas */
 
   /* Elevación: sombras suaves teñidas de verde, sin bordes duros */
-  --ig-shadow-1: 0 1px 2px rgba(11, 63, 36, .04), 0 4px 14px rgba(11, 63, 36, .06);
-  --ig-shadow-2: 0 2px 4px rgba(11, 63, 36, .04), 0 12px 32px rgba(11, 63, 36, .10);
-  --ig-shadow-3: 0 8px 16px rgba(11, 63, 36, .06), 0 28px 64px rgba(11, 63, 36, .18);
+  --ig-shadow-1: 0 1px 2px rgba(23, 51, 11, .04), 0 4px 14px rgba(23, 51, 11, .06);
+  --ig-shadow-2: 0 2px 4px rgba(23, 51, 11, .04), 0 12px 32px rgba(23, 51, 11, .10);
+  --ig-shadow-3: 0 8px 16px rgba(23, 51, 11, .06), 0 28px 64px rgba(23, 51, 11, .18);
   --ig-shadow-focus: 0 0 0 4px var(--ig-color-focus);
 
   /* Espaciado (base 4px) */

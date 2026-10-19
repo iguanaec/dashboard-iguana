@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 <style>
 /* =========================================================
-   Iguana Design System — tokens  ·  v0.1.0
+   Iguana Design System — tokens  ·  v0.2.0
    Fuente única de verdad. Todo lo demás (components.css, tokens.json,
    la documentación) se alimenta de estas variables.
 
@@ -28,41 +28,43 @@
      1. PRIMITIVOS
      --------------------------------------------------------- */
 
-  /* Marca · verde Iguana (ancla #0C7A3E = 600) */
-  --ig-green-50:  #EDF7F1;
-  --ig-green-100: #D5EDDF;
-  --ig-green-200: #AEDBC2;
-  --ig-green-300: #7FC5A0;
-  --ig-green-400: #46A877;
-  --ig-green-500: #1F8F58;
-  --ig-green-600: #0C7A3E;
-  --ig-green-700: #0A6334;
-  --ig-green-800: #0B4D2B;
-  --ig-green-900: #0B3F24;
-  --ig-green-950: #072616;
+  /* Marca · verde lima Iguana (ancla #A8FF6C = 400).
+     Del 50 al 400 son fondos y resaltes; del 600 al 950, texto y superficies oscuras. */
+  --ig-green-50:  #F4FFEA;
+  --ig-green-100: #E6FFCF;
+  --ig-green-200: #CFFFA6;
+  --ig-green-300: #BDFF88;
+  --ig-green-400: #A8FF6C;   /* color principal */
+  --ig-green-500: #7FDB41;
+  --ig-green-600: #4EA11A;   /* ≥3:1 sobre blanco: iconos, gráficos, controles */
+  --ig-green-700: #38760F;   /* ≥4.5:1 sobre blanco: texto de marca, enlaces */
+  --ig-green-800: #29560C;
+  --ig-green-900: #17330B;   /* superficie oscura: hero, tarjeta inversa */
+  --ig-green-950: #0C1D06;
 
-  /* Resalte · lima (energía: solo para lo que hay que ver primero) */
-  --ig-lime-50:  #F6FDE3;
-  --ig-lime-100: #EAFAC4;
-  --ig-lime-200: #DAF59A;
-  --ig-lime-300: #C6F36E;
-  --ig-lime-400: #AEE24A;
-  --ig-lime-500: #93C92F;
+  /* Resalte · lima. Es la misma familia que el verde (alias): se conserva el nombre
+     para las tarjetas y botones que "hay que ver primero". */
+  --ig-lime-50:  var(--ig-green-50);
+  --ig-lime-100: var(--ig-green-100);
+  --ig-lime-200: var(--ig-green-200);
+  --ig-lime-300: var(--ig-green-400);
+  --ig-lime-400: var(--ig-green-500);
+  --ig-lime-500: var(--ig-green-600);
 
-  /* Neutros "mist": gris con un toque verde. Sin tonos beige ni café. */
+  /* Neutros "mist": gris con un toque lima. Sin tonos beige ni café. */
   --ig-gray-0:   #FFFFFF;
-  --ig-gray-25:  #F7FAF8;
-  --ig-gray-50:  #F1F5F2;
-  --ig-gray-100: #E7EDE9;
-  --ig-gray-200: #D5DEDA;
-  --ig-gray-300: #B7C4BE;
-  --ig-gray-400: #7C8B84;   /* ≥3:1 sobre blanco: bordes de controles */
-  --ig-gray-500: #5B6A63;   /* ≥4.5:1 sobre blanco, fondo y tonal */
-  --ig-gray-600: #4B5851;
-  --ig-gray-700: #34403A;
-  --ig-gray-800: #1F2A24;
-  --ig-gray-900: #121B16;
-  --ig-gray-950: #0B120E;
+  --ig-gray-25:  #F9FBF5;
+  --ig-gray-50:  #F2F6EC;
+  --ig-gray-100: #E7EDDF;
+  --ig-gray-200: #D6DFCB;
+  --ig-gray-300: #B9C5AD;
+  --ig-gray-400: #7B8871;   /* ≥3:1 sobre blanco: bordes de controles */
+  --ig-gray-500: #5A6651;   /* ≥4.5:1 sobre blanco, fondo y tonal */
+  --ig-gray-600: #4A5543;
+  --ig-gray-700: #353E30;
+  --ig-gray-800: #222A1E;
+  --ig-gray-900: #151B12;
+  --ig-gray-950: #0C100A;
 
   /* Semánticos que la gente ya reconoce en otras apps */
   --ig-red-50:  #FEECEC;   /* error · pérdida · eliminar */
@@ -99,8 +101,8 @@
   --ig-color-surface-soft:    var(--ig-gray-25);    /* campos, filas sobre blanco */
   --ig-color-surface-brand:   var(--ig-green-50);
   --ig-color-surface-inverse: var(--ig-green-900);  /* hero oscuro, botón principal */
-  --ig-color-surface-highlight: var(--ig-lime-300); /* tarjeta destacada */
-  --ig-color-scrim:           rgba(7, 38, 22, .55);
+  --ig-color-surface-highlight: var(--ig-green-400); /* tarjeta destacada */
+  --ig-color-scrim:           rgba(12, 29, 6, .55);
 
   /* Texto */
   --ig-color-text:            var(--ig-gray-900);
@@ -109,23 +111,25 @@
   --ig-color-text-inverse:    var(--ig-gray-0);
   --ig-color-text-on-highlight: var(--ig-gray-900);
   --ig-color-text-brand:      var(--ig-green-700);
-  --ig-color-link:            var(--ig-green-600);
+  --ig-color-link:            var(--ig-green-700);
 
   /* Marca y acciones */
   --ig-color-brand:           var(--ig-green-600);
   --ig-color-brand-hover:     var(--ig-green-700);
-  --ig-color-action:          var(--ig-green-900);   /* botón principal */
-  --ig-color-action-hover:    var(--ig-green-800);
-  --ig-color-action-text:     var(--ig-gray-0);
-  --ig-color-accent:          var(--ig-lime-300);    /* botón de resalte, seleccionado */
-  --ig-color-accent-hover:    var(--ig-lime-400);
+  --ig-color-action:          var(--ig-green-400);   /* botón principal: verde lima con tinta oscura */
+  --ig-color-action-hover:    var(--ig-green-500);
+  --ig-color-action-text:     var(--ig-gray-900);
+  --ig-color-action-dark:     var(--ig-green-900);   /* botón oscuro, sobre fondos lima */
+  --ig-color-action-dark-text: var(--ig-green-400);
+  --ig-color-accent:          var(--ig-green-400);   /* seleccionado, resalte */
+  --ig-color-accent-hover:    var(--ig-green-500);
 
   /* Controles */
   --ig-color-control-border:       var(--ig-gray-400);
   --ig-color-control-border-hover: var(--ig-gray-500);
   --ig-color-control-fill:         var(--ig-gray-25);
   --ig-color-control-off:          var(--ig-gray-400);
-  --ig-color-focus:                rgba(12, 122, 62, .35);
+  --ig-color-focus:                rgba(78, 161, 26, .38);
 
   /* Retroalimentación (siempre acompañada de icono o texto, nunca solo color) */
   --ig-color-success:         var(--ig-green-700);
@@ -144,7 +148,7 @@
   --ig-data-2: var(--ig-gray-800);    /* gastos, serie de contraste */
   --ig-data-3: var(--ig-teal-500);
   --ig-data-4: var(--ig-blue-500);
-  --ig-data-5: var(--ig-lime-300);    /* solo resalte, con contorno oscuro */
+  --ig-data-5: var(--ig-green-400);    /* solo resalte, con contorno oscuro */
   --ig-data-6: var(--ig-amber-400);   /* solo resalte, con contorno oscuro */
   --ig-data-track: var(--ig-gray-200);
   --ig-data-heat-0: var(--ig-gray-100);
@@ -166,9 +170,9 @@
   --ig-radius-blob: 62% 38% 54% 46% / 48% 56% 44% 52%;   /* formas orgánicas decorativas */
 
   /* Elevación: sombras suaves teñidas de verde, sin bordes duros */
-  --ig-shadow-1: 0 1px 2px rgba(11, 63, 36, .04), 0 4px 14px rgba(11, 63, 36, .06);
-  --ig-shadow-2: 0 2px 4px rgba(11, 63, 36, .04), 0 12px 32px rgba(11, 63, 36, .10);
-  --ig-shadow-3: 0 8px 16px rgba(11, 63, 36, .06), 0 28px 64px rgba(11, 63, 36, .18);
+  --ig-shadow-1: 0 1px 2px rgba(23, 51, 11, .04), 0 4px 14px rgba(23, 51, 11, .06);
+  --ig-shadow-2: 0 2px 4px rgba(23, 51, 11, .04), 0 12px 32px rgba(23, 51, 11, .10);
+  --ig-shadow-3: 0 8px 16px rgba(23, 51, 11, .06), 0 28px 64px rgba(23, 51, 11, .18);
   --ig-shadow-focus: 0 0 0 4px var(--ig-color-focus);
 
   /* Espaciado (base 4px) */
@@ -235,7 +239,7 @@
 }
 
 /* =========================================================
-   Iguana Design System — componentes  ·  v0.1.0
+   Iguana Design System — componentes  ·  v0.2.0
    Requiere tokens.css. Prefijo ig-, nombres tipo BEM.
 
    Principios de forma
@@ -265,9 +269,14 @@
 .ig-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------- Icono ---------- */
-.ig-icon { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
-.ig-icon--sm { width: 16px; height: 16px; }
-.ig-icon--lg { width: 24px; height: 24px; }
+.ig-icon { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* Mancha de color de los iconos (ver icons.js). Sobre fondos lima pasa a un verde oscuro translúcido. */
+.ig-root { --ig-icon-tint: var(--ig-green-400); }
+.ig-btn--primary, .ig-btn--accent, .ig-arrow-btn, .ig-card--highlight, .ig-nav-item[aria-current="page"], .ig-tabbar__item[aria-current="page"] .ig-tabbar__icon,
+.ig-tab[aria-selected="true"], button.ig-chip[aria-pressed="true"], .ig-round-btn--ok, .ig-avatar--accent, .ig-toast__icon, .ig-week__day[aria-current="date"] { --ig-icon-tint: rgba(23, 51, 11, .2); }
+.ig-icon--sm { width: 18px; height: 18px; }
+.ig-icon--lg { width: 28px; height: 28px; }
+.ig-icon--xl { width: 56px; height: 56px; stroke-width: 1.8; }
 
 /* Anillo de foco: resplandor suave, nunca línea recta */
 .ig-root :focus-visible { outline: 2px solid var(--ig-color-brand); outline-offset: 2px; box-shadow: var(--ig-shadow-focus); border-radius: var(--ig-radius-sm); }
@@ -286,8 +295,9 @@
 .ig-btn:hover { background: var(--_bg-hover); transform: translateY(-1px); }
 .ig-btn:active { transform: scale(.97); transition-duration: var(--ig-dur-instant); }
 .ig-btn:disabled, .ig-btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; transform: none; }
-.ig-btn--primary   { --_bg: var(--ig-color-action); --_fg: var(--ig-color-action-text); --_bg-hover: var(--ig-color-action-hover); box-shadow: var(--ig-shadow-1); }
-.ig-btn--primary:hover { box-shadow: var(--ig-shadow-2); }
+.ig-btn--primary   { --_bg: var(--ig-color-action); --_fg: var(--ig-color-action-text); --_bg-hover: var(--ig-color-action-hover); box-shadow: 0 6px 16px rgba(78, 161, 26, .30); }
+.ig-btn--primary:hover { box-shadow: 0 10px 22px rgba(78, 161, 26, .38); }
+.ig-btn--dark      { --_bg: var(--ig-color-action-dark); --_fg: var(--ig-color-action-dark-text); --_bg-hover: var(--ig-green-800); box-shadow: var(--ig-shadow-1); }
 .ig-btn--accent    { --_bg: var(--ig-color-accent); --_fg: var(--ig-color-text-on-highlight); --_bg-hover: var(--ig-color-accent-hover); box-shadow: none; }
 .ig-btn--secondary { --_bg: var(--ig-color-surface-brand); --_fg: var(--ig-green-800); --_bg-hover: var(--ig-green-100); box-shadow: none; }
 .ig-btn--ghost     { --_bg: transparent; --_fg: var(--ig-color-text-muted); --_bg-hover: var(--ig-color-surface-tonal); box-shadow: none; }
@@ -299,7 +309,6 @@
 .ig-btn--block { width: 100%; }
 .ig-btn[aria-busy="true"] { pointer-events: none; color: transparent; }
 .ig-btn[aria-busy="true"]::after { content: ""; position: absolute; width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid var(--_fg); border-top-color: transparent; animation: ig-spin .7s linear infinite; }
-.ig-btn[aria-busy="true"].ig-btn--primary::after { border-color: #fff; border-top-color: transparent; }
 @keyframes ig-spin { to { transform: rotate(360deg); } }
 
 /* Botón flecha circular ↗ (el icono gira al pasar el cursor) */
@@ -417,7 +426,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 /* Motivo de marca: la chispa de 4 puntas con esquinas curvas */
 .ig-spark { overflow: clip; }
 .ig-spark::after { content: ""; position: absolute; right: -34px; top: -26px; width: 190px; height: 190px; background: rgba(255, 255, 255, .32); border-radius: 22%; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); pointer-events: none; }
-.ig-card--inverse.ig-spark::after { background: rgba(198, 243, 110, .10); }
+.ig-card--inverse.ig-spark::after { background: rgba(168, 255, 108, .12); }
 .ig-blob { position: absolute; border-radius: var(--ig-radius-blob); pointer-events: none; }
 
 .ig-link { padding: 8px 4px; color: var(--ig-color-link); font-size: var(--ig-text-sm); font-weight: var(--ig-weight-bold); text-decoration: none; }
@@ -451,6 +460,8 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 
 /* ---------- Gráficos ---------- */
 .ig-chart { position: relative; }
+.ig-trendline { display: block; width: 100%; height: auto; overflow: visible; }
+.ig-trendline:focus-visible { outline-offset: 4px; }
 .ig-bars { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--ig-space-3); height: 200px; }
 .ig-bar { position: relative; display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; height: 100%; min-width: 0; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
 .ig-bar__fill { display: block; width: 100%; max-width: 56px; height: calc(var(--_h, .3) * 100% - 28px); min-height: 14px; border-radius: 22px 22px 14px 14px; background: var(--ig-green-200); transition: height var(--ig-dur-slower) var(--ig-ease-spring), background var(--ig-dur-fast) var(--ig-ease-out), transform var(--ig-dur-fast) var(--ig-ease-out); }
@@ -549,7 +560,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 .ig-empty { display: grid; justify-items: center; gap: var(--ig-space-3); padding: var(--ig-space-8) var(--ig-space-5); text-align: center; color: var(--ig-color-text-muted); }
 .ig-empty__art { position: relative; display: grid; place-items: center; width: 120px; height: 104px; margin-bottom: var(--ig-space-2); color: var(--ig-color-brand); }
 .ig-empty__art::before { content: ""; position: absolute; inset: 0; border-radius: var(--ig-radius-blob); background: var(--ig-color-surface-brand); animation: ig-morph 8s var(--ig-ease-in-out) infinite alternate; }
-.ig-empty__art .ig-icon { position: relative; width: 40px; height: 40px; stroke-width: 1.5; }
+.ig-empty__art .ig-icon { position: relative; width: 44px; height: 44px; stroke-width: 1.8; }
 .ig-empty h3 { margin: 0; font-size: var(--ig-text-lg); color: var(--ig-color-text); }
 .ig-empty p { margin: 0; max-width: 36ch; }
 @keyframes ig-morph { to { border-radius: 40% 60% 42% 58% / 56% 44% 56% 44%; transform: rotate(6deg) scale(1.04); } }
@@ -563,7 +574,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 .ig-timeline__item:not(:last-child)::before { content: ""; position: absolute; left: 14px; top: 34px; bottom: 2px; width: 4px; background-image: radial-gradient(circle, var(--ig-green-300) 1.6px, transparent 2px); background-size: 4px 9px; background-repeat: repeat-y; }
 .ig-timeline__node { align-self: start; justify-self: center; width: 16px; height: 16px; margin-top: 22px; border-radius: 50%; background: var(--ig-color-surface); box-shadow: inset 0 0 0 3px var(--ig-color-brand); transition: transform var(--ig-dur-base) var(--ig-ease-spring); }
 .ig-timeline__item:hover .ig-timeline__node { transform: scale(1.2); }
-.ig-timeline__item--now .ig-timeline__node { width: 24px; height: 24px; margin-top: 18px; box-shadow: inset 0 0 0 6px var(--ig-color-brand), 0 0 0 5px rgba(12, 122, 62, .18); }
+.ig-timeline__item--now .ig-timeline__node { width: 24px; height: 24px; margin-top: 18px; box-shadow: inset 0 0 0 6px var(--ig-color-brand), 0 0 0 5px rgba(78, 161, 26, .22); }
 .ig-timeline__card { display: grid; gap: 3px; padding: var(--ig-space-3) var(--ig-space-4); border: 0; border-radius: var(--ig-radius-lg); background: var(--ig-color-surface); box-shadow: var(--ig-shadow-1); text-align: left; transition: transform var(--ig-dur-base) var(--ig-ease-spring), box-shadow var(--ig-dur-base) var(--ig-ease-out); cursor: pointer; font: inherit; color: inherit; }
 .ig-timeline__card:hover { transform: translateX(4px); box-shadow: var(--ig-shadow-2); }
 .ig-timeline__item--now .ig-timeline__card { background: var(--ig-color-surface-inverse); color: #fff; padding: var(--ig-space-4); }
@@ -579,7 +590,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 
 /* ---------- Banner con acción ---------- */
 .ig-banner { position: relative; overflow: hidden; display: flex; align-items: flex-end; justify-content: space-between; gap: var(--ig-space-4); min-height: 160px; padding: var(--ig-space-6); border-radius: var(--ig-radius-xl); background: radial-gradient(120% 140% at 100% 0%, var(--ig-green-700), var(--ig-green-900) 55%, var(--ig-green-950)); color: #fff; overflow: hidden; }
-.ig-banner .ig-blob { right: -40px; top: -50px; width: 180px; height: 160px; background: rgba(198, 243, 110, .14); }
+.ig-banner .ig-blob { right: -40px; top: -50px; width: 180px; height: 160px; background: rgba(168, 255, 108, .16); }
 .ig-banner__title { position: relative; max-width: 14ch; font-size: var(--ig-text-2xl); font-weight: var(--ig-weight-extrabold); letter-spacing: var(--ig-tracking-title); line-height: 1.1; }
 .ig-banner__title em { font-style: normal; color: var(--ig-lime-300); }
 
@@ -600,7 +611,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 .doc-nav { display: grid; gap: 2px; }
 .doc-nav a { display: flex; align-items: center; min-height: 40px; padding: 0 var(--ig-space-4); border-radius: var(--ig-radius-md); color: var(--ig-color-text-muted); font-size: var(--ig-text-sm); font-weight: var(--ig-weight-semibold); text-decoration: none; transition: background var(--ig-dur-fast) var(--ig-ease-out), color var(--ig-dur-fast) var(--ig-ease-out); }
 .doc-nav a:hover { background: var(--ig-color-surface-tonal); color: var(--ig-color-text); }
-.doc-nav a[aria-current="true"] { background: var(--ig-color-action); color: #fff; }
+.doc-nav a[aria-current="true"] { background: var(--ig-color-action); color: var(--ig-color-action-text); }
 .doc-nav .doc-nav__group { margin: var(--ig-space-3) 0 var(--ig-space-1) var(--ig-space-4); }
 
 .doc-main { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ig-space-12); min-width: 0; }
@@ -726,46 +737,106 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 </style>
 </head>
 <body class="ig-root">
+<script>
+/* =========================================================
+   Iguana Design System — iconos  ·  v0.2.0
+   Estilo "dúo": trazo redondeado de 2 px + una mancha de color de marca
+   desplazada detrás (como un sticker mal registrado). Las formas son
+   propias del negocio (toldo de tienda, burbuja con ojos, calendario de puntos),
+   no los iconos genéricos de siempre.
 
-<!-- Iconos del sistema: trazo 1.75, puntas y uniones redondeadas -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4v-9Z"/><path d="M10 20v-5h4v5"/></symbol>
-    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
-    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.8 2.6-6 6-6s6 2.2 6 6M16.5 5.5h5M19 3v5"/></symbol>
-    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H19v14H6.5A2.5 2.5 0 0 1 4 16.5v-9Z"/><path d="M4 8h15M15.5 13.5h.01"/></symbol>
-    <symbol id="i-bot" viewBox="0 0 24 24"><path d="M12 3v3M9.5 3h5"/><rect x="4" y="7" width="16" height="13" rx="4.5"/><path d="M4 13H2M22 13h-2M9 16.5h6M8.8 12h.01M15.2 12h.01"/></symbol>
-    <symbol id="i-cog" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2-.7a7 7 0 0 0-.6-1.4l.9-1.9-2.1-2.1-1.9.9a7 7 0 0 0-1.4-.6L11.2 3h-3l-.7 1.7a7 7 0 0 0-1.4.6l-1.9-.9-2.1 2.1.9 1.9a7 7 0 0 0-.6 1.4l-1.7.7v3l1.7.7a7 7 0 0 0 .6 1.4l-.9 1.9 2.1 2.1 1.9-.9a7 7 0 0 0 1.4.6l.7 1.7h3l.7-1.7a7 7 0 0 0 1.4-.6l1.9.9 2.1-2.1-.9-1.9a7 7 0 0 0 .6-1.4l2-.7Z"/></symbol>
-    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></symbol>
-    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></symbol>
-    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
-    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
-    <symbol id="i-up" viewBox="0 0 24 24"><path d="M7 14l5-5 5 5"/></symbol>
-    <symbol id="i-down" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></symbol>
-    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
-    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
-    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
-    <symbol id="i-arrow-ur" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
-    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
-    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></symbol>
-    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></symbol>
-    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></symbol>
-    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4V6Z"/></symbol>
-    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 19h14"/></symbol>
-    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
-    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.6"/></symbol>
-    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z"/></symbol>
-    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
-    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4 3 19h18L12 4Z"/><path d="M12 10v4M12 17h.01"/></symbol>
-  </defs>
-</svg>
+   Uso:   <svg class="ig-icon"><use href="#i-home"/></svg>
+   Color: la mancha usa --ig-icon-tint (por defecto lima). Sobre fondos lima
+          el sistema la cambia a un verde oscuro translúcido.
+   ========================================================= */
+(function () {
+  // t(): mancha de color. Desplazada 1.5px hacia abajo-derecha respecto del trazo.
+  function t(d, dx, dy) {
+    return '<path d="' + d + '" transform="translate(' + (dx == null ? 1.5 : dx) + ' ' + (dy == null ? 1.5 : dy) + ')" style="fill:var(--ig-icon-tint,#A8FF6C);stroke:none"/>';
+  }
+  function p(d, extra) { return '<path d="' + d + '"' + (extra ? ' ' + extra : '') + '/>'; }
+  function dot(x, y, w) { return '<path d="M' + x + ' ' + y + 'h.01" stroke-width="' + (w || 3) + '"/>'; }
+  function circ(cx, cy, r) { return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '"/>'; }
+  function tc(cx, cy, r, dx, dy) { return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" transform="translate(' + (dx == null ? 1.5 : dx) + ' ' + (dy == null ? 1.5 : dy) + ')" style="fill:var(--ig-icon-tint,#A8FF6C);stroke:none"/>'; }
+
+  var BUBBLE = 'M6 4.5h12a2.5 2.5 0 0 1 2.5 2.5v7a2.5 2.5 0 0 1-2.5 2.5h-6.2L8 19.8V16.5H6A2.5 2.5 0 0 1 3.5 14V7A2.5 2.5 0 0 1 6 4.5Z';
+  var CAL = 'M6.5 5.5h11A2.5 2.5 0 0 1 20 8v9.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5V8a2.5 2.5 0 0 1 2.5-2.5Z';
+  var RECEIPT = 'M7 3.5h10a1.5 1.5 0 0 1 1.5 1.5v14.8l-2.2-1.5-2.1 1.5-2.2-1.5-2.2 1.5-2.1-1.5-1.2.8V5A1.5 1.5 0 0 1 7 3.5Z';
+  var BELL = 'M6 16.4V11a6 6 0 0 1 12 0v5.4l1.6 2.1H4.4Z';
+
+  var ICONS = {
+    home: t('M5.5 9.8v8.9a1.8 1.8 0 0 0 1.8 1.8h9.4a1.8 1.8 0 0 0 1.8-1.8V9.8L12 4.4Z') +
+      p('M3.5 11.2 12 3.8l8.5 7.4M5.5 9.8v8.9a1.8 1.8 0 0 0 1.8 1.8h9.4a1.8 1.8 0 0 0 1.8-1.8V9.8M9.8 20.5v-4.3a2.2 2.2 0 0 1 4.4 0v4.3'),
+    calendar: t(CAL) + p(CAL) + p('M8.5 3.5v3.2M15.5 3.5v3.2') + dot(8.5, 11.6) + dot(12, 11.6) + dot(15.5, 11.6) + dot(8.5, 15.6) + dot(12, 15.6),
+    users: tc(9.2, 8.7, 4.2, 1.2, 1.4) + circ(9.2, 8.7, 3.4) + p('M3.4 19.6c.5-3.5 3-5.3 5.8-5.3s5.3 1.8 5.8 5.3') + p('M15.6 5.7a3.2 3.2 0 0 1 0 6M17.6 14.6c1.9.6 2.9 2 3.1 4.4'),
+    wallet: t('M5.5 9.2h14.5a1.5 1.5 0 0 1 1.5 1.5v7.8a2 2 0 0 1-2 2H7.5a2 2 0 0 1-2-2Z', 1, 1.2) +
+      p('M4 8.5A2.5 2.5 0 0 1 6.5 6H17a2.5 2.5 0 0 1 2.5 2.5v.7M4 8.5v8A2.5 2.5 0 0 0 6.5 19h11a2.5 2.5 0 0 0 2.5-2.5v-6a1.5 1.5 0 0 0-1.5-1.5H6.5A2.5 2.5 0 0 1 4 8.5Z') + dot(16.2, 13.9, 3.4),
+    chat: t(BUBBLE) + p(BUBBLE) + dot(8.6, 10.5, 3) + dot(12, 10.5, 3) + dot(15.4, 10.5, 3),
+    bot: t(BUBBLE) + p(BUBBLE) + p('M9 10.2v.9M15 10.2v.9') + p('M9.6 13.2c.8.7 1.6 1 2.4 1s1.6-.3 2.4-1'),
+    cog: tc(8.5, 7.5, 2.6, 1.2, 1.2) + tc(15.5, 16.5, 2.6, 1.2, 1.2) + circ(8.5, 7.5, 2.6) + circ(15.5, 16.5, 2.6) + p('M13.4 7.5H20M4 7.5h1.9M4 16.5h6.9M18.1 16.5H20'),
+    sliders: tc(8, 8.5, 2.5, 1.2, 1.2) + circ(8, 8.5, 2.5) + p('M4 8.5h1.5M10.5 8.5H20') + tc(16, 15.5, 2.5, 1.2, 1.2) + circ(16, 15.5, 2.5) + p('M4 15.5h9.5M18.5 15.5H20'),
+    receipt: t(RECEIPT) + p(RECEIPT) + p('M9.2 9h5.6M9.2 12.5h3.6'),
+    building: t('M5.5 12.5V20h13v-7.5Z', 1, 1) + p('M4 9.6 5.4 4.6h13.2L20 9.6M4 9.6a2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.2 0 2.7 2.7 0 0 0 5.4 0M5.6 12.6V20h12.8v-7.4M10 20v-4.4h4V20'),
+    refresh: tc(12, 12, 7.2, 1, 1) + p('M19.6 12a7.6 7.6 0 1 1-2.3-5.4M19.6 4.4v4.3h-4.3'),
+    logout: t('M5 5.5h5.5v13H5Z', 1, 1) + p('M10.5 4.5H7A2.5 2.5 0 0 0 4.5 7v10A2.5 2.5 0 0 0 7 19.5h3.5M15.2 8.2 19 12l-3.8 3.8M19 12H9.6'),
+    plus: tc(12, 12, 8, 1.2, 1.2) + p('M12 6.5v11M6.5 12h11'),
+    search: tc(10.6, 10.6, 6.2, 1.4, 1.4) + circ(10.6, 10.6, 6.2) + p('m15.4 15.4 4.4 4.4'),
+    back: p('M14.8 5.5 8.3 12l6.5 6.5'),
+    'chevron-left': p('M14.8 5.5 8.3 12l6.5 6.5'),
+    'chevron-right': p('M9.2 5.5l6.5 6.5-6.5 6.5'),
+    'chevron-down': p('M5.5 9.2l6.5 6.5 6.5-6.5'),
+    x: p('M6.5 6.5l11 11M17.5 6.5l-11 11'),
+    check: p('M5 12.8l4.4 4.4L19 7.4', 'stroke-width="2.4"'),
+    up: p('M6.5 14.2 12 8.7l5.5 5.5'),
+    down: p('M6.5 9.8l5.5 5.5 5.5-5.5'),
+    'arrow-ur': p('M7 17 17 7M9.2 7H17v7.8', 'stroke-width="2.2"'),
+    more: dot(6, 12, 3.6) + dot(12, 12, 3.6) + dot(18, 12, 3.6),
+    edit: t('M5 19.2l.7-3.7 9.6-9.6 3 3-9.6 9.6Z', 1, 1) + p('M4.6 19.4l.9-4.2L16.6 4.1a2.2 2.2 0 0 1 3.1 3.1L8.6 18.5ZM14.4 6.4l3.2 3.2'),
+    trash: t('M7 8.5h10l-.7 10a2 2 0 0 1-2 1.8H9.7a2 2 0 0 1-2-1.8Z', 1, 1) + p('M4.8 7h14.4M9.4 7V5.2a1.6 1.6 0 0 1 1.6-1.6h2a1.6 1.6 0 0 1 1.6 1.6V7M6.7 7l.8 11.3a2 2 0 0 0 2 1.7h5a2 2 0 0 0 2-1.7L17.3 7M10.2 11v5M13.8 11v5'),
+    clock: tc(12, 12, 8.3, 1.2, 1.2) + circ(12, 12, 8.3) + p('M12 7.6V12l3 1.9'),
+    file: t('M7.5 3.5h6L19 9v10a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 6 19V5A1.5 1.5 0 0 1 7.5 3.5Z', 1, 1) + p('M7.5 3.5h6L19 9v10a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 6 19V5A1.5 1.5 0 0 1 7.5 3.5ZM13.5 3.7V9h5.3M9.6 13.4h5M9.6 16.8h3'),
+    bell: t(BELL) + p(BELL) + p('M10 20.6a2.1 2.1 0 0 0 4 0'),
+    download: t('M5 17h14v1.6a1.6 1.6 0 0 1-1.6 1.6H6.6A1.6 1.6 0 0 1 5 18.6Z', 0, 0.4) + p('M12 4.2v10.3M7.6 10.2l4.4 4.4 4.4-4.4M5 17v1.6A1.6 1.6 0 0 0 6.6 20.2h10.8a1.6 1.6 0 0 0 1.6-1.6V17'),
+    eye: tc(12, 12, 4.4, 1, 1.2) + p('M2.8 12S6 5.8 12 5.8 21.2 12 21.2 12 18 18.2 12 18.2 2.8 12 2.8 12Z') + circ(12, 12, 2.9),
+    star: t('M12 3.9l2.6 5.2 5.7.9-4.1 4 1 5.7L12 17.1 6.8 19.7l1-5.7-4.1-4 5.7-.9Z') + p('M12 3.9l2.6 5.2 5.7.9-4.1 4 1 5.7L12 17.1 6.8 19.7l1-5.7-4.1-4 5.7-.9Z', 'stroke-linejoin="round"'),
+    info: tc(12, 12, 8.4, 1.2, 1.2) + circ(12, 12, 8.4) + p('M12 11.2v5.2') + dot(12, 7.9, 2.8),
+    alert: t('M10.4 5.3 3.7 17a2 2 0 0 0 1.7 3h13.2a2 2 0 0 0 1.7-3L13.6 5.3a2 2 0 0 0-3.2 0Z', 1, 1.2) + p('M10.4 5.3 3.7 17a2 2 0 0 0 1.7 3h13.2a2 2 0 0 0 1.7-3L13.6 5.3a2 2 0 0 0-3.2 0ZM12 10v3.8') + dot(12, 17, 2.8),
+    trend: t('M4.5 17.2l5-5 3.5 3.4 6.5-6V18a1.5 1.5 0 0 1-1.5 1.5H6A1.5 1.5 0 0 1 4.5 18Z', 0, 0) + p('M4 16.2l5.6-5.6 3.5 3.5 7-6.6M15.4 7.5H20.2v4.8'),
+    whatsapp: t('M12 4.4a8.2 8.2 0 0 0-7 12.4L4 20.4l3.7-1A8.2 8.2 0 1 0 12 4.4Z') +
+      '<path d="M12 3.2a8.8 8.8 0 0 0-7.5 13.4L3.2 20.8l4.3-1.3A8.8 8.8 0 1 0 12 3.2Z"/>' +
+      '<path d="M9.2 8.2c-.4.5-.6 1.1-.4 1.9.5 1.9 2.2 3.8 4.3 4.6.9.3 1.6.1 2.1-.4l.4-.8-1.9-1-.8.7c-.9-.3-1.9-1.2-2.3-2.2l.7-.8-.9-1.9-.8-.1Z" fill="currentColor" stroke="none"/>'
+  };
+
+  // Aliases del panel original
+  ICONS.note = ICONS.file; ICONS.label = ICONS.file; ICONS.value = ICONS.trend; ICONS.main = ICONS.home;
+
+  function sprite() {
+    var out = '<svg id="ig-sprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>';
+    Object.keys(ICONS).forEach(function (name) {
+      if (['note', 'label', 'value', 'main'].indexOf(name) > -1) return;   // alias sin símbolo propio
+      out += '<symbol id="i-' + name + '" viewBox="0 0 24 24">' + ICONS[name] + '</symbol>';
+    });
+    return out + '</defs></svg>';
+  }
+
+  function mount() {
+    if (document.getElementById('ig-sprite')) return;
+    var holder = document.createElement('div');
+    holder.innerHTML = sprite();
+    document.body.insertBefore(holder.firstChild, document.body.firstChild);
+  }
+  window.IG_ICONS = { names: Object.keys(ICONS), mount: mount, sprite: sprite };
+  if (document.body) mount(); else document.addEventListener('DOMContentLoaded', mount);
+})();
+
+</script>
+
 
 <div class="doc">
 
   <!-- ============ Navegación ============ -->
   <aside class="doc-side" aria-label="Secciones">
-    <div class="doc-brand"><img src="data:image/png;base64,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" alt="" /><div><strong>Iguana DS</strong><span>v0.1.0 · claro</span></div></div>
+    <div class="doc-brand"><img src="data:image/png;base64,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" alt="" /><div><strong>Iguana DS</strong><span>v0.2.0 · claro</span></div></div>
     <nav class="doc-nav" id="docNav">
       <a href="#principios">Principios</a>
       <a href="#color">Color</a>
@@ -785,7 +856,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 
     <!-- ============ Portada ============ -->
     <header class="doc-hero ig-spark ig-card--inverse">
-      <p class="ig-eyebrow">Iguana Design System · v0.1.0</p>
+      <p class="ig-eyebrow">Iguana Design System · v0.2.0</p>
       <h1>Claro, suave y <em>sin líneas rectas</em>.</h1>
       <p>Un solo sistema para el panel, la web y lo que venga: tokens de color con la cromática verde de Iguana, formas redondeadas, colores que la gente ya entiende (verde bien, rojo mal, ámbar ojo) y elementos que responden al tocar.</p>
       <div class="doc-hero__chips">
@@ -814,9 +885,9 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
       <h2>Color</h2>
       <p class="lead">Haz clic en cualquier muestra para copiar su valor. Cada color tiene un nombre de token; los componentes usan solo los <b>semánticos</b>.</p>
 
-      <div class="doc-sub"><h3>Marca · verde Iguana</h3><p>Ancla <code>#0C7A3E</code> (600). El 900 es el botón principal y las superficies oscuras; el 50–100 son fondos suaves.</p><div class="swatches" data-group="green"></div></div>
-      <div class="doc-sub"><h3>Resalte · lima</h3><p>La “energía” de la marca. Solo para lo que debe verse primero: elemento activo, tarjeta destacada, el día pico. Siempre con texto oscuro encima.</p><div class="swatches" data-group="lime"></div></div>
-      <div class="doc-sub"><h3>Neutros · mist</h3><p>Grises con un toque verde: se sienten de la misma familia y no tiran a beige ni café como el gris cálido anterior.</p><div class="swatches" data-group="gray"></div></div>
+      <div class="doc-sub"><h3>Marca · verde lima Iguana</h3><p>Ancla <code>#A8FF6C</code> (400): botón principal, elemento activo y tarjeta destacada, siempre con tinta oscura encima. El 600 y el 700 sirven para texto, iconos y gráficos sobre blanco; el 900 es la superficie oscura donde el lima brilla.</p><div class="swatches" data-group="green"></div></div>
+      <div class="doc-sub"><h3>Resalte · lima (alias)</h3><p>Mismos valores que el verde: se conserva el nombre para lo que debe verse primero (elemento activo, tarjeta destacada, el día pico).</p><div class="swatches" data-group="lime"></div></div>
+      <div class="doc-sub"><h3>Neutros · mist</h3><p>Grises con un toque lima: se sienten de la misma familia y no tiran a beige ni café como el gris cálido anterior.</p><div class="swatches" data-group="gray"></div></div>
 
       <div class="doc-sub"><h3>Semánticos reconocibles</h3><p>Los que cualquier persona ya entiende de otras apps. Se usan con moderación y siempre con icono o texto.</p>
         <div class="doc-grid doc-grid--3">
@@ -922,7 +993,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
     <!-- ============ Iconos ============ -->
     <section class="doc-section" id="iconos">
       <h2>Iconos</h2>
-      <p class="lead">Trazo de 1,75 px, puntas y uniones redondeadas, 20 px por defecto. Un solo estilo: siempre contorno, nunca relleno mezclado. Clic para copiar el nombre.</p>
+      <p class="lead">Estilo dúo: trazo de 2 px con puntas redondeadas y una mancha lima desplazada detrás, como un sticker. Formas propias del negocio (toldo para empresas, burbuja con ojos para el asistente, calendario de puntos). La mancha se vuelve verde oscuro translúcido sobre fondos lima. Clic para copiar el nombre.</p>
       <div class="icon-grid" id="iconGrid"></div>
     </section>
 
@@ -1193,7 +1264,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 
 <script>
 /* =========================================================
-   Iguana Design System — comportamientos  ·  v0.1.0
+   Iguana Design System — comportamientos  ·  v0.2.0
    JavaScript sin dependencias. Expone window.IG.
    Todo respeta prefers-reduced-motion y funciona con teclado.
    ========================================================= */
@@ -1426,6 +1497,56 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
     window.addEventListener('resize', function () { show(active); });
   }
 
+  /* ---------- Línea mínima (sparkline) con punto final ---------- */
+  function trend(root, config) {
+    var W = 320, H = config.height || 96, pad = 10;
+    var values = config.values;
+    var labels = config.labels || values.map(function (v, i) { return String(i + 1); });
+    var color = config.color || cssVar('--ig-data-1');
+    var format = config.format || function (n) { return money.format(n); };
+    var max = Math.max.apply(null, values.concat([1])) * 1.1;
+    var x = function (i) { return pad + (values.length === 1 ? (W - pad * 2) / 2 : (i * (W - pad * 2)) / (values.length - 1)); };
+    var y = function (v) { return pad + (1 - v / max) * (H - pad * 2); };
+    var pts = values.map(function (v, i) { return { x: x(i), y: y(v) }; });
+    var id = 'ig-trend-' + (config.id || Math.random().toString(36).slice(2, 7));
+    var chart = svg('svg', { class: 'ig-trendline', viewBox: '0 0 ' + W + ' ' + H, role: 'img', tabindex: '0', 'aria-label': config.label || 'Tendencia' });
+    var gradient = svg('linearGradient', { id: id, x1: 0, y1: 0, x2: 0, y2: 1 });
+    gradient.append(svg('stop', { offset: '0%', 'stop-color': color, 'stop-opacity': config.fill == null ? '.35' : config.fill }), svg('stop', { offset: '100%', 'stop-color': color, 'stop-opacity': '0' }));
+    var defs = svg('defs'); defs.append(gradient);
+    var d = pts.length > 1 ? smoothPath(pts) : 'M' + pts[0].x + ',' + pts[0].y + ' L' + pts[0].x + ',' + pts[0].y;
+    chart.append(defs,
+      svg('path', { d: d + ' L' + pts[pts.length - 1].x + ',' + (H - pad) + ' L' + pts[0].x + ',' + (H - pad) + ' Z', fill: 'url(#' + id + ')' }),
+      svg('path', { d: d, fill: 'none', stroke: color, 'stroke-width': 3.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+    var dot = svg('circle', { r: 6, fill: config.dotFill || '#fff', stroke: color, 'stroke-width': 3.5 });
+    chart.append(dot);
+    var tip = el('div', { class: 'ig-tooltip', role: 'status' });
+    var active = values.length - 1;
+    function show(index) {
+      active = Math.max(0, Math.min(values.length - 1, index));
+      dot.setAttribute('cx', x(active)); dot.setAttribute('cy', y(values[active]));
+      tip.textContent = labels[active] + ' · ' + format(values[active]);
+      var box = chart.getBoundingClientRect();
+      var half = tip.offsetWidth / 2 + 4;
+      tip.style.left = Math.max(half, Math.min(box.width - half, (x(active) / W) * box.width)) + 'px';
+      tip.style.top = ((y(values[active]) / H) * box.height - 12) + 'px';
+      chart.setAttribute('aria-valuetext', tip.textContent);
+    }
+    chart.addEventListener('pointermove', function (event) {
+      var box = chart.getBoundingClientRect();
+      var vx = ((event.clientX - box.left) / box.width) * W;
+      show(Math.round(((vx - pad) / (W - pad * 2)) * (values.length - 1)));
+    });
+    chart.addEventListener('pointerleave', function () { show(values.length - 1); });
+    chart.addEventListener('keydown', function (event) {
+      if (event.key === 'ArrowRight') { event.preventDefault(); show(active + 1); }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); show(active - 1); }
+    });
+    root.replaceChildren(chart, tip);
+    root.classList.add('ig-chart');
+    requestAnimationFrame(function () { show(active); });
+    window.addEventListener('resize', function () { show(active); });
+  }
+
   /* ---------- Gauge en segmentos redondeados ---------- */
   function gauge(root, config) {
     var N = config.segments || 30, W = 260, H = 140, R = 112, cx = W / 2, cy = 128;
@@ -1521,7 +1642,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { auto(); });
   else auto();
 
-  window.IG = { segmented: segmented, menu: menu, countUp: countUp, bars: bars, line: line, gauge: gauge, ring: ring, matrix: matrix, toast: toast, auto: auto, money: function (n) { return money.format(n); } };
+  window.IG = { segmented: segmented, menu: menu, countUp: countUp, bars: bars, line: line, trend: trend, gauge: gauge, ring: ring, matrix: matrix, toast: toast, auto: auto, money: function (n) { return money.format(n); } };
 })();
 
 ;
@@ -1530,7 +1651,11 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
   'use strict';
 
   var $ = function (id) { return document.getElementById(id); };
-  var css = function (name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); };
+  var css = function (name) {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    var alias = /^var\((--[\w-]+)\)$/.exec(v);          // los alias (p. ej. lima → verde) se resuelven al valor final
+    return alias ? css(alias[1]) : v;
+  };
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var money = function (n) { return IG.money(n); };
 
@@ -1568,7 +1693,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
       var token = item[0], name = item[1], value = css(token);
       var button = document.createElement('button');
       button.type = 'button';
-      button.className = 'swatch' + (token === '--ig-green-600' ? ' swatch--brand' : '');
+      button.className = 'swatch' + (token === '--ig-green-400' ? ' swatch--brand' : '');
       button.innerHTML = '<div class="swatch__chip" style="background:var(' + token + ')"></div><b>' + name + '</b><span>' + token.replace('--ig-', '') + '</span><small>' + value + '</small>';
       button.title = 'Copiar ' + value;
       button.addEventListener('click', function () {
@@ -1584,8 +1709,8 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
     ['Texto principal', '--ig-gray-900', '--ig-gray-0', 4.5], ['Texto principal', '--ig-gray-900', '--ig-gray-50', 4.5],
     ['Texto secundario', '--ig-gray-600', '--ig-gray-0', 4.5], ['Texto secundario', '--ig-gray-600', '--ig-gray-100', 4.5],
     ['Texto sutil', '--ig-gray-500', '--ig-gray-0', 4.5], ['Texto sutil', '--ig-gray-500', '--ig-gray-50', 4.5], ['Texto sutil', '--ig-gray-500', '--ig-gray-100', 4.5],
-    ['Marca sobre blanco', '--ig-green-600', '--ig-gray-0', 4.5], ['Marca sobre verde suave', '--ig-green-700', '--ig-green-100', 4.5],
-    ['Botón principal', '--ig-gray-0', '--ig-green-900', 4.5], ['Lima sobre verde 900', '--ig-lime-300', '--ig-green-900', 4.5], ['Tinta sobre lima', '--ig-gray-900', '--ig-lime-300', 4.5],
+    ['Marca (texto) sobre blanco', '--ig-green-700', '--ig-gray-0', 4.5], ['Marca (texto) sobre verde suave', '--ig-green-700', '--ig-green-100', 4.5], ['Marca (icono) sobre blanco', '--ig-green-600', '--ig-gray-0', 3],
+    ['Botón principal: tinta sobre lima', '--ig-gray-900', '--ig-green-400', 4.5], ['Botón oscuro: lima sobre verde 900', '--ig-green-400', '--ig-green-900', 4.5], ['Blanco sobre verde 900', '--ig-gray-0', '--ig-green-900', 4.5],
     ['Peligro sobre fondo suave', '--ig-red-700', '--ig-red-50', 4.5], ['Blanco sobre rojo', '--ig-gray-0', '--ig-red-600', 4.5],
     ['Tinta sobre ámbar claro', '--ig-gray-900', '--ig-amber-100', 4.5], ['Información sobre fondo suave', '--ig-blue-700', '--ig-blue-50', 4.5],
     ['Borde de control', '--ig-gray-400', '--ig-gray-0', 3], ['Borde de control sobre fondo', '--ig-gray-400', '--ig-gray-50', 3],
@@ -1604,7 +1729,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 
   /* ---------- Iconos ---------- */
   var iconGrid = $('iconGrid');
-  document.querySelectorAll('svg defs symbol').forEach(function (sym) {
+  document.querySelectorAll('#ig-sprite symbol').forEach(function (sym) {
     var name = sym.id.replace('i-', '');
     var cell = document.createElement('button');
     cell.type = 'button';

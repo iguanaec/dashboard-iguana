@@ -62,13 +62,16 @@
 
   function icon(name) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'icon');
+    svg.setAttribute('class', 'ig-icon');
     svg.setAttribute('aria-hidden', 'true');
     const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
     use.setAttribute('href', `#i-${name}`);
     svg.append(use);
     return svg;
   }
+
+  /** Color de un token del design system (para los gráficos dibujados en SVG). */
+  const token = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
   const usd = new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' });
   // Los negativos se escriben -$18,80 (no $-18,80)
@@ -795,14 +798,14 @@
     const svg = chartSvg(`Ingresos ${money(income)} y gastos ${money(expenses)}`);
     const r = 72;
     const c = 2 * Math.PI * r;
-    svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#e6e8e3', 'stroke-width': 30 }));
+    svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: token('--ig-data-track'), 'stroke-width': 30 }));
     if (total > 0) {
       const incomeLen = (income / total) * c;
-      svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#0c7a3e', 'stroke-width': 30, 'stroke-dasharray': `${incomeLen} ${c - incomeLen}`, transform: 'rotate(-90 180 112)' }));
-      svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: '#e0701f', 'stroke-width': 30, 'stroke-dasharray': `${c - incomeLen} ${incomeLen}`, 'stroke-dashoffset': -incomeLen, transform: 'rotate(-90 180 112)' }));
+      svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: token('--ig-data-1'), 'stroke-width': 30, 'stroke-dasharray': `${incomeLen} ${c - incomeLen}`, transform: 'rotate(-90 180 112)' }));
+      svg.append(svgEl('circle', { cx: 180, cy: 112, r, fill: 'none', stroke: token('--ig-data-2'), 'stroke-width': 30, 'stroke-dasharray': `${c - incomeLen} ${incomeLen}`, 'stroke-dashoffset': -incomeLen, transform: 'rotate(-90 180 112)' }));
     }
-    svg.append(svgEl('text', { x: 180, y: 108, 'text-anchor': 'middle', fill: '#6c716d', 'font-size': 12 }, 'Movimiento total'));
-    svg.append(svgEl('text', { x: 180, y: 132, 'text-anchor': 'middle', fill: '#121212', 'font-size': 20, 'font-weight': 600 }, currency(total / 100)));
+    svg.append(svgEl('text', { x: 180, y: 108, 'text-anchor': 'middle', fill: token('--ig-gray-500'), 'font-size': 12 }, 'Movimiento total'));
+    svg.append(svgEl('text', { x: 180, y: 132, 'text-anchor': 'middle', fill: token('--ig-gray-900'), 'font-size': 20, 'font-weight': 700 }, currency(total / 100)));
     box.replaceChildren(svg);
   }
 
@@ -821,31 +824,22 @@
 
   function renderDailyLine(activity) {
     const box = $('dashboardLineChart');
-    const svg = chartSvg('Ingresos y gastos por día');
     if (!activity.length) {
       box.replaceChildren(h('div', { class: 'chart-empty', text: 'Sin movimientos en este período' }));
       return;
     }
-    const max = Math.max(...activity.flatMap((a) => [Number(a.income_cents), Number(a.expenses_cents)]), 1);
-    const left = 44, top = 16, width = 300, height = 175;
-    for (let i = 0; i <= 4; i += 1) {
-      const y = top + (height * i) / 4;
-      svg.append(svgEl('line', { x1: left, y1: y, x2: left + width, y2: y, stroke: '#ecece8' }));
-      svg.append(svgEl('text', { x: left - 6, y: y + 4, 'text-anchor': 'end', fill: '#6c716d', 'font-size': 10 }, currency((max * (4 - i)) / 4 / 100).replace(/[,.]00$/, '')));
-    }
-    const at = (item, index, field) => ({
-      x: activity.length === 1 ? left + width / 2 : left + (index * width) / (activity.length - 1),
-      y: top + height - (Number(item[field]) / max) * height,
+    // El gráfico del sistema necesita al menos dos puntos
+    const days = activity.length === 1 ? [activity[0], activity[0]] : activity;
+    IG.line(box, {
+      id: 'daily',
+      label: 'Ingresos y gastos por día',
+      labels: days.map((a) => `Día ${Number(a.date.slice(8, 10))}`),
+      series: [
+        { name: 'Ingresos', color: token('--ig-data-1'), values: days.map((a) => Number(a.income_cents) / 100) },
+        { name: 'Gastos', color: token('--ig-data-2'), values: days.map((a) => Number(a.expenses_cents) / 100) },
+      ],
+      format: (n) => currency(n),
     });
-    for (const [field, color] of [['income_cents', '#0c7a3e'], ['expenses_cents', '#e0701f']]) {
-      const pts = activity.map((item, i) => at(item, i, field));
-      svg.append(svgEl('polyline', { points: pts.map((p) => `${p.x},${p.y}`).join(' '), fill: 'none', stroke: color, 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
-      pts.forEach((p) => svg.append(svgEl('circle', { cx: p.x, cy: p.y, r: 3.5, fill: color, stroke: '#fff', 'stroke-width': 2 })));
-    }
-    for (const index of new Set([0, Math.floor((activity.length - 1) / 2), activity.length - 1])) {
-      svg.append(svgEl('text', { x: at(activity[index], index, 'income_cents').x, y: 216, 'text-anchor': 'middle', fill: '#6c716d', 'font-size': 10 }, `Día ${Number(activity[index].date.slice(8, 10))}`));
-    }
-    box.replaceChildren(svg);
   }
 
   function renderDashboard(data) {
@@ -1238,7 +1232,7 @@
 
   /** Chip "▲ 12% más": siempre flecha + palabra, nunca solo color. */
   function fillDelta(el, current, previous, { goodWhenUp = true, suffix = '', hideWithoutPrevious = false } = {}) {
-    el.className = 'delta';
+    el.className = 'ig-delta';
     el.replaceChildren();
     el.hidden = false;
     if (!previous) {
@@ -1249,7 +1243,7 @@
     const pct = Math.round(((current - previous) / Math.abs(previous)) * 100);
     if (pct === 0) { el.append('Sin cambios'); return; }
     const up = pct > 0;
-    el.classList.add(up === goodWhenUp ? 'good' : 'bad');
+    el.classList.add(up === goodWhenUp ? 'ig-delta--up' : 'ig-delta--down');
     el.append(icon(up ? 'up' : 'down'), `${Math.abs(pct)}% ${up ? 'más' : 'menos'}${suffix}`);
   }
 
@@ -1291,18 +1285,6 @@
     return null;
   }
 
-  function progressRing(done, total) {
-    const r = 50;
-    const c = 2 * Math.PI * r;
-    const svg = svgEl('svg', { viewBox: '0 0 120 120', 'aria-hidden': 'true' });
-    svg.append(svgEl('circle', { cx: 60, cy: 60, r, fill: 'none', stroke: '#e6e8e3', 'stroke-width': 12 }));
-    if (done > 0) {
-      svg.append(svgEl('circle', { cx: 60, cy: 60, r, fill: 'none', stroke: '#0c7a3e', 'stroke-width': 12, 'stroke-linecap': 'round', 'stroke-dasharray': `${(done / total) * c} ${c}`, transform: 'rotate(-90 60 60)' }));
-    }
-    return h('div', { class: 'ring', role: 'img', 'aria-label': `${done} de ${total} citas de hoy atendidas` },
-      svg, h('div', { class: 'ring-label' }, h('strong', { text: `${done}/${total}` }), h('span', { text: 'citas de hoy' })));
-  }
-
   const upcomingAppointments = (now) => state.appointments
     .filter((a) => isConfirmed(a) && endTime(a) > now)
     .sort((x, y) => new Date(startOf(x)) - new Date(startOf(y)));
@@ -1323,9 +1305,6 @@
         h('a', { class: 'btn', href: '#/calendario', text: 'Abrir calendario' })));
       return;
     }
-    const today = bizDay(now.toISOString());
-    const todays = state.appointments.filter((a) => isConfirmed(a) && bizDay(startOf(a)) === today);
-    const done = todays.filter((a) => endTime(a) <= now).length;
     const minutes = Math.round((endTime(next) - new Date(startOf(next))) / 60000);
     const pay = next.payment_status || 'unpaid';
     const link = contactLink(next);
@@ -1338,15 +1317,14 @@
         h('div', { class: 'next-time', text: bizTime(startOf(next)) }),
         h('div', { class: 'next-info' },
           h('div', { class: 'next-name', text: next.customer_name || next.patient_name || 'Cliente' }),
-          h('div', { class: 'next-meta', text: `${next.service_name || next.service || 'Servicio'} · ${minutes} min` })),
-        todays.length ? progressRing(done, todays.length) : null),
+          h('div', { class: 'next-meta', text: `${next.service_name || next.service || 'Servicio'} · ${minutes} min` }))),
       h('div', { class: 'next-actions' },
-        h('button', { type: 'button', class: 'btn btn-primary', onclick: () => openAppointment(next), text: 'Ver detalle' }),
+        h('button', { type: 'button', class: 'btn btn-dark', onclick: () => openAppointment(next), text: 'Ver detalle' }),
         link ? h('a', { class: 'btn', href: link.href, target: '_blank', rel: 'noopener', 'aria-label': link.full, title: link.full }, icon('chat'), h('span', { class: 'btn-label', text: link.label })) : null));
   }
 
-  function renderToday(now, day, yesterday) {
-    $('homeIncomeToday').textContent = money(day.summary.income_cents);
+  function renderToday(now, day, yesterday, month) {
+    IG.countUp($('homeIncomeToday'), day.summary.income_cents / 100, { format: currency });
     fillDelta($('homeIncomeDelta'), day.summary.income_cents, yesterday.summary.income_cents, { suffix: ' que ayer', hideWithoutPrevious: true });
     $('homeExpenseToday').textContent = money(day.summary.expenses_cents);
     const owed = owedAppointments(now);
@@ -1354,6 +1332,38 @@
     const people = new Set(owed.map((a) => a.customer_name)).size;
     $('homeOutstanding').textContent = money(total);
     $('homeOutstandingNote').textContent = people ? `${people} persona${people === 1 ? '' : 's'} te ${people === 1 ? 'debe' : 'deben'}` : 'Todo al día';
+    renderSpark(month, businessToday());
+    $('homeMonthIncome').replaceChildren('Este mes llevas cobrados ', h('strong', { text: money(month.summary.income_cents) }));
+  }
+
+  /** Línea de lo cobrado cada día del mes, hasta hoy. */
+  function renderSpark(month, today) {
+    const byDay = new Map(month.daily_activity.map((a) => [a.date, Number(a.income_cents) / 100]));
+    const last = Number(today.slice(8));
+    const values = Array.from({ length: Math.max(last, 2) }, (_, i) => byDay.get(`${today.slice(0, 8)}${pad2(i + 1)}`) || 0);
+    IG.trend($('homeSpark'), {
+      id: 'income',
+      label: 'Cobrado por día este mes',
+      values,
+      labels: values.map((_, i) => `Día ${i + 1}`),
+      color: token('--ig-green-400'),
+      dotFill: token('--ig-green-900'),
+      height: 150,
+      format: (n) => currency(n),
+    });
+  }
+
+  function renderRing(now) {
+    const today = bizDay(now.toISOString());
+    const todays = state.appointments.filter((a) => isConfirmed(a) && bizDay(startOf(a)) === today);
+    const done = todays.filter((a) => endTime(a) <= now).length;
+    if (!todays.length) {
+      $('homeRing').replaceChildren(h('div', { class: 'list-empty', text: 'Sin citas hoy' }));
+      $('homeRingNote').textContent = '';
+      return;
+    }
+    IG.ring($('homeRing'), done, todays.length, 'atendidas');
+    $('homeRingNote').textContent = done === todays.length ? 'Terminaste el día' : `Faltan ${todays.length - done}`;
   }
 
   function statRow(label, value, chip) {
@@ -1375,6 +1385,7 @@
     $('homeAppts').textContent = String(c.services_count);
     fillDelta($('homeApptsDelta'), c.services_count, l.services_count);
     $('homeApptsNote').textContent = `Mes pasado: ${l.services_count}`;
+    IG.gauge($('homeApptsGauge'), { value: l.services_count ? Math.min(100, Math.round((c.services_count / l.services_count) * 100)) : 100, caption: 'del ritmo del mes pasado', label: 'Citas de este mes frente al mes pasado' });
     const month = bizDay(now.toISOString()).slice(0, 7);
     const mine = state.appointments.filter((a) => bizDay(startOf(a)).startsWith(month));
     const upcoming = mine.filter((a) => isConfirmed(a) && new Date(startOf(a)) > now).length;
@@ -1411,11 +1422,9 @@
     const openDays = (state.settings.businessHours || []).filter((d) => d.enabled).map((d) => d.day);
     const quiet = (openDays.length ? openDays : order).reduce((best, d) => (counts[d] < counts[best] ? d : best), openDays[0] ?? 1);
     const peakHour = Object.entries(hours).sort((a, b) => b[1] - a[1])[0][0];
-    $('peakLead').textContent = `Tu día más fuerte es el ${WEEKDAYS_LONG[peakDay]}. Citas de los últimos 90 días.`;
-    list.replaceChildren(...order.map((d) => h('li', { class: d === peakDay ? 'is-peak' : '', 'aria-label': `${WEEKDAYS_LONG[d]}: ${counts[d]} citas` },
-      h('span', { class: 'peak-count', text: String(counts[d]) }),
-      h('span', { class: 'peak-bar', style: `--h:${(counts[d] / max).toFixed(3)}` }),
-      h('span', { class: 'peak-day', text: WEEKDAYS[d] }))));
+    $('peakLead').textContent = `Tu día más fuerte es el ${WEEKDAYS_LONG[peakDay]}. Citas de los últimos 90 días; toca una barra para ver el detalle.`;
+    IG.bars(list, order.map((d) => ({ label: WEEKDAYS[d], value: counts[d], display: `${WEEKDAYS_LONG[d]}: ${counts[d]} citas` })),
+      { label: 'Citas por día de la semana', selected: order.indexOf(peakDay) });
     const fact = (label, value) => h('div', { class: 'fact' }, h('span', { text: label }), h('strong', { text: value }));
     const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1);
     facts.replaceChildren(
@@ -1479,7 +1488,8 @@
     syncCalendar();
     const now = new Date();
     renderNext(now);
-    renderToday(now, day, yesterday);
+    renderToday(now, day, yesterday, current);
+    renderRing(now);
     renderMonth(now, current, last);
     renderPeak(now);
     renderLists(now);

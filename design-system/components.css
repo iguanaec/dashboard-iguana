@@ -1,5 +1,5 @@
 /* =========================================================
-   Iguana Design System — componentes  ·  v0.1.0
+   Iguana Design System — componentes  ·  v0.2.0
    Requiere tokens.css. Prefijo ig-, nombres tipo BEM.
 
    Principios de forma
@@ -29,9 +29,14 @@
 .ig-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------- Icono ---------- */
-.ig-icon { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
-.ig-icon--sm { width: 16px; height: 16px; }
-.ig-icon--lg { width: 24px; height: 24px; }
+.ig-icon { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* Mancha de color de los iconos (ver icons.js). Sobre fondos lima pasa a un verde oscuro translúcido. */
+.ig-root { --ig-icon-tint: var(--ig-green-400); }
+.ig-btn--primary, .ig-btn--accent, .ig-arrow-btn, .ig-card--highlight, .ig-nav-item[aria-current="page"], .ig-tabbar__item[aria-current="page"] .ig-tabbar__icon,
+.ig-tab[aria-selected="true"], button.ig-chip[aria-pressed="true"], .ig-round-btn--ok, .ig-avatar--accent, .ig-toast__icon, .ig-week__day[aria-current="date"] { --ig-icon-tint: rgba(23, 51, 11, .2); }
+.ig-icon--sm { width: 18px; height: 18px; }
+.ig-icon--lg { width: 28px; height: 28px; }
+.ig-icon--xl { width: 56px; height: 56px; stroke-width: 1.8; }
 
 /* Anillo de foco: resplandor suave, nunca línea recta */
 .ig-root :focus-visible { outline: 2px solid var(--ig-color-brand); outline-offset: 2px; box-shadow: var(--ig-shadow-focus); border-radius: var(--ig-radius-sm); }
@@ -50,8 +55,9 @@
 .ig-btn:hover { background: var(--_bg-hover); transform: translateY(-1px); }
 .ig-btn:active { transform: scale(.97); transition-duration: var(--ig-dur-instant); }
 .ig-btn:disabled, .ig-btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; transform: none; }
-.ig-btn--primary   { --_bg: var(--ig-color-action); --_fg: var(--ig-color-action-text); --_bg-hover: var(--ig-color-action-hover); box-shadow: var(--ig-shadow-1); }
-.ig-btn--primary:hover { box-shadow: var(--ig-shadow-2); }
+.ig-btn--primary   { --_bg: var(--ig-color-action); --_fg: var(--ig-color-action-text); --_bg-hover: var(--ig-color-action-hover); box-shadow: 0 6px 16px rgba(78, 161, 26, .30); }
+.ig-btn--primary:hover { box-shadow: 0 10px 22px rgba(78, 161, 26, .38); }
+.ig-btn--dark      { --_bg: var(--ig-color-action-dark); --_fg: var(--ig-color-action-dark-text); --_bg-hover: var(--ig-green-800); box-shadow: var(--ig-shadow-1); }
 .ig-btn--accent    { --_bg: var(--ig-color-accent); --_fg: var(--ig-color-text-on-highlight); --_bg-hover: var(--ig-color-accent-hover); box-shadow: none; }
 .ig-btn--secondary { --_bg: var(--ig-color-surface-brand); --_fg: var(--ig-green-800); --_bg-hover: var(--ig-green-100); box-shadow: none; }
 .ig-btn--ghost     { --_bg: transparent; --_fg: var(--ig-color-text-muted); --_bg-hover: var(--ig-color-surface-tonal); box-shadow: none; }
@@ -63,7 +69,6 @@
 .ig-btn--block { width: 100%; }
 .ig-btn[aria-busy="true"] { pointer-events: none; color: transparent; }
 .ig-btn[aria-busy="true"]::after { content: ""; position: absolute; width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid var(--_fg); border-top-color: transparent; animation: ig-spin .7s linear infinite; }
-.ig-btn[aria-busy="true"].ig-btn--primary::after { border-color: #fff; border-top-color: transparent; }
 @keyframes ig-spin { to { transform: rotate(360deg); } }
 
 /* Botón flecha circular ↗ (el icono gira al pasar el cursor) */
@@ -181,7 +186,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 /* Motivo de marca: la chispa de 4 puntas con esquinas curvas */
 .ig-spark { overflow: clip; }
 .ig-spark::after { content: ""; position: absolute; right: -34px; top: -26px; width: 190px; height: 190px; background: rgba(255, 255, 255, .32); border-radius: 22%; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); pointer-events: none; }
-.ig-card--inverse.ig-spark::after { background: rgba(198, 243, 110, .10); }
+.ig-card--inverse.ig-spark::after { background: rgba(168, 255, 108, .12); }
 .ig-blob { position: absolute; border-radius: var(--ig-radius-blob); pointer-events: none; }
 
 .ig-link { padding: 8px 4px; color: var(--ig-color-link); font-size: var(--ig-text-sm); font-weight: var(--ig-weight-bold); text-decoration: none; }
@@ -215,6 +220,8 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 
 /* ---------- Gráficos ---------- */
 .ig-chart { position: relative; }
+.ig-trendline { display: block; width: 100%; height: auto; overflow: visible; }
+.ig-trendline:focus-visible { outline-offset: 4px; }
 .ig-bars { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--ig-space-3); height: 200px; }
 .ig-bar { position: relative; display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; height: 100%; min-width: 0; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
 .ig-bar__fill { display: block; width: 100%; max-width: 56px; height: calc(var(--_h, .3) * 100% - 28px); min-height: 14px; border-radius: 22px 22px 14px 14px; background: var(--ig-green-200); transition: height var(--ig-dur-slower) var(--ig-ease-spring), background var(--ig-dur-fast) var(--ig-ease-out), transform var(--ig-dur-fast) var(--ig-ease-out); }
@@ -313,7 +320,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 .ig-empty { display: grid; justify-items: center; gap: var(--ig-space-3); padding: var(--ig-space-8) var(--ig-space-5); text-align: center; color: var(--ig-color-text-muted); }
 .ig-empty__art { position: relative; display: grid; place-items: center; width: 120px; height: 104px; margin-bottom: var(--ig-space-2); color: var(--ig-color-brand); }
 .ig-empty__art::before { content: ""; position: absolute; inset: 0; border-radius: var(--ig-radius-blob); background: var(--ig-color-surface-brand); animation: ig-morph 8s var(--ig-ease-in-out) infinite alternate; }
-.ig-empty__art .ig-icon { position: relative; width: 40px; height: 40px; stroke-width: 1.5; }
+.ig-empty__art .ig-icon { position: relative; width: 44px; height: 44px; stroke-width: 1.8; }
 .ig-empty h3 { margin: 0; font-size: var(--ig-text-lg); color: var(--ig-color-text); }
 .ig-empty p { margin: 0; max-width: 36ch; }
 @keyframes ig-morph { to { border-radius: 40% 60% 42% 58% / 56% 44% 56% 44%; transform: rotate(6deg) scale(1.04); } }
@@ -327,7 +334,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 .ig-timeline__item:not(:last-child)::before { content: ""; position: absolute; left: 14px; top: 34px; bottom: 2px; width: 4px; background-image: radial-gradient(circle, var(--ig-green-300) 1.6px, transparent 2px); background-size: 4px 9px; background-repeat: repeat-y; }
 .ig-timeline__node { align-self: start; justify-self: center; width: 16px; height: 16px; margin-top: 22px; border-radius: 50%; background: var(--ig-color-surface); box-shadow: inset 0 0 0 3px var(--ig-color-brand); transition: transform var(--ig-dur-base) var(--ig-ease-spring); }
 .ig-timeline__item:hover .ig-timeline__node { transform: scale(1.2); }
-.ig-timeline__item--now .ig-timeline__node { width: 24px; height: 24px; margin-top: 18px; box-shadow: inset 0 0 0 6px var(--ig-color-brand), 0 0 0 5px rgba(12, 122, 62, .18); }
+.ig-timeline__item--now .ig-timeline__node { width: 24px; height: 24px; margin-top: 18px; box-shadow: inset 0 0 0 6px var(--ig-color-brand), 0 0 0 5px rgba(78, 161, 26, .22); }
 .ig-timeline__card { display: grid; gap: 3px; padding: var(--ig-space-3) var(--ig-space-4); border: 0; border-radius: var(--ig-radius-lg); background: var(--ig-color-surface); box-shadow: var(--ig-shadow-1); text-align: left; transition: transform var(--ig-dur-base) var(--ig-ease-spring), box-shadow var(--ig-dur-base) var(--ig-ease-out); cursor: pointer; font: inherit; color: inherit; }
 .ig-timeline__card:hover { transform: translateX(4px); box-shadow: var(--ig-shadow-2); }
 .ig-timeline__item--now .ig-timeline__card { background: var(--ig-color-surface-inverse); color: #fff; padding: var(--ig-space-4); }
@@ -343,7 +350,7 @@ button.ig-chip[aria-pressed="true"] { background: var(--ig-color-accent); color:
 
 /* ---------- Banner con acción ---------- */
 .ig-banner { position: relative; overflow: hidden; display: flex; align-items: flex-end; justify-content: space-between; gap: var(--ig-space-4); min-height: 160px; padding: var(--ig-space-6); border-radius: var(--ig-radius-xl); background: radial-gradient(120% 140% at 100% 0%, var(--ig-green-700), var(--ig-green-900) 55%, var(--ig-green-950)); color: #fff; overflow: hidden; }
-.ig-banner .ig-blob { right: -40px; top: -50px; width: 180px; height: 160px; background: rgba(198, 243, 110, .14); }
+.ig-banner .ig-blob { right: -40px; top: -50px; width: 180px; height: 160px; background: rgba(168, 255, 108, .16); }
 .ig-banner__title { position: relative; max-width: 14ch; font-size: var(--ig-text-2xl); font-weight: var(--ig-weight-extrabold); letter-spacing: var(--ig-tracking-title); line-height: 1.1; }
 .ig-banner__title em { font-style: normal; color: var(--ig-lime-300); }
 

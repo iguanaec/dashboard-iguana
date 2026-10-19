@@ -3,7 +3,11 @@
   'use strict';
 
   var $ = function (id) { return document.getElementById(id); };
-  var css = function (name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); };
+  var css = function (name) {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    var alias = /^var\((--[\w-]+)\)$/.exec(v);          // los alias (p. ej. lima → verde) se resuelven al valor final
+    return alias ? css(alias[1]) : v;
+  };
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var money = function (n) { return IG.money(n); };
 
@@ -41,7 +45,7 @@
       var token = item[0], name = item[1], value = css(token);
       var button = document.createElement('button');
       button.type = 'button';
-      button.className = 'swatch' + (token === '--ig-green-600' ? ' swatch--brand' : '');
+      button.className = 'swatch' + (token === '--ig-green-400' ? ' swatch--brand' : '');
       button.innerHTML = '<div class="swatch__chip" style="background:var(' + token + ')"></div><b>' + name + '</b><span>' + token.replace('--ig-', '') + '</span><small>' + value + '</small>';
       button.title = 'Copiar ' + value;
       button.addEventListener('click', function () {
@@ -57,8 +61,8 @@
     ['Texto principal', '--ig-gray-900', '--ig-gray-0', 4.5], ['Texto principal', '--ig-gray-900', '--ig-gray-50', 4.5],
     ['Texto secundario', '--ig-gray-600', '--ig-gray-0', 4.5], ['Texto secundario', '--ig-gray-600', '--ig-gray-100', 4.5],
     ['Texto sutil', '--ig-gray-500', '--ig-gray-0', 4.5], ['Texto sutil', '--ig-gray-500', '--ig-gray-50', 4.5], ['Texto sutil', '--ig-gray-500', '--ig-gray-100', 4.5],
-    ['Marca sobre blanco', '--ig-green-600', '--ig-gray-0', 4.5], ['Marca sobre verde suave', '--ig-green-700', '--ig-green-100', 4.5],
-    ['Botón principal', '--ig-gray-0', '--ig-green-900', 4.5], ['Lima sobre verde 900', '--ig-lime-300', '--ig-green-900', 4.5], ['Tinta sobre lima', '--ig-gray-900', '--ig-lime-300', 4.5],
+    ['Marca (texto) sobre blanco', '--ig-green-700', '--ig-gray-0', 4.5], ['Marca (texto) sobre verde suave', '--ig-green-700', '--ig-green-100', 4.5], ['Marca (icono) sobre blanco', '--ig-green-600', '--ig-gray-0', 3],
+    ['Botón principal: tinta sobre lima', '--ig-gray-900', '--ig-green-400', 4.5], ['Botón oscuro: lima sobre verde 900', '--ig-green-400', '--ig-green-900', 4.5], ['Blanco sobre verde 900', '--ig-gray-0', '--ig-green-900', 4.5],
     ['Peligro sobre fondo suave', '--ig-red-700', '--ig-red-50', 4.5], ['Blanco sobre rojo', '--ig-gray-0', '--ig-red-600', 4.5],
     ['Tinta sobre ámbar claro', '--ig-gray-900', '--ig-amber-100', 4.5], ['Información sobre fondo suave', '--ig-blue-700', '--ig-blue-50', 4.5],
     ['Borde de control', '--ig-gray-400', '--ig-gray-0', 3], ['Borde de control sobre fondo', '--ig-gray-400', '--ig-gray-50', 3],
@@ -77,7 +81,7 @@
 
   /* ---------- Iconos ---------- */
   var iconGrid = $('iconGrid');
-  document.querySelectorAll('svg defs symbol').forEach(function (sym) {
+  document.querySelectorAll('#ig-sprite symbol').forEach(function (sym) {
     var name = sym.id.replace('i-', '');
     var cell = document.createElement('button');
     cell.type = 'button';
