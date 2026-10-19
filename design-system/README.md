@@ -48,3 +48,11 @@ Todos los pares de texto/fondo y controles cumplen WCAG 2.1 AA (la tabla "Pares 
 
 `0.x` mientras se prueba. Los cambios de un token se hacen en `tokens.css`, se regenera `tokens.json` y se revisa la tabla de contraste.
 Pendiente: modo oscuro (mismos tokens semánticos), componentes de formulario avanzados y sincronía con Figma.
+
+## Verlo en un solo archivo
+
+`design-system/iguana-design-system.html` es la documentación completa en **un único archivo** (CSS, JS e imágenes embebidos). Se abre con doble clic o desde cualquier visor HTML. Se regenera con:
+
+```bash
+node design-system/build-standalone.mjs
+```
