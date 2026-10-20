@@ -1549,6 +1549,229 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
+/* =========================================================
+   Mensajería · Iguana — estilos de conversaciones, embudo, chatbots,
+   campañas y catálogo. Solo tokens del design system; sin líneas decorativas
+   (se separa con tono, espacio y sombra).
+   ========================================================= */
+
+/* ---------- Piezas comunes ---------- */
+.m-ch { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px 2px 6px; border-radius: var(--ig-radius-pill); background: var(--ig-color-surface-tonal); color: var(--ig-color-text-muted); font-size: 11.5px; font-weight: var(--ig-weight-semibold); white-space: nowrap; }
+.m-ch .ig-icon { width: 13px; height: 13px; }
+.m-ch--whatsapp { background: var(--ig-green-100); color: var(--ig-green-800); }
+.m-ch--instagram { background: #F6E6FF; color: #6B2A94; }
+.m-ch--messenger { background: var(--ig-color-info-soft); color: var(--ig-color-info); }
+
+.m-avatar { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ig-green-100); color: var(--ig-green-800); font-weight: var(--ig-weight-bold); font-size: 14px; }
+.m-avatar[data-ch="instagram"] { background: #F6E6FF; color: #6B2A94; }
+.m-avatar[data-ch="messenger"] { background: var(--ig-color-info-soft); color: var(--ig-color-info); }
+.m-avatar--lg { width: 44px; height: 44px; }
+.m-avatar--xl { width: 72px; height: 72px; font-size: 24px; }
+
+.m-search { position: relative; display: flex; align-items: center; flex: 1; min-width: 0; }
+.m-search .ig-icon { position: absolute; left: 14px; width: 18px; height: 18px; color: var(--ig-color-text-subtle); pointer-events: none; }
+.m-search input[type="search"] { width: 100%; padding-left: 44px; border-radius: var(--ig-radius-pill); }
+
+.m-chips, .m-tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px; }
+.m-chips::-webkit-scrollbar, .m-tabs::-webkit-scrollbar { display: none; }
+.m-chip, .m-tab { flex: none; min-height: 34px; padding: 0 14px; border: 0; border-radius: var(--ig-radius-pill); background: var(--ig-color-surface-tonal); color: var(--ig-color-text-muted); font: inherit; font-size: 13px; font-weight: var(--ig-weight-semibold); cursor: pointer; transition: background var(--ig-dur-base), transform var(--ig-dur-base); }
+.m-chip:hover, .m-tab:hover { background: var(--ig-gray-200); }
+.m-chip:active, .m-tab:active { transform: scale(.97); }
+.m-chip[aria-pressed="true"], .m-tab[aria-selected="true"] { background: var(--ig-color-action); color: var(--ig-color-action-text); }
+.m-tab em { margin-left: 6px; padding: 1px 7px; border-radius: var(--ig-radius-pill); background: var(--ig-green-900); color: var(--ig-green-400); font-style: normal; font-size: 11px; }
+.m-tab[aria-selected="true"] em { background: var(--ig-green-900); }
+
+/* ---------- Bandeja ---------- */
+.m-inbox { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: var(--gap); height: clamp(520px, calc(100dvh - var(--chrome-top) - 150px), 860px); }
+.m-inbox.has-info { grid-template-columns: 340px minmax(0, 1fr) 300px; }
+.m-inbox > * { min-height: 0; }
+.m-inbox:not(.has-info) .m-info { display: none; }
+
+.m-list { display: flex; flex-direction: column; }
+.m-list-head { display: grid; gap: var(--ig-space-3); padding: var(--ig-space-4); }
+.m-items { flex: 1; overflow-y: auto; padding: 0 var(--ig-space-2) var(--ig-space-2); display: grid; gap: 2px; align-content: start; }
+.m-item { display: flex; gap: var(--ig-space-3); align-items: flex-start; width: 100%; padding: var(--ig-space-3); border: 0; border-radius: var(--ig-radius-md); background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background var(--ig-dur-base); }
+.m-item:hover { background: var(--ig-color-surface-tonal); }
+.m-item[aria-current="true"] { background: var(--ig-color-surface-brand); }
+.m-item-main { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.m-item-top { display: flex; justify-content: space-between; gap: 8px; }
+.m-item-top strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.m-item-top time { flex: none; font-size: 12px; color: var(--ig-color-text-subtle); }
+.m-item-msg { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; color: var(--ig-color-text-muted); }
+.m-item-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.m-who { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ig-color-text-subtle); }
+.m-who .ig-icon { width: 14px; height: 14px; }
+.m-unread { flex: none; align-self: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: var(--ig-radius-pill); display: grid; place-items: center; background: var(--ig-color-action); color: var(--ig-color-action-text); font-size: 12px; font-weight: var(--ig-weight-bold); }
+
+.m-thread { display: flex; flex-direction: column; }
+.m-thread-head { display: flex; align-items: center; gap: var(--ig-space-3); padding: var(--ig-space-3) var(--ig-space-4); background: var(--ig-color-surface-soft); }
+.m-thread-who { min-width: 120px; flex: 1; }
+.m-thread-who h2 { font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m-thread-who p { display: flex; white-space: nowrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ig-color-text-subtle); flex-wrap: wrap; }
+.m-thread-actions { display: flex; align-items: center; gap: var(--ig-space-2); }
+.m-ai { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: var(--ig-weight-semibold); color: var(--ig-color-text-muted); cursor: pointer; }
+.m-back { display: none; }
+.m-info-btn[aria-pressed="true"] { background: var(--ig-color-surface-brand); }
+
+.m-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: var(--ig-space-5) var(--ig-space-4); background: var(--ig-color-bg); }
+.m-body:focus-visible { outline: 0; box-shadow: inset 0 0 0 3px var(--ig-color-focus); }
+.m-day { text-align: center; }
+.m-day span { padding: 3px 12px; border-radius: var(--ig-radius-pill); background: var(--ig-color-surface); box-shadow: var(--ig-shadow-1); font-size: 11.5px; color: var(--ig-color-text-subtle); }
+.m-msg { position: relative; max-width: min(520px, 82%); padding: 9px 14px 6px; border-radius: 20px; box-shadow: var(--ig-shadow-1); animation: m-pop .22s var(--ig-ease-out); }
+.m-msg p { font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
+.m-msg time { display: block; margin-top: 2px; text-align: right; font-size: 10.5px; opacity: .6; }
+.m-msg-who { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; font-size: 11px; font-weight: var(--ig-weight-bold); letter-spacing: .02em; }
+.m-msg-who .ig-icon { width: 14px; height: 14px; }
+.m-msg--in { align-self: flex-start; border-bottom-left-radius: 6px; background: var(--ig-color-surface); }
+.m-msg--out { align-self: flex-end; border-bottom-right-radius: 6px; background: var(--ig-color-action); color: var(--ig-color-action-text); }
+.m-msg--bot { align-self: flex-end; border-bottom-right-radius: 6px; background: var(--ig-green-900); color: #fff; --ig-icon-tint: rgba(168, 255, 108, .25); }
+.m-msg--bot .m-msg-who { color: var(--ig-green-400); }
+@keyframes m-pop { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
+
+.m-composer { display: flex; align-items: center; gap: var(--ig-space-2); padding: var(--ig-space-3) var(--ig-space-4); background: var(--ig-color-surface); }
+.m-composer input[type="text"] { flex: 1; min-width: 0; border-radius: var(--ig-radius-pill); padding-left: 18px; }
+.ig-menu-wrap { position: relative; }
+.m-tpl-menu { position: absolute; z-index: 5; left: 0; bottom: calc(100% + 8px); display: grid; min-width: 250px; padding: 6px; border-radius: var(--ig-radius-md); background: var(--ig-color-surface); box-shadow: var(--ig-shadow-3); }
+.m-tpl-menu button { padding: 10px 12px; border: 0; border-radius: var(--ig-radius-sm); background: transparent; color: var(--ig-color-text); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.m-tpl-menu button:hover, .m-tpl-menu button:focus-visible { background: var(--ig-color-surface-brand); outline: 0; }
+
+.m-info { overflow-y: auto; display: grid; gap: var(--ig-space-4); align-content: start; }
+.m-info-top { display: grid; justify-items: center; gap: 6px; text-align: center; }
+.m-info-top p { color: var(--ig-color-text-subtle); font-size: 13px; }
+.m-facts { display: grid; gap: var(--ig-space-3); }
+.m-facts > div { display: grid; gap: 4px; padding: var(--ig-space-3); border-radius: var(--ig-radius-md); background: var(--ig-color-surface-soft); }
+.m-facts dt { font: var(--ig-weight-medium) 11px/1.3 var(--ig-font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ig-color-text-subtle); }
+.m-facts dd { font-size: 14px; }
+.m-info-block h4 { margin-bottom: 8px; font-size: 13px; color: var(--ig-color-text-muted); }
+.m-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.m-addtag { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--ig-color-surface-tonal); color: var(--ig-color-text-muted); cursor: pointer; }
+.m-addtag .ig-icon { width: 16px; height: 16px; }
+.m-info textarea { min-height: 76px; }
+
+/* ---------- Tarjetas de cifras ---------- */
+.m-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); margin-bottom: var(--gap); }
+.m-kpis--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.m-kpi { display: grid; gap: 4px; }
+.m-kpi .m-kpi-l { font: var(--ig-weight-medium) 11.5px/1.3 var(--ig-font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ig-color-text-subtle); }
+.m-kpi strong { font-size: 28px; line-height: 1.1; font-weight: var(--ig-weight-extrabold, 800); letter-spacing: -.02em; }
+.m-kpi small { color: var(--ig-color-text-subtle); font-size: 13px; }
+.m-kpi--hl { background: var(--ig-color-surface-highlight); color: var(--ig-color-text-on-highlight); --ig-icon-tint: rgba(23, 51, 11, .2); }
+.m-kpi--hl small, .m-kpi--hl .m-kpi-l { color: var(--ig-green-900); }
+
+/* ---------- Embudo ---------- */
+.m-board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: var(--gap); overflow-x: auto; padding-bottom: var(--ig-space-3); scroll-snap-type: x proximity; }
+.m-col { scroll-snap-align: start; display: flex; flex-direction: column; gap: var(--ig-space-3); padding: var(--ig-space-3); border-radius: var(--ig-radius-lg); background: var(--ig-color-surface-tonal); min-height: 320px; transition: background var(--ig-dur-base), box-shadow var(--ig-dur-base); }
+.m-col.is-over { background: var(--ig-color-surface-brand); box-shadow: 0 0 0 3px var(--ig-color-focus); }
+.m-col header { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 4px 0; }
+.m-col-sum { font-size: 13px; font-weight: var(--ig-weight-bold); color: var(--ig-color-text-muted); }
+.m-col ul { display: grid; gap: var(--ig-space-3); align-content: start; }
+.m-deal { position: relative; display: grid; gap: 8px; padding: var(--ig-space-4); border-radius: var(--ig-radius-md); background: var(--ig-color-surface); box-shadow: var(--ig-shadow-1); cursor: grab; transition: transform var(--ig-dur-base) var(--ig-ease-spring, ease), box-shadow var(--ig-dur-base); }
+.m-deal:hover { transform: translateY(-2px); box-shadow: var(--ig-shadow-2); }
+.m-deal.is-drag { opacity: .45; }
+.m-deal strong { font-size: 14px; line-height: 1.3; }
+.m-deal-who { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ig-color-text-muted); }
+.m-deal-who .m-avatar { width: 26px; height: 26px; font-size: 10px; }
+.m-deal-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.m-deal-foot b { font-size: 15px; }
+.m-deal-move { display: flex; gap: 4px; justify-content: flex-end; }
+.m-deal-move .icon-btn { width: 32px; height: 32px; }
+.m-col-empty { padding: var(--ig-space-5) var(--ig-space-3); border-radius: var(--ig-radius-md); text-align: center; font-size: 13px; color: var(--ig-color-text-subtle); background: rgba(255, 255, 255, .5); }
+
+/* ---------- Chatbots ---------- */
+.m-bots { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.m-bot-list { display: grid; gap: var(--ig-space-3); }
+.m-bot { display: flex; align-items: center; gap: var(--ig-space-3); padding: var(--ig-space-4); }
+.m-bot.is-current { background: var(--ig-color-surface-brand); box-shadow: var(--ig-shadow-2); }
+.m-bot-pick { flex: 1; display: grid; gap: 3px; min-width: 0; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.m-bot-pick small { color: var(--ig-color-text-muted); font-size: 13px; }
+.m-bot-stats { font-size: 12px; color: var(--ig-color-text-subtle); }
+.m-steps { display: grid; gap: 0; counter-reset: s; }
+.m-step { position: relative; display: flex; gap: var(--ig-space-4); padding: 0 0 var(--ig-space-5); }
+.m-step:last-child { padding-bottom: 0; }
+.m-step:not(:last-child)::before { content: ""; position: absolute; left: 21px; top: 48px; bottom: 4px; border-left: 3px dotted var(--ig-gray-300); }
+.m-step-ico { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--ig-radius-md); background: var(--ig-color-surface-tonal); color: var(--ig-color-text); }
+.m-step--ai .m-step-ico { background: var(--ig-color-action); color: var(--ig-color-action-text); --ig-icon-tint: rgba(23, 51, 11, .2); }
+.m-step div { padding: 4px 0; }
+.m-step p { margin-top: 2px; font-size: 14.5px; max-width: 58ch; }
+.m-flow-foot { display: flex; gap: var(--ig-space-3); flex-wrap: wrap; margin-top: var(--ig-space-6); }
+
+/* ---------- Campañas ---------- */
+.m-camps { display: grid; gap: var(--gap); }
+.m-camp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 420px); gap: var(--ig-space-6); align-items: center; }
+.m-camp-top { display: flex; align-items: center; gap: var(--ig-space-3); flex-wrap: wrap; margin-bottom: 6px; }
+.m-camp-top strong { font-size: 16px; }
+.m-camp-main p { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; font-size: 13px; color: var(--ig-color-text-muted); }
+.m-camp-main code { padding: 1px 6px; border-radius: 6px; background: var(--ig-color-surface-tonal); font-family: var(--ig-font-mono); font-size: 12px; }
+.m-funnel { display: grid; gap: 6px; }
+.m-funnel div { display: grid; grid-template-columns: 76px minmax(0, 1fr) 48px; align-items: center; gap: 10px; font-size: 12.5px; }
+.m-funnel span { color: var(--ig-color-text-muted); }
+.m-funnel i { display: block; width: var(--w); height: 10px; border-radius: var(--ig-radius-pill); background: var(--ig-green-500); }
+.m-funnel div:nth-child(2) i { background: var(--ig-green-400); }
+.m-funnel div:nth-child(3) i { background: var(--ig-green-300); }
+.m-funnel div:nth-child(4) i { background: var(--ig-green-600); }
+.m-funnel b { text-align: right; }
+.m-camp-sched { display: flex; align-items: center; gap: 10px; padding: var(--ig-space-3) var(--ig-space-4); border-radius: var(--ig-radius-md); background: var(--ig-color-info-soft); color: var(--ig-color-info); font-size: 13.5px; }
+
+/* ---------- Catálogo ---------- */
+.m-cat-tools { display: flex; gap: var(--ig-space-3); align-items: center; margin-bottom: var(--gap); flex-wrap: wrap; }
+.m-cat-tools .m-search { max-width: 380px; flex: 1 1 260px; }
+.m-cat-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--gap); align-items: start; }
+.m-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--gap); }
+.m-product { display: grid; gap: var(--ig-space-3); align-content: start; }
+.m-product-img { display: grid; place-items: center; height: 110px; border-radius: var(--ig-radius-lg); background: var(--ig-color-surface-brand); color: var(--ig-green-800); }
+.m-product-body { display: grid; gap: 6px; justify-items: start; }
+.m-product-body strong { font-size: 15px; }
+.m-product-price { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+.m-product-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.m-pay ul { display: grid; gap: var(--ig-space-3); }
+.m-pay li { display: flex; align-items: center; justify-content: space-between; gap: var(--ig-space-3); padding: var(--ig-space-3) var(--ig-space-4); border-radius: var(--ig-radius-md); background: var(--ig-color-surface-soft); }
+.m-pay li span:first-child { display: grid; }
+.m-pay small { color: var(--ig-color-text-subtle); font-size: 12.5px; }
+
+/* ---------- Diálogo de campaña ---------- */
+
+/* ---------- Responsive ---------- */
+.nav .nav-short { display: none; }
+body[data-page="conversaciones"] .fab { display: none; }
+@media (max-width: 1559px) {
+  .m-inbox.has-info { grid-template-columns: 320px minmax(0, 1fr); }
+  .m-inbox.has-info .m-info { position: fixed; z-index: 30; top: calc(var(--chrome-top) + 12px); right: 12px; bottom: 12px; width: min(340px, calc(100vw - 24px)); box-shadow: var(--ig-shadow-3); }
+}
+@media (max-width: 1024px) {
+  .m-bots { grid-template-columns: 1fr; }
+  .m-cat-layout { grid-template-columns: 1fr; }
+  .m-camp { grid-template-columns: 1fr; gap: var(--ig-space-4); }
+}
+@media (max-width: 860px) {
+  .nav .nav-long { display: none; }
+  .nav .nav-short { display: inline; }
+  .m-inbox, .m-inbox.has-info { grid-template-columns: 1fr; height: calc(100dvh - var(--chrome-top) - var(--tabbar-h) - var(--safe-bottom) - 28px); }
+  .m-inbox .m-thread, .m-inbox .m-info { display: none; }
+  .m-inbox.is-thread .m-list { display: none; }
+  .m-inbox.is-thread .m-thread { display: flex; }
+  .m-inbox.has-info.is-thread .m-info { display: grid; }
+  .m-inbox:not(.is-thread) .m-info { display: none; }
+  .m-back { display: grid; }
+  .m-kpis, .m-kpis--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .m-ai span:first-child { display: none; }
+}
+@media (max-width: 560px) {
+  .m-kpis { grid-template-columns: 1fr; }
+  .m-kpi .m-kpi-l { font: var(--ig-weight-medium) 11.5px/1.3 var(--ig-font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ig-color-text-subtle); }
+.m-kpi strong { font-size: 24px; }
+  .m-thread-head { padding: var(--ig-space-2) var(--ig-space-3); gap: var(--ig-space-2); }
+  .m-thread-head .m-avatar { display: none; }
+  .m-thread-actions .btn span { display: none; }
+  .m-msg { max-width: 90%; }
+  .m-composer .btn span { display: none; }
+  .m-col { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .m-msg, .m-deal, .m-chip, .m-tab { animation: none; transition: none; }
+}
+
+.m-product-actions .btn { flex: 1 1 auto; justify-content: center; }
+
 </style>
 </head>
 <body class="ig-root" data-state="loading">
@@ -1718,9 +1941,14 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
   <nav class="nav" id="nav" aria-label="Principal">
     <ul>
       <li><a href="#/inicio" data-route="inicio"><svg class="ig-icon"><use href="#i-home"/></svg><span>Inicio</span></a></li>
+      <li><a href="#/conversaciones" data-route="conversaciones"><svg class="ig-icon"><use href="#i-chat"/></svg><span><span class="nav-long">Conversaciones</span><span class="nav-short">Chats</span></span></a></li>
       <li><a href="#/calendario" data-route="calendario"><svg class="ig-icon"><use href="#i-calendar"/></svg><span>Calendario</span></a></li>
       <li><a href="#/clientes" data-route="clientes"><svg class="ig-icon"><use href="#i-users"/></svg><span>Clientes</span></a></li>
       <li><a href="#/dinero" data-route="dinero"><svg class="ig-icon"><use href="#i-wallet"/></svg><span>Dinero</span></a></li>
+      <li class="nav-secondary nav-sep"><a href="#/embudo" data-route="embudo"><svg class="ig-icon"><use href="#i-trend"/></svg><span>Embudo de ventas</span></a></li>
+      <li class="nav-secondary"><a href="#/chatbots" data-route="chatbots"><svg class="ig-icon"><use href="#i-sliders"/></svg><span>Chatbots</span></a></li>
+      <li class="nav-secondary"><a href="#/campanas" data-route="campanas"><svg class="ig-icon"><use href="#i-whatsapp"/></svg><span>Campañas</span></a></li>
+      <li class="nav-secondary"><a href="#/catalogo" data-route="catalogo"><svg class="ig-icon"><use href="#i-receipt"/></svg><span>Catálogo</span></a></li>
       <li class="nav-secondary nav-sep"><a href="#/asistente" data-route="asistente"><svg class="ig-icon"><use href="#i-bot"/></svg><span>Asistente IA</span></a></li>
       <li class="nav-secondary"><a href="#/ajustes" data-route="ajustes"><svg class="ig-icon"><use href="#i-cog"/></svg><span>Ajustes</span></a></li>
       <li class="nav-secondary nav-soon"><a href="#/facturar" data-route="facturar"><svg class="ig-icon"><use href="#i-receipt"/></svg><span>Facturar</span><em class="tag">Pronto</em></a></li>
@@ -2061,6 +2289,37 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
       </form>
     </section>
 
+    <!-- Conversaciones -->
+    <section class="view" id="view-conversaciones" data-view="conversaciones" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Conversaciones</h1><p>WhatsApp, Instagram y Messenger en una sola bandeja, con tu equipo y el asistente IA.</p></div></div>
+      <div id="merc-conversaciones"></div>
+    </section>
+
+    <!-- Embudo -->
+    <section class="view" id="view-embudo" data-view="embudo" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Embudo de ventas</h1><p>Sigue cada oportunidad desde el primer mensaje hasta el cobro. Arrastra las tarjetas o usa las flechas.</p></div></div>
+      <div id="merc-embudo"></div>
+    </section>
+
+    <!-- Chatbots -->
+    <section class="view" id="view-chatbots" data-view="chatbots" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Chatbots</h1><p>Automatiza saludos, citas, recordatorios y cobros. Tú decides cuándo entra una persona.</p></div></div>
+      <div id="merc-chatbots"></div>
+    </section>
+
+    <!-- Campañas -->
+    <section class="view" id="view-campanas" data-view="campanas" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Campañas</h1><p>Envía plantillas de WhatsApp a tus clientes y mide quién las lee y responde.</p></div>
+        <button class="btn btn-primary" type="button" data-merc-new-campaign><svg class="ig-icon"><use href="#i-plus"/></svg><span>Nueva campaña</span></button></div>
+      <div id="merc-campanas"></div>
+    </section>
+
+    <!-- Catálogo -->
+    <section class="view" id="view-catalogo" data-view="catalogo" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Catálogo</h1><p>Comparte servicios y productos en el chat y cobra con un link de pago.</p></div></div>
+      <div id="merc-catalogo"></div>
+    </section>
+
     <!-- Facturar -->
     <section class="view" id="view-facturar" data-view="facturar" hidden>
       <div class="view-head"><div><h1 tabindex="-1">Facturar</h1></div></div>
@@ -2099,6 +2358,25 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
 
 <!-- ============ DIÁLOGOS ============ -->
 
+<dialog class="dialog dialog-sm" id="mCampaignDialog" aria-labelledby="mCampTitle">
+  <form method="dialog" class="stack">
+    <header class="dialog-head">
+      <h2 id="mCampTitle">Nueva campaña</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Cerrar"><svg class="ig-icon"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dialog-body stack">
+      <label class="field"><span class="field-label">Nombre</span><input name="name" maxlength="80" required placeholder="Ej. Promo de fin de mes" /></label>
+      <label class="field"><span class="field-label">Plantilla de WhatsApp</span>
+        <select name="tpl"><option>promo_madre_v2</option><option>cupos_finde</option><option>lanzamiento_kit</option><option>recordatorio_cita</option></select></label>
+      <label class="field"><span class="field-label">Audiencia</span>
+        <select name="audience"><option>Todos los contactos</option><option>Etiqueta · Cliente frecuente</option><option>Clientes con cita en el último año</option><option>Sin visitas hace 60 días</option></select></label>
+      <label class="field"><span class="field-label">Cuándo</span>
+        <select name="when"><option value="tomorrow">Mañana a las 10:00</option><option value="now">Ahora</option></select></label>
+    </div>
+    <footer class="dialog-foot"><button class="btn btn-primary" type="submit">Programar envío</button></footer>
+  </form>
+</dialog>
+
 <dialog class="dialog dialog-sm" id="moreDialog" aria-labelledby="moreTitle">
   <header class="dialog-head">
     <h2 id="moreTitle">Más opciones</h2>
@@ -2106,6 +2384,10 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
   </header>
   <div class="dialog-body">
     <ul class="more-list">
+      <li><a href="#/embudo"><svg class="ig-icon"><use href="#i-trend"/></svg><span><strong>Embudo de ventas</strong><small>Oportunidades por etapa</small></span></a></li>
+      <li><a href="#/chatbots"><svg class="ig-icon"><use href="#i-sliders"/></svg><span><strong>Chatbots</strong><small>Automatiza respuestas</small></span></a></li>
+      <li><a href="#/campanas"><svg class="ig-icon"><use href="#i-whatsapp"/></svg><span><strong>Campañas</strong><small>Mensajes masivos con plantillas</small></span></a></li>
+      <li><a href="#/catalogo"><svg class="ig-icon"><use href="#i-receipt"/></svg><span><strong>Catálogo</strong><small>Productos y links de pago</small></span></a></li>
       <li><a href="#/asistente"><svg class="ig-icon"><use href="#i-bot"/></svg><span><strong>Asistente IA</strong><small>Cómo conversa con tus clientes</small></span></a></li>
       <li><a href="#/ajustes"><svg class="ig-icon"><use href="#i-cog"/></svg><span><strong>Ajustes</strong><small>Servicios, horario y reservas</small></span></a></li>
       <li><a href="#/facturar"><svg class="ig-icon"><use href="#i-receipt"/></svg><span><strong>Facturar</strong><small>Próximamente</small></span></a></li>
@@ -2985,6 +3267,583 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
 
 ;
 /* =========================================================
+   Mensajería · Iguana
+   Bandeja de conversaciones, embudo, chatbots, campañas y catálogo.
+   Solo datos de ejemplo (nada se envía ni se guarda). Se monta desde app.js
+   con  window.IguanaMsg.render(vista).
+   ========================================================= */
+(() => {
+  'use strict';
+
+  const $ = (id) => document.getElementById(id);
+  const toast = (msg, type) => (window.IG ? window.IG.toast(msg, { type }) : null);
+  const icon = (name, cls = '') => `<svg class="ig-icon ${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const usd = (n) => new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' }).format(n);
+  const initials = (name) => name.split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+
+  const CHANNELS = {
+    whatsapp: { label: 'WhatsApp', icon: 'whatsapp' },
+    instagram: { label: 'Instagram', icon: 'star' },
+    messenger: { label: 'Messenger', icon: 'chat' },
+  };
+  const AGENTS = {
+    ana: { name: 'Ana Paredes', short: 'Ana' },
+    luis: { name: 'Luis Mora', short: 'Luis' },
+    sofi: { name: 'Sofía Vera', short: 'Sofía' },
+  };
+  const hm = (h, m) => `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+
+  /* ---------------- Datos de ejemplo ---------------- */
+  const convos = [
+    { id: 1, name: 'María Fernanda Salazar', phone: '+593 98 412 7788', channel: 'whatsapp', agent: 'ana', bot: false, unread: 2, stage: 'negociacion', status: 'open', tags: ['Cliente frecuente', 'Quito'], last: hm(10, 42),
+      msgs: [
+        { from: 'in', text: 'Hola, buenos días. ¿Tienen disponible el plan de limpieza facial para este sábado?', t: hm(10, 31) },
+        { from: 'bot', text: 'Hola María Fernanda 👋 Soy el asistente de Iguana. Sí hay cupos el sábado a las 09:00 y a las 15:30. ¿Cuál te acomoda?', t: hm(10, 31) },
+        { from: 'in', text: 'A las 15:30 por favor. ¿Cuánto cuesta con el masaje incluido?', t: hm(10, 38) },
+        { from: 'out', agent: 'ana', text: 'Con masaje incluido son $45. Si pagas hoy por transferencia te dejo $5 de descuento.', t: hm(10, 40) },
+        { from: 'in', text: 'Perfecto, ¿me pasas el link de pago?', t: hm(10, 42) },
+        { from: 'in', text: 'Y confirmo la cita ahora mismo 🙌', t: hm(10, 42) },
+      ] },
+    { id: 2, name: 'Carlos Andrade', phone: '+593 99 301 2245', channel: 'instagram', agent: null, bot: true, unread: 1, stage: 'nuevo', status: 'open', tags: ['Desde anuncio'], last: hm(10, 15),
+      msgs: [
+        { from: 'in', text: 'Vi su publicación del corte + barba. ¿Hasta qué hora atienden?', t: hm(10, 14) },
+        { from: 'bot', text: 'Hola Carlos 👋 Atendemos de lunes a sábado de 09:00 a 19:00. ¿Quieres que te reserve un cupo?', t: hm(10, 15) },
+        { from: 'in', text: '¿Y el domingo?', t: hm(10, 15) },
+      ] },
+    { id: 3, name: 'Valeria Núñez', phone: '+593 96 880 1432', channel: 'whatsapp', agent: 'luis', bot: false, unread: 0, stage: 'propuesta', status: 'open', tags: ['Corporativo'], last: hm(9, 58),
+      msgs: [
+        { from: 'in', text: 'Necesitamos una cotización para 12 personas, jornada completa de bienestar para el equipo.', t: hm(9, 40) },
+        { from: 'out', agent: 'luis', text: 'Claro Valeria, te preparo la propuesta. ¿Qué fecha tienen en mente?', t: hm(9, 45) },
+        { from: 'in', text: 'Primera semana del próximo mes.', t: hm(9, 52) },
+        { from: 'out', agent: 'luis', text: 'Listo. Te la envío por correo en unos minutos y la dejo también por aquí.', t: hm(9, 58) },
+      ] },
+    { id: 4, name: 'Diego Cevallos', phone: '+593 98 120 5566', channel: 'messenger', agent: 'sofi', bot: false, unread: 0, stage: 'calificado', status: 'open', tags: ['Guayaquil'], last: hm(9, 20),
+      msgs: [
+        { from: 'in', text: '¿Hacen envíos a Guayaquil de los kits de cuidado?', t: hm(9, 12) },
+        { from: 'out', agent: 'sofi', text: 'Sí Diego, enviamos a todo el país. En Guayaquil llega en 24 a 48 horas. El envío cuesta $4,50.', t: hm(9, 20) },
+      ] },
+    { id: 5, name: 'Paola Jácome', phone: '+593 99 774 0091', channel: 'whatsapp', agent: null, bot: true, unread: 3, stage: 'nuevo', status: 'open', tags: ['Sin asignar'], last: hm(8, 47),
+      msgs: [
+        { from: 'in', text: 'Hola!!', t: hm(8, 44) },
+        { from: 'bot', text: 'Hola Paola 👋 ¿En qué te puedo ayudar? Puedo agendar una cita, mostrarte el catálogo o pasarte con una persona del equipo.', t: hm(8, 44) },
+        { from: 'in', text: 'Quiero cambiar mi cita del jueves', t: hm(8, 46) },
+        { from: 'in', text: 'Si se puede para el viernes en la tarde', t: hm(8, 47) },
+      ] },
+    { id: 6, name: 'Andrés Villacís', phone: '+593 95 612 3388', channel: 'instagram', agent: 'ana', bot: false, unread: 0, stage: 'ganado', status: 'resolved', tags: ['Pagado'], last: 'Ayer',
+      msgs: [
+        { from: 'in', text: 'Ya hice el pago, te mando el comprobante.', t: hm(17, 3) },
+        { from: 'out', agent: 'ana', text: '¡Recibido, Andrés! Tu cita queda confirmada para el miércoles a las 11:00. Gracias 💚', t: hm(17, 10) },
+      ] },
+    { id: 7, name: 'Gabriela Torres', phone: '+593 98 004 7712', channel: 'whatsapp', agent: 'sofi', bot: false, unread: 0, stage: 'calificado', status: 'open', tags: ['Referida'], last: 'Ayer',
+      msgs: [
+        { from: 'in', text: 'Me recomendó Paula. ¿Tienen paquetes para novias?', t: hm(15, 20) },
+        { from: 'out', agent: 'sofi', text: 'Hola Gabriela, ¡felicidades! Sí, tenemos el paquete Novia con prueba previa. Te cuento los detalles.', t: hm(15, 32) },
+      ] },
+    { id: 8, name: 'Jorge Mejía', phone: '+593 99 555 8090', channel: 'messenger', agent: 'luis', bot: false, unread: 0, stage: 'perdido', status: 'resolved', tags: ['Sin respuesta'], last: 'Lun',
+      msgs: [
+        { from: 'in', text: 'Gracias, lo voy a pensar.', t: hm(12, 5) },
+      ] },
+  ];
+
+  const stages = [
+    { key: 'nuevo', label: 'Nuevo', tone: 'info' },
+    { key: 'calificado', label: 'Calificado', tone: 'brand' },
+    { key: 'propuesta', label: 'Propuesta', tone: 'warning' },
+    { key: 'negociacion', label: 'Negociación', tone: 'warning' },
+    { key: 'ganado', label: 'Ganado', tone: 'success' },
+  ];
+  const deals = [
+    { id: 1, convo: 4, title: 'Kit cuidado facial x3', value: 96, stage: 'calificado' },
+    { id: 2, convo: 2, title: 'Corte + barba mensual', value: 120, stage: 'nuevo' },
+    { id: 3, convo: 5, title: 'Reagendar cita + extras', value: 35, stage: 'nuevo' },
+    { id: 4, convo: 3, title: 'Jornada bienestar · 12 personas', value: 1260, stage: 'propuesta' },
+    { id: 5, convo: 1, title: 'Limpieza facial + masaje', value: 45, stage: 'negociacion' },
+    { id: 6, convo: 7, title: 'Paquete Novia con prueba', value: 380, stage: 'calificado' },
+    { id: 7, convo: 6, title: 'Plan trimestral cuidado', value: 210, stage: 'ganado' },
+  ];
+
+  const bots = [
+    { id: 1, name: 'Bienvenida y menú', trigger: 'Primer mensaje de un contacto nuevo', on: true, runs: 1284, done: 78,
+      steps: [
+        { type: 'Disparador', text: 'Llega un mensaje de un contacto nuevo', icon: 'bell' },
+        { type: 'Mensaje', text: 'Saludo con el nombre del negocio y 3 botones: Agendar · Catálogo · Hablar con alguien', icon: 'chat' },
+        { type: 'Condición', text: 'Si elige «Agendar» → flujo de citas. Si elige «Catálogo» → envía productos', icon: 'sliders' },
+        { type: 'Acción', text: 'Etiqueta al contacto como «Desde bot» y lo agrega al embudo en «Nuevo»', icon: 'users' },
+      ] },
+    { id: 2, name: 'Agendar cita con IA', trigger: 'Palabras: cita, reservar, agendar', on: true, runs: 642, done: 71,
+      steps: [
+        { type: 'Disparador', text: 'El mensaje contiene «cita», «reservar» o «agendar»', icon: 'bell' },
+        { type: 'IA', text: 'Pregunta servicio y día, y consulta los cupos libres del calendario', icon: 'bot' },
+        { type: 'Mensaje', text: 'Ofrece hasta 3 horarios disponibles', icon: 'chat' },
+        { type: 'Acción', text: 'Crea la cita en el calendario y envía confirmación', icon: 'calendar' },
+      ] },
+    { id: 3, name: 'Recordatorio y cobro', trigger: '24 horas antes de la cita', on: true, runs: 913, done: 92,
+      steps: [
+        { type: 'Disparador', text: '24 horas antes de cada cita', icon: 'clock' },
+        { type: 'Plantilla', text: 'Envía el recordatorio aprobado por WhatsApp con botón «Confirmar»', icon: 'whatsapp' },
+        { type: 'Condición', text: 'Si hay saldo pendiente → envía el link de pago', icon: 'wallet' },
+      ] },
+    { id: 4, name: 'Reactivar clientes inactivos', trigger: 'Sin visitas hace 60 días', on: false, runs: 0, done: 0,
+      steps: [
+        { type: 'Disparador', text: 'Cliente sin citas en los últimos 60 días', icon: 'clock' },
+        { type: 'Plantilla', text: 'Envía una oferta de regreso con 10 % de descuento', icon: 'whatsapp' },
+        { type: 'Espera', text: 'Si no responde en 3 días, pasa a una persona del equipo', icon: 'users' },
+      ] },
+  ];
+
+  const campaigns = [
+    { id: 1, name: 'Promo Día de la Madre', tpl: 'promo_madre_v2', channel: 'whatsapp', audience: 'Clientes con cita en el último año', sent: 842, delivered: 811, read: 604, replied: 119, status: 'sent', date: '12 may' },
+    { id: 2, name: 'Recordatorio de cupos de fin de semana', tpl: 'cupos_finde', channel: 'whatsapp', audience: 'Etiqueta · Cliente frecuente', sent: 215, delivered: 209, read: 172, replied: 41, status: 'sent', date: '03 jun' },
+    { id: 3, name: 'Lanzamiento kit cuidado facial', tpl: 'lanzamiento_kit', channel: 'whatsapp', audience: 'Todos los contactos', sent: 0, delivered: 0, read: 0, replied: 0, status: 'scheduled', date: 'Vie 18:00' },
+  ];
+
+  const products = [
+    { id: 1, name: 'Limpieza facial profunda', sku: 'SRV-001', price: 40, stock: null, cat: 'Servicios' },
+    { id: 2, name: 'Limpieza facial + masaje', sku: 'SRV-002', price: 50, stock: null, cat: 'Servicios' },
+    { id: 3, name: 'Corte + barba', sku: 'SRV-014', price: 12, stock: null, cat: 'Servicios' },
+    { id: 4, name: 'Kit cuidado facial', sku: 'PRD-101', price: 32, stock: 18, cat: 'Productos' },
+    { id: 5, name: 'Sérum vitamina C', sku: 'PRD-102', price: 24, stock: 7, cat: 'Productos' },
+    { id: 6, name: 'Crema hidratante 50 ml', sku: 'PRD-103', price: 18, stock: 0, cat: 'Productos' },
+    { id: 7, name: 'Paquete Novia', sku: 'PKG-020', price: 380, stock: null, cat: 'Paquetes' },
+    { id: 8, name: 'Tarjeta de regalo $50', sku: 'GFT-050', price: 50, stock: 40, cat: 'Paquetes' },
+  ];
+  const payMethods = [
+    { name: 'Payphone', note: 'Tarjeta y enlace de pago', on: true },
+    { name: 'Transferencia', note: 'Datos bancarios en el chat', on: true },
+    { name: 'Stripe', note: 'Tarjetas internacionales', on: false },
+    { name: 'De Una', note: 'Pago con código QR', on: true },
+  ];
+
+  const templates = ['Saludo de bienvenida', 'Datos para transferencia', 'Horarios de atención', 'Dirección y cómo llegar', 'Gracias por tu compra'];
+  const templateText = {
+    'Saludo de bienvenida': '¡Hola! Gracias por escribirnos a Iguana 👋 ¿En qué te podemos ayudar?',
+    'Datos para transferencia': 'Banco Pichincha · Cuenta corriente 2200123456 · Iguana Corp · RUC 1790000000001. Envíanos el comprobante por aquí.',
+    'Horarios de atención': 'Atendemos de lunes a sábado de 09:00 a 19:00.',
+    'Dirección y cómo llegar': 'Estamos en La Floresta, Quito. Te comparto la ubicación en un momento 📍',
+    'Gracias por tu compra': '¡Gracias por tu compra! Si necesitas algo más, aquí estamos 💚',
+  };
+
+  /* ---------------- Estado de la interfaz ---------------- */
+  const ui = {
+    convoId: 1, tab: 'todos', channel: 'todos', q: '', mobileThread: false, info: window.innerWidth >= 1560,
+    botId: 1, catQ: '', catCat: 'Todo',
+  };
+  const mounted = {};
+  const byId = (id) => convos.find((c) => c.id === id);
+
+  const chBadge = (key) => `<span class="m-ch m-ch--${key}">${icon(CHANNELS[key].icon)}<span>${CHANNELS[key].label}</span></span>`;
+  const avatar = (c, size = '') => `<span class="m-avatar ${size}" data-ch="${c.channel}" aria-hidden="true">${esc(initials(c.name))}</span>`;
+  const agentLabel = (c) => (c.bot ? 'Asistente IA' : c.agent ? AGENTS[c.agent].name : 'Sin asignar');
+  const lastPreview = (c) => { const m = c.msgs[c.msgs.length - 1]; return (m.from === 'out' ? 'Tú: ' : '') + m.text; };
+  const stageOf = (k) => stages.find((s) => s.key === k) || { label: 'Perdido', tone: 'danger' };
+
+  /* ======================= CONVERSACIONES ======================= */
+  function visibleConvos() {
+    const q = ui.q.trim().toLowerCase();
+    return convos.filter((c) => {
+      if (ui.channel !== 'todos' && c.channel !== ui.channel) return false;
+      if (ui.tab === 'mios' && c.agent !== 'ana') return false;
+      if (ui.tab === 'sin' && (c.agent || c.bot)) return false;
+      if (ui.tab === 'bot' && !c.bot) return false;
+      if ((ui.tab === 'resueltos') !== (c.status === 'resolved')) return false;
+      if (q && !(c.name.toLowerCase().includes(q) || lastPreview(c).toLowerCase().includes(q) || c.phone.includes(q))) return false;
+      return true;
+    });
+  }
+
+  function renderInbox() {
+    const root = $('merc-conversaciones');
+    const list = visibleConvos();
+    if (!list.some((c) => c.id === ui.convoId) && list.length && !ui.mobileThread) ui.convoId = list[0].id;
+    const cur = byId(ui.convoId);
+    const unreadTotal = convos.reduce((n, c) => n + c.unread, 0);
+    const tabs = [['todos', 'Abiertas'], ['mios', 'Mías'], ['sin', 'Sin asignar'], ['bot', 'Con IA'], ['resueltos', 'Resueltas']];
+
+    root.innerHTML = `
+      <div class="m-inbox ${ui.mobileThread ? 'is-thread' : ''} ${ui.info ? 'has-info' : ''}">
+        <section class="m-list card card-flush" aria-label="Conversaciones">
+          <div class="m-list-head">
+            <div class="m-search"><span class="sr-only">Buscar</span>${icon('search')}<input id="mSearch" type="search" placeholder="Buscar nombre, teléfono o mensaje" value="${esc(ui.q)}" autocomplete="off" /></div>
+            <div class="m-chips" role="group" aria-label="Canal">
+              ${['todos', ...Object.keys(CHANNELS)].map((k) => `<button class="m-chip" type="button" data-ch="${k}" aria-pressed="${ui.channel === k}">${k === 'todos' ? 'Todos' : CHANNELS[k].label}</button>`).join('')}
+            </div>
+            <div class="m-tabs" role="tablist" aria-label="Filtro">
+              ${tabs.map(([k, l]) => `<button class="m-tab" role="tab" type="button" data-tab="${k}" aria-selected="${ui.tab === k}">${l}${k === 'todos' && unreadTotal ? `<em>${unreadTotal}</em>` : ''}</button>`).join('')}
+            </div>
+          </div>
+          <ul class="m-items">
+            ${list.length ? list.map((c) => `
+              <li><button class="m-item" type="button" data-id="${c.id}" ${c.id === ui.convoId ? 'aria-current="true"' : ''}>
+                ${avatar(c)}
+                <span class="m-item-main">
+                  <span class="m-item-top"><strong>${esc(c.name)}</strong><time>${c.last}</time></span>
+                  <span class="m-item-msg">${esc(lastPreview(c))}</span>
+                  <span class="m-item-meta">${chBadge(c.channel)}<span class="m-who">${c.bot ? icon('bot') : ''}${esc(agentLabel(c))}</span></span>
+                </span>
+                ${c.unread ? `<span class="m-unread" aria-label="${c.unread} sin leer">${c.unread}</span>` : ''}
+              </button></li>`).join('') : `<li class="empty">No hay conversaciones con ese filtro.</li>`}
+          </ul>
+        </section>
+
+        ${cur ? threadHtml(cur) : `<section class="m-thread card"><div class="empty-big">${icon('chat', 'ig-icon--xl')}<h2>Elige una conversación</h2><p>Aquí verás los mensajes de WhatsApp, Instagram y Messenger en un solo lugar.</p></div></section>`}
+        ${cur ? infoHtml(cur) : ''}
+      </div>`;
+    wireInbox(root);
+    const body = root.querySelector('.m-body');
+    if (body) body.scrollTop = body.scrollHeight;
+  }
+
+  function threadHtml(c) {
+    return `
+      <section class="m-thread card card-flush" aria-label="Chat con ${esc(c.name)}">
+        <header class="m-thread-head">
+          <button class="icon-btn m-back" type="button" id="mBack" aria-label="Volver a la lista">${icon('back')}</button>
+          ${avatar(c, 'm-avatar--lg')}
+          <div class="m-thread-who"><h2>${esc(c.name)}</h2><p>${chBadge(c.channel)}<span>${esc(c.phone)}</span></p></div>
+          <div class="m-thread-actions">
+            <label class="m-ai" title="Si está activo, el asistente responde por ti">
+              <span>Asistente IA</span>
+              <span class="ig-switch"><input type="checkbox" id="mAiToggle" ${c.bot ? 'checked' : ''} aria-label="Responder con el asistente IA" /><span class="ig-switch__track"></span></span>
+            </label>
+            <button class="btn btn-sm ${c.status === 'resolved' ? '' : 'btn-primary'}" type="button" id="mResolve">${icon('check')}<span>${c.status === 'resolved' ? 'Reabrir' : 'Resolver'}</span></button>
+            <button class="icon-btn m-info-btn" type="button" id="mInfoBtn" aria-label="Ver datos del contacto" aria-pressed="${ui.info}">${icon('info')}</button>
+          </div>
+        </header>
+        <div class="m-body" tabindex="0" aria-live="polite">
+          <p class="m-day"><span>Hoy</span></p>
+          ${c.msgs.map(msgHtml).join('')}
+        </div>
+        <form class="m-composer" id="mComposer" autocomplete="off">
+          <div class="ig-menu-wrap">
+            <button class="icon-btn" type="button" id="mTplBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Respuestas rápidas" title="Respuestas rápidas">${icon('file')}</button>
+            <div class="m-tpl-menu" id="mTplMenu" role="menu" hidden>
+              ${templates.map((t) => `<button type="button" role="menuitem" data-tpl="${esc(t)}">${esc(t)}</button>`).join('')}
+            </div>
+          </div>
+          <input id="mInput" type="text" placeholder="${c.bot ? 'El asistente está respondiendo. Escribe para tomar el chat' : 'Escribe un mensaje'}" aria-label="Mensaje" />
+          <button class="btn btn-primary" type="submit">${icon('arrow-ur')}<span>Enviar</span></button>
+        </form>
+      </section>`;
+  }
+
+  function msgHtml(m) {
+    if (m.from === 'in') return `<div class="m-msg m-msg--in"><p>${esc(m.text)}</p><time>${m.t}</time></div>`;
+    if (m.from === 'bot') return `<div class="m-msg m-msg--bot"><span class="m-msg-who">${icon('bot')}Asistente IA</span><p>${esc(m.text)}</p><time>${m.t}</time></div>`;
+    return `<div class="m-msg m-msg--out"><span class="m-msg-who">${esc(AGENTS[m.agent || 'ana'].short)}</span><p>${esc(m.text)}</p><time>${m.t}</time></div>`;
+  }
+
+  function infoHtml(c) {
+    const d = deals.find((x) => x.convo === c.id);
+    const st = stageOf(c.stage);
+    return `
+      <aside class="m-info card" aria-label="Datos del contacto">
+        <div class="m-info-top">${avatar(c, 'm-avatar--xl')}<h3>${esc(c.name)}</h3><p>${esc(c.phone)}</p></div>
+        <dl class="m-facts">
+          <div><dt>Canal</dt><dd>${chBadge(c.channel)}</dd></div>
+          <div><dt>Atiende</dt><dd>
+            <select id="mAssign" aria-label="Asignar a">
+              <option value="" ${!c.agent && !c.bot ? 'selected' : ''}>Sin asignar</option>
+              ${Object.entries(AGENTS).map(([k, a]) => `<option value="${k}" ${c.agent === k && !c.bot ? 'selected' : ''}>${a.name}</option>`).join('')}
+            </select></dd></div>
+          <div><dt>Etapa</dt><dd><span class="ig-chip ig-chip--${st.tone}">${st.label}</span></dd></div>
+          ${d ? `<div><dt>Oportunidad</dt><dd>${esc(d.title)}<br /><strong>${usd(d.value)}</strong></dd></div>` : ''}
+        </dl>
+        <div class="m-info-block"><h4>Etiquetas</h4><div class="m-tags">${c.tags.map((t) => `<span class="ig-chip">${esc(t)}</span>`).join('')}<button class="m-addtag" type="button" id="mAddTag" aria-label="Agregar etiqueta">${icon('plus')}</button></div></div>
+        <div class="m-info-block"><h4>Nota interna</h4><textarea id="mNote" rows="3" placeholder="Solo la ve tu equipo"></textarea></div>
+        <div class="m-info-block"><a class="btn btn-sm btn-block" href="#/clientes">${icon('users')}<span>Ver ficha del cliente</span></a></div>
+      </aside>`;
+  }
+
+  function wireInbox(root) {
+    const rerender = () => renderInbox();
+    root.querySelector('#mSearch')?.addEventListener('input', (e) => {
+      ui.q = e.target.value; const pos = e.target.selectionStart; renderInbox();
+      const el = $('mSearch'); el.focus(); el.setSelectionRange(pos, pos);
+    });
+    root.querySelectorAll('.m-chip').forEach((b) => b.addEventListener('click', () => { ui.channel = b.dataset.ch; rerender(); }));
+    root.querySelectorAll('.m-tab').forEach((b) => b.addEventListener('click', () => { ui.tab = b.dataset.tab; rerender(); }));
+    root.querySelectorAll('.m-item').forEach((b) => b.addEventListener('click', () => {
+      ui.convoId = Number(b.dataset.id); ui.mobileThread = true; byId(ui.convoId).unread = 0; rerender();
+    }));
+    const cur = byId(ui.convoId);
+    if (!cur) return;
+    $('mBack')?.addEventListener('click', () => { ui.mobileThread = false; rerender(); });
+    $('mInfoBtn')?.addEventListener('click', () => { ui.info = !ui.info; rerender(); });
+    $('mAiToggle')?.addEventListener('change', (e) => {
+      cur.bot = e.target.checked;
+      if (cur.bot) cur.agent = null;
+      toast(cur.bot ? 'El asistente IA responderá este chat' : 'Tomaste el chat, el asistente se pausó');
+      rerender();
+    });
+    $('mResolve')?.addEventListener('click', () => {
+      cur.status = cur.status === 'resolved' ? 'open' : 'resolved';
+      toast(cur.status === 'resolved' ? 'Conversación resuelta' : 'Conversación reabierta');
+      rerender();
+    });
+    $('mAssign')?.addEventListener('change', (e) => {
+      cur.agent = e.target.value || null; cur.bot = false;
+      toast(cur.agent ? `Asignada a ${AGENTS[cur.agent].name}` : 'Conversación sin asignar');
+      rerender();
+    });
+    $('mAddTag')?.addEventListener('click', () => {
+      const t = (window.prompt('Nueva etiqueta') || '').trim();
+      if (t) { cur.tags.push(t.slice(0, 24)); rerender(); }
+    });
+    const menu = $('mTplMenu'); const menuBtn = $('mTplBtn');
+    menuBtn?.addEventListener('click', () => {
+      const open = menu.hidden; menu.hidden = !open; menuBtn.setAttribute('aria-expanded', String(open));
+    });
+    menu?.querySelectorAll('[data-tpl]').forEach((b) => b.addEventListener('click', () => {
+      $('mInput').value = templateText[b.dataset.tpl]; menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); $('mInput').focus();
+    }));
+    $('mComposer')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = $('mInput').value.trim();
+      if (!text) return;
+      const now = new Date();
+      cur.msgs.push({ from: 'out', agent: 'ana', text, t: hm(now.getHours(), now.getMinutes()) });
+      cur.last = hm(now.getHours(), now.getMinutes());
+      if (cur.bot) { cur.bot = false; cur.agent = 'ana'; }
+      cur.status = 'open';
+      renderInbox();
+      $('mInput').focus();
+    });
+  }
+
+  /* ======================= EMBUDO ======================= */
+  function renderPipeline() {
+    const root = $('merc-embudo');
+    const open = deals.filter((d) => d.stage !== 'ganado');
+    const total = open.reduce((n, d) => n + d.value, 0);
+    const won = deals.filter((d) => d.stage === 'ganado').reduce((n, d) => n + d.value, 0);
+    root.innerHTML = `
+      <div class="m-kpis">
+        <div class="card m-kpi"><span class="m-kpi-l">En el embudo</span><strong>${usd(total)}</strong><small>${open.length} oportunidades abiertas</small></div>
+        <div class="card m-kpi m-kpi--hl"><span class="m-kpi-l">Ganado este mes</span><strong>${usd(won)}</strong><small>${deals.filter((d) => d.stage === 'ganado').length} ${deals.filter((d) => d.stage === 'ganado').length === 1 ? 'venta cerrada' : 'ventas cerradas'}</small></div>
+        <div class="card m-kpi"><span class="m-kpi-l">Tasa de cierre</span><strong>${Math.round((deals.filter((d) => d.stage === 'ganado').length / deals.length) * 100)} %</strong><small>Sobre todas las oportunidades</small></div>
+      </div>
+      <div class="m-board" role="list">
+        ${stages.map((s, si) => {
+          const list = deals.filter((d) => d.stage === s.key);
+          return `<section class="m-col" role="listitem" data-stage="${s.key}" aria-label="${s.label}">
+            <header><span class="ig-chip ig-chip--${s.tone} ig-chip--dot">${s.label}</span><span class="m-col-sum">${usd(list.reduce((n, d) => n + d.value, 0))}</span></header>
+            <ul>
+              ${list.map((d) => { const c = byId(d.convo); return `
+                <li class="m-deal" draggable="true" data-deal="${d.id}">
+                  <strong>${esc(d.title)}</strong>
+                  <span class="m-deal-who">${avatar(c)}<span>${esc(c.name)}</span></span>
+                  <span class="m-deal-foot"><b>${usd(d.value)}</b>${chBadge(c.channel)}</span>
+                  <span class="m-deal-move">
+                    <button class="icon-btn" type="button" data-move="-1" data-deal="${d.id}" aria-label="Mover a la etapa anterior" ${si === 0 ? 'disabled' : ''}>${icon('chevron-left')}</button>
+                    <button class="icon-btn" type="button" data-move="1" data-deal="${d.id}" aria-label="Mover a la siguiente etapa" ${si === stages.length - 1 ? 'disabled' : ''}>${icon('chevron-right')}</button>
+                  </span>
+                </li>`; }).join('') || '<li class="m-col-empty">Arrastra una oportunidad aquí</li>'}
+            </ul>
+          </section>`;
+        }).join('')}
+      </div>`;
+    root.querySelectorAll('[data-move]').forEach((b) => b.addEventListener('click', () => {
+      const d = deals.find((x) => x.id === Number(b.dataset.deal));
+      const i = stages.findIndex((s) => s.key === d.stage) + Number(b.dataset.move);
+      if (i < 0 || i >= stages.length) return;
+      d.stage = stages[i].key; byId(d.convo).stage = d.stage;
+      if (d.stage === 'ganado') toast('¡Venta ganada! 🎉');
+      renderPipeline();
+    }));
+    let drag = null;
+    root.querySelectorAll('.m-deal').forEach((el) => {
+      el.addEventListener('dragstart', (e) => { drag = Number(el.dataset.deal); el.classList.add('is-drag'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(drag)); });
+      el.addEventListener('dragend', () => el.classList.remove('is-drag'));
+    });
+    root.querySelectorAll('.m-col').forEach((col) => {
+      col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('is-over'); });
+      col.addEventListener('dragleave', () => col.classList.remove('is-over'));
+      col.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const d = deals.find((x) => x.id === drag);
+        if (d) { d.stage = col.dataset.stage; byId(d.convo).stage = d.stage; renderPipeline(); }
+      });
+    });
+  }
+
+  /* ======================= CHATBOTS ======================= */
+  function renderBots() {
+    const root = $('merc-chatbots');
+    const cur = bots.find((b) => b.id === ui.botId) || bots[0];
+    root.innerHTML = `
+      <div class="m-bots">
+        <ul class="m-bot-list" aria-label="Automatizaciones">
+          ${bots.map((b) => `
+            <li class="card m-bot ${b.id === cur.id ? 'is-current' : ''}">
+              <button type="button" class="m-bot-pick" data-bot="${b.id}" aria-current="${b.id === cur.id}">
+                <strong>${esc(b.name)}</strong>
+                <small>${esc(b.trigger)}</small>
+                <span class="m-bot-stats">${b.on ? `${b.runs.toLocaleString('es-EC')} ejecuciones · ${b.done} % completadas` : 'Pausada'}</span>
+              </button>
+              <label class="ig-switch" title="${b.on ? 'Activa' : 'Pausada'}"><input type="checkbox" data-toggle="${b.id}" ${b.on ? 'checked' : ''} aria-label="Activar ${esc(b.name)}" /><span class="ig-switch__track"></span></label>
+            </li>`).join('')}
+          <li><button class="btn btn-block" type="button" id="mNewBot">${icon('plus')}<span>Nueva automatización</span></button></li>
+        </ul>
+        <section class="card m-flow" aria-label="Flujo de ${esc(cur.name)}">
+          <div class="card-head"><div><p class="eyebrow">Flujo</p><h2>${esc(cur.name)}</h2></div><span class="ig-chip ig-chip--${cur.on ? 'success' : 'warning'} ig-chip--dot">${cur.on ? 'Activa' : 'Pausada'}</span></div>
+          <ol class="m-steps">
+            ${cur.steps.map((s, i) => `
+              <li class="m-step m-step--${s.type === 'IA' ? 'ai' : 'std'}">
+                <span class="m-step-ico">${icon(s.icon)}</span>
+                <div><span class="eyebrow">${i + 1} · ${s.type}</span><p>${esc(s.text)}</p></div>
+              </li>`).join('')}
+          </ol>
+          <div class="m-flow-foot">
+            <button class="btn" type="button" id="mAddStep">${icon('plus')}<span>Agregar paso</span></button>
+            <button class="btn btn-primary" type="button" id="mTestBot">${icon('chat')}<span>Probar en WhatsApp</span></button>
+          </div>
+        </section>
+      </div>`;
+    root.querySelectorAll('[data-bot]').forEach((b) => b.addEventListener('click', () => { ui.botId = Number(b.dataset.bot); renderBots(); }));
+    root.querySelectorAll('[data-toggle]').forEach((i) => i.addEventListener('change', () => {
+      const b = bots.find((x) => x.id === Number(i.dataset.toggle)); b.on = i.checked;
+      toast(b.on ? `«${b.name}» activada` : `«${b.name}» pausada`); renderBots();
+    }));
+    $('mNewBot').addEventListener('click', () => {
+      const name = (window.prompt('¿Cómo se llama la automatización?') || '').trim();
+      if (!name) return;
+      const b = { id: bots.length + 1, name: name.slice(0, 50), trigger: 'Define cuándo se activa', on: false, runs: 0, done: 0, steps: [{ type: 'Disparador', text: 'Elige qué inicia este flujo', icon: 'bell' }] };
+      bots.push(b); ui.botId = b.id; renderBots();
+    });
+    $('mAddStep').addEventListener('click', () => {
+      const text = (window.prompt('¿Qué debe hacer este paso?') || '').trim();
+      if (text) { cur.steps.push({ type: 'Mensaje', text: text.slice(0, 160), icon: 'chat' }); renderBots(); }
+    });
+    $('mTestBot').addEventListener('click', () => toast('Te enviamos un mensaje de prueba (demostración)'));
+  }
+
+  /* ======================= CAMPAÑAS ======================= */
+  const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
+
+  function renderCampaigns() {
+    const root = $('merc-campanas');
+    const sent = campaigns.reduce((n, c) => n + c.sent, 0);
+    const del = campaigns.reduce((n, c) => n + c.delivered, 0);
+    const read = campaigns.reduce((n, c) => n + c.read, 0);
+    const rep = campaigns.reduce((n, c) => n + c.replied, 0);
+    root.innerHTML = `
+      <div class="m-kpis m-kpis--4">
+        <div class="card m-kpi"><span class="m-kpi-l">Mensajes enviados</span><strong>${sent.toLocaleString('es-EC')}</strong><small>En los últimos 30 días</small></div>
+        <div class="card m-kpi"><span class="m-kpi-l">Entregados</span><strong>${pct(del, sent)} %</strong><small>${del.toLocaleString('es-EC')} mensajes</small></div>
+        <div class="card m-kpi"><span class="m-kpi-l">Leídos</span><strong>${pct(read, del)} %</strong><small>De los entregados</small></div>
+        <div class="card m-kpi m-kpi--hl"><span class="m-kpi-l">Respondieron</span><strong>${pct(rep, read)} %</strong><small>${rep} conversaciones nuevas</small></div>
+      </div>
+      <ul class="m-camps">
+        ${campaigns.map((c) => `
+          <li class="card m-camp">
+            <div class="m-camp-main">
+              <div class="m-camp-top"><strong>${esc(c.name)}</strong><span class="ig-chip ig-chip--${c.status === 'sent' ? 'success' : 'info'} ig-chip--dot">${c.status === 'sent' ? 'Enviada' : 'Programada'}</span></div>
+              <p>${chBadge(c.channel)}<span>Plantilla <code>${esc(c.tpl)}</code></span><span>${esc(c.audience)}</span><time>${esc(c.date)}</time></p>
+            </div>
+            ${c.status === 'sent' ? `
+              <div class="m-funnel" role="img" aria-label="Enviados ${c.sent}, entregados ${c.delivered}, leídos ${c.read}, respuestas ${c.replied}">
+                ${[['Enviados', c.sent, 100], ['Entregados', c.delivered, pct(c.delivered, c.sent)], ['Leídos', c.read, pct(c.read, c.sent)], ['Respuestas', c.replied, pct(c.replied, c.sent)]]
+                  .map(([l, v, w]) => `<div><span>${l}</span><i style="--w:${Math.max(w, 4)}%"></i><b>${v.toLocaleString('es-EC')}</b></div>`).join('')}
+              </div>` : `<div class="m-camp-sched">${icon('clock')}<span>Se envía automáticamente a los contactos elegidos.</span></div>`}
+          </li>`).join('')}
+      </ul>`;
+  }
+
+  function openCampaignDialog() {
+    const dlg = $('mCampaignDialog');
+    if (!dlg) return;
+    dlg.querySelector('form').reset();
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    dlg.querySelector('input')?.focus();
+  }
+
+  /* ======================= CATÁLOGO ======================= */
+  function renderCatalog() {
+    const root = $('merc-catalogo');
+    const cats = ['Todo', ...new Set(products.map((p) => p.cat))];
+    const q = ui.catQ.trim().toLowerCase();
+    const list = products.filter((p) => (ui.catCat === 'Todo' || p.cat === ui.catCat) && (!q || p.name.toLowerCase().includes(q)));
+    root.innerHTML = `
+      <div class="m-cat-tools">
+        <div class="m-search">${icon('search')}<span class="sr-only">Buscar en el catálogo</span><input id="mCatQ" type="search" placeholder="Buscar producto o servicio" value="${esc(ui.catQ)}" autocomplete="off" /></div>
+        <div class="m-chips" role="group" aria-label="Categoría">${cats.map((c) => `<button class="m-chip" type="button" data-cat="${esc(c)}" aria-pressed="${ui.catCat === c}">${esc(c)}</button>`).join('')}</div>
+      </div>
+      <div class="m-cat-layout">
+        <ul class="m-products">
+          ${list.map((p) => `
+            <li class="card m-product">
+              <span class="m-product-img" aria-hidden="true">${icon(p.cat === 'Servicios' ? 'calendar' : p.cat === 'Paquetes' ? 'star' : 'receipt', 'ig-icon--lg')}</span>
+              <div class="m-product-body">
+                <span class="eyebrow">${esc(p.sku)} · ${esc(p.cat)}</span>
+                <strong>${esc(p.name)}</strong>
+                <span class="m-product-price">${usd(p.price)}</span>
+                ${p.stock === null ? '<span class="ig-chip ig-chip--brand">Servicio</span>' : p.stock === 0 ? '<span class="ig-chip ig-chip--danger ig-chip--dot">Agotado</span>' : p.stock < 10 ? `<span class="ig-chip ig-chip--warning ig-chip--dot">Quedan ${p.stock}</span>` : `<span class="ig-chip ig-chip--success ig-chip--dot">${p.stock} en stock</span>`}
+              </div>
+              <div class="m-product-actions">
+                <button class="btn btn-sm" type="button" data-send="${p.id}" ${p.stock === 0 ? 'disabled' : ''}>${icon('whatsapp')}<span>Enviar al chat</span></button>
+                <button class="btn btn-sm btn-quiet" type="button" data-pay="${p.id}" ${p.stock === 0 ? 'disabled' : ''}>${icon('wallet')}<span>Link de pago</span></button>
+              </div>
+            </li>`).join('') || '<li class="empty">No encontramos productos con ese nombre.</li>'}
+        </ul>
+        <aside class="card m-pay" aria-label="Métodos de pago">
+          <div class="card-head"><h2>Cobrar en el chat</h2></div>
+          <p class="card-lead">Tus clientes pagan sin salir de la conversación.</p>
+          <ul>
+            ${payMethods.map((m, i) => `
+              <li><span><strong>${esc(m.name)}</strong><small>${esc(m.note)}</small></span>
+              <label class="ig-switch"><input type="checkbox" data-pm="${i}" ${m.on ? 'checked' : ''} aria-label="Activar ${esc(m.name)}" /><span class="ig-switch__track"></span></label></li>`).join('')}
+          </ul>
+        </aside>
+      </div>`;
+    $('mCatQ').addEventListener('input', (e) => {
+      ui.catQ = e.target.value; const pos = e.target.selectionStart; renderCatalog();
+      const el = $('mCatQ'); el.focus(); el.setSelectionRange(pos, pos);
+    });
+    root.querySelectorAll('[data-cat]').forEach((b) => b.addEventListener('click', () => { ui.catCat = b.dataset.cat; renderCatalog(); }));
+    root.querySelectorAll('[data-send]').forEach((b) => b.addEventListener('click', () => {
+      const p = products.find((x) => x.id === Number(b.dataset.send));
+      toast(`«${p.name}» enviado a ${byId(ui.convoId).name}`);
+    }));
+    root.querySelectorAll('[data-pay]').forEach((b) => b.addEventListener('click', () => {
+      const p = products.find((x) => x.id === Number(b.dataset.pay));
+      const link = `https://pagos.iguana.ec/p/${p.sku.toLowerCase()}`;
+      if (navigator.clipboard) navigator.clipboard.writeText(link).catch(() => {});
+      toast(`Link de pago copiado: ${link}`);
+    }));
+    root.querySelectorAll('[data-pm]').forEach((i) => i.addEventListener('change', () => {
+      const m = payMethods[Number(i.dataset.pm)]; m.on = i.checked; toast(`${m.name} ${m.on ? 'activado' : 'desactivado'}`);
+    }));
+  }
+
+  /* ---------------- Montaje ---------------- */
+  const renderers = { conversaciones: renderInbox, embudo: renderPipeline, chatbots: renderBots, campanas: renderCampaigns, catalogo: renderCatalog };
+
+  function render(view) {
+    if (!renderers[view]) return;
+    if (view === 'conversaciones' && !ui.mobileThread) ui.mobileThread = false;
+    renderers[view]();
+    if (!mounted.dialog) {
+      mounted.dialog = true;
+      const dlg = $('mCampaignDialog');
+      if (dlg) {
+        dlg.querySelector('form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const f = new FormData(e.target);
+          campaigns.unshift({ id: campaigns.length + 1, name: String(f.get('name')).slice(0, 80), tpl: String(f.get('tpl')), channel: 'whatsapp', audience: String(f.get('audience')), sent: 0, delivered: 0, read: 0, replied: 0, status: 'scheduled', date: f.get('when') === 'now' ? 'Ahora' : 'Mañana 10:00' });
+          dlg.close(); toast('Campaña programada (demostración)');
+          if (window.location.hash === '#/campanas') renderCampaigns();
+        });
+      }
+      document.querySelectorAll('[data-merc-new-campaign]').forEach((b) => b.addEventListener('click', openCampaignDialog));
+    }
+  }
+
+  window.IguanaMsg = { render };
+})();
+
+;
+/* =========================================================
    Panel Iguana — lógica de la interfaz
    Misma API que antes; navegación por hash (#/calendario, #/dinero/gastos…)
    ========================================================= */
@@ -3023,6 +3882,7 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
   const VIEW_TITLES = {
     inicio: 'Inicio', calendario: 'Calendario', clientes: 'Clientes', dinero: 'Dinero', asistente: 'Asistente IA',
     ajustes: 'Ajustes', facturar: 'Facturar', moderador: 'Empresas',
+    conversaciones: 'Conversaciones', embudo: 'Embudo de ventas', chatbots: 'Chatbots', campanas: 'Campañas', catalogo: 'Catálogo',
   };
   const MONEY_TABS = ['resumen', 'ingresos', 'gastos'];
   const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -4640,7 +5500,7 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
       else link.removeAttribute('aria-current');
     });
     document.body.dataset.page = view;
-    $('navMore').classList.toggle('is-current', ['asistente', 'ajustes', 'facturar'].includes(view));
+    $('navMore').classList.toggle('is-current', ['asistente', 'ajustes', 'facturar', 'embudo', 'chatbots', 'campanas', 'catalogo'].includes(view));
     document.title = `${VIEW_TITLES[view]} · ${$('brandName').textContent}`;
     if (changed) {
       window.scrollTo({ top: 0, behavior: 'auto' });
@@ -4672,6 +5532,7 @@ body[data-page="asistente"] .fab, body[data-page="ajustes"] .fab { bottom: calc(
         if (token !== routeToken) return;
         fillSettingsForms(state.settings);
       }
+      if (['conversaciones', 'embudo', 'chatbots', 'campanas', 'catalogo'].includes(view)) window.IguanaMsg?.render(view);
       if (view === 'moderador') await Promise.all([loadCompanies(), loadModeratorSettings()]);
       stamp();
       const after = state.afterRoute;

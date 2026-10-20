@@ -28,6 +28,7 @@ Vistas especiales, agregando esto al final de la dirección del archivo:
 | `design-system/` | Iguana Design System: tokens, componentes, iconos y documentación (ver su README) |
 | `panel-iguana.html` | El panel completo en un solo archivo (generado) |
 | `app.js` | Lógica de la interfaz |
+| `merc.js`, `merc.css` | Mensajería: conversaciones, embudo, chatbots, campañas y catálogo (datos de ejemplo) |
 | `demo-api.js` | Datos de ejemplo que reemplazan a la API (solo para diseño) |
 | `images/` | Logo y íconos de Iguana (tomados de iguana.ec) |
 
@@ -45,6 +46,11 @@ Cada sección tiene su propia dirección, así el botón "atrás" y los enlaces 
 - `#/calendario` — vista diaria (principal): franja de la semana y línea de tiempo del día; la vista de mes está en el botón "Mes". En celular también se cambia de día deslizando
 - `#/clientes` — directorio e historial
 - `#/dinero/resumen`, `#/dinero/ingresos`, `#/dinero/gastos`
+- `#/conversaciones` — bandeja única de WhatsApp, Instagram y Messenger: filtros, asignación, asistente IA por chat, respuestas rápidas y ficha del contacto
+- `#/embudo` — oportunidades por etapa (arrastra o usa las flechas)
+- `#/chatbots` — automatizaciones con su flujo paso a paso
+- `#/campanas` — envíos con plantillas de WhatsApp y su embudo de lectura/respuesta
+- `#/catalogo` — productos, envío al chat, links de pago y métodos de cobro
 - `#/asistente` — configuración del asistente de IA
 - `#/ajustes` — servicios, horario y reglas de reserva
 - `#/facturar` — próximamente

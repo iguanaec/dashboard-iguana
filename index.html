@@ -14,12 +14,14 @@
 <link href="design-system/tokens.css" rel="stylesheet" />
 <link href="design-system/components.css" rel="stylesheet" />
 <link href="styles.css" rel="stylesheet" />
+<link href="merc.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/luxon3@6.1.11/index.global.min.js" defer></script>
 <!-- Modo diseño: datos de ejemplo sin API. Quita esta línea para usar la API real. -->
 <script src="demo-api.js" defer></script>
 <script src="design-system/ig.js" defer></script>
+<script src="merc.js" defer></script>
 <script src="app.js" defer></script>
 </head>
 <body class="ig-root" data-state="loading">
@@ -97,9 +99,14 @@
   <nav class="nav" id="nav" aria-label="Principal">
     <ul>
       <li><a href="#/inicio" data-route="inicio"><svg class="ig-icon"><use href="#i-home"/></svg><span>Inicio</span></a></li>
+      <li><a href="#/conversaciones" data-route="conversaciones"><svg class="ig-icon"><use href="#i-chat"/></svg><span><span class="nav-long">Conversaciones</span><span class="nav-short">Chats</span></span></a></li>
       <li><a href="#/calendario" data-route="calendario"><svg class="ig-icon"><use href="#i-calendar"/></svg><span>Calendario</span></a></li>
       <li><a href="#/clientes" data-route="clientes"><svg class="ig-icon"><use href="#i-users"/></svg><span>Clientes</span></a></li>
       <li><a href="#/dinero" data-route="dinero"><svg class="ig-icon"><use href="#i-wallet"/></svg><span>Dinero</span></a></li>
+      <li class="nav-secondary nav-sep"><a href="#/embudo" data-route="embudo"><svg class="ig-icon"><use href="#i-trend"/></svg><span>Embudo de ventas</span></a></li>
+      <li class="nav-secondary"><a href="#/chatbots" data-route="chatbots"><svg class="ig-icon"><use href="#i-sliders"/></svg><span>Chatbots</span></a></li>
+      <li class="nav-secondary"><a href="#/campanas" data-route="campanas"><svg class="ig-icon"><use href="#i-whatsapp"/></svg><span>Campañas</span></a></li>
+      <li class="nav-secondary"><a href="#/catalogo" data-route="catalogo"><svg class="ig-icon"><use href="#i-receipt"/></svg><span>Catálogo</span></a></li>
       <li class="nav-secondary nav-sep"><a href="#/asistente" data-route="asistente"><svg class="ig-icon"><use href="#i-bot"/></svg><span>Asistente IA</span></a></li>
       <li class="nav-secondary"><a href="#/ajustes" data-route="ajustes"><svg class="ig-icon"><use href="#i-cog"/></svg><span>Ajustes</span></a></li>
       <li class="nav-secondary nav-soon"><a href="#/facturar" data-route="facturar"><svg class="ig-icon"><use href="#i-receipt"/></svg><span>Facturar</span><em class="tag">Pronto</em></a></li>
@@ -440,6 +447,37 @@
       </form>
     </section>
 
+    <!-- Conversaciones -->
+    <section class="view" id="view-conversaciones" data-view="conversaciones" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Conversaciones</h1><p>WhatsApp, Instagram y Messenger en una sola bandeja, con tu equipo y el asistente IA.</p></div></div>
+      <div id="merc-conversaciones"></div>
+    </section>
+
+    <!-- Embudo -->
+    <section class="view" id="view-embudo" data-view="embudo" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Embudo de ventas</h1><p>Sigue cada oportunidad desde el primer mensaje hasta el cobro. Arrastra las tarjetas o usa las flechas.</p></div></div>
+      <div id="merc-embudo"></div>
+    </section>
+
+    <!-- Chatbots -->
+    <section class="view" id="view-chatbots" data-view="chatbots" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Chatbots</h1><p>Automatiza saludos, citas, recordatorios y cobros. Tú decides cuándo entra una persona.</p></div></div>
+      <div id="merc-chatbots"></div>
+    </section>
+
+    <!-- Campañas -->
+    <section class="view" id="view-campanas" data-view="campanas" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Campañas</h1><p>Envía plantillas de WhatsApp a tus clientes y mide quién las lee y responde.</p></div>
+        <button class="btn btn-primary" type="button" data-merc-new-campaign><svg class="ig-icon"><use href="#i-plus"/></svg><span>Nueva campaña</span></button></div>
+      <div id="merc-campanas"></div>
+    </section>
+
+    <!-- Catálogo -->
+    <section class="view" id="view-catalogo" data-view="catalogo" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Catálogo</h1><p>Comparte servicios y productos en el chat y cobra con un link de pago.</p></div></div>
+      <div id="merc-catalogo"></div>
+    </section>
+
     <!-- Facturar -->
     <section class="view" id="view-facturar" data-view="facturar" hidden>
       <div class="view-head"><div><h1 tabindex="-1">Facturar</h1></div></div>
@@ -478,6 +516,25 @@
 
 <!-- ============ DIÁLOGOS ============ -->
 
+<dialog class="dialog dialog-sm" id="mCampaignDialog" aria-labelledby="mCampTitle">
+  <form method="dialog" class="stack">
+    <header class="dialog-head">
+      <h2 id="mCampTitle">Nueva campaña</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Cerrar"><svg class="ig-icon"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dialog-body stack">
+      <label class="field"><span class="field-label">Nombre</span><input name="name" maxlength="80" required placeholder="Ej. Promo de fin de mes" /></label>
+      <label class="field"><span class="field-label">Plantilla de WhatsApp</span>
+        <select name="tpl"><option>promo_madre_v2</option><option>cupos_finde</option><option>lanzamiento_kit</option><option>recordatorio_cita</option></select></label>
+      <label class="field"><span class="field-label">Audiencia</span>
+        <select name="audience"><option>Todos los contactos</option><option>Etiqueta · Cliente frecuente</option><option>Clientes con cita en el último año</option><option>Sin visitas hace 60 días</option></select></label>
+      <label class="field"><span class="field-label">Cuándo</span>
+        <select name="when"><option value="tomorrow">Mañana a las 10:00</option><option value="now">Ahora</option></select></label>
+    </div>
+    <footer class="dialog-foot"><button class="btn btn-primary" type="submit">Programar envío</button></footer>
+  </form>
+</dialog>
+
 <dialog class="dialog dialog-sm" id="moreDialog" aria-labelledby="moreTitle">
   <header class="dialog-head">
     <h2 id="moreTitle">Más opciones</h2>
@@ -485,6 +542,10 @@
   </header>
   <div class="dialog-body">
     <ul class="more-list">
+      <li><a href="#/embudo"><svg class="ig-icon"><use href="#i-trend"/></svg><span><strong>Embudo de ventas</strong><small>Oportunidades por etapa</small></span></a></li>
+      <li><a href="#/chatbots"><svg class="ig-icon"><use href="#i-sliders"/></svg><span><strong>Chatbots</strong><small>Automatiza respuestas</small></span></a></li>
+      <li><a href="#/campanas"><svg class="ig-icon"><use href="#i-whatsapp"/></svg><span><strong>Campañas</strong><small>Mensajes masivos con plantillas</small></span></a></li>
+      <li><a href="#/catalogo"><svg class="ig-icon"><use href="#i-receipt"/></svg><span><strong>Catálogo</strong><small>Productos y links de pago</small></span></a></li>
       <li><a href="#/asistente"><svg class="ig-icon"><use href="#i-bot"/></svg><span><strong>Asistente IA</strong><small>Cómo conversa con tus clientes</small></span></a></li>
       <li><a href="#/ajustes"><svg class="ig-icon"><use href="#i-cog"/></svg><span><strong>Ajustes</strong><small>Servicios, horario y reservas</small></span></a></li>
       <li><a href="#/facturar"><svg class="ig-icon"><use href="#i-receipt"/></svg><span><strong>Facturar</strong><small>Próximamente</small></span></a></li>

@@ -37,6 +37,7 @@
   const VIEW_TITLES = {
     inicio: 'Inicio', calendario: 'Calendario', clientes: 'Clientes', dinero: 'Dinero', asistente: 'Asistente IA',
     ajustes: 'Ajustes', facturar: 'Facturar', moderador: 'Empresas',
+    conversaciones: 'Conversaciones', embudo: 'Embudo de ventas', chatbots: 'Chatbots', campanas: 'Campañas', catalogo: 'Catálogo',
   };
   const MONEY_TABS = ['resumen', 'ingresos', 'gastos'];
   const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -1654,7 +1655,7 @@
       else link.removeAttribute('aria-current');
     });
     document.body.dataset.page = view;
-    $('navMore').classList.toggle('is-current', ['asistente', 'ajustes', 'facturar'].includes(view));
+    $('navMore').classList.toggle('is-current', ['asistente', 'ajustes', 'facturar', 'embudo', 'chatbots', 'campanas', 'catalogo'].includes(view));
     document.title = `${VIEW_TITLES[view]} · ${$('brandName').textContent}`;
     if (changed) {
       window.scrollTo({ top: 0, behavior: 'auto' });
@@ -1686,6 +1687,7 @@
         if (token !== routeToken) return;
         fillSettingsForms(state.settings);
       }
+      if (['conversaciones', 'embudo', 'chatbots', 'campanas', 'catalogo'].includes(view)) window.IguanaMsg?.render(view);
       if (view === 'moderador') await Promise.all([loadCompanies(), loadModeratorSettings()]);
       stamp();
       const after = state.afterRoute;
