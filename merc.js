@@ -62,6 +62,12 @@
         { from: 'in', text: 'Quiero cambiar mi cita del jueves', t: hm(8, 46) },
         { from: 'in', text: 'Si se puede para el viernes en la tarde', t: hm(8, 47) },
       ] },
+    { id: 9, name: 'Valeria Andrade', phone: '+593 99 870 1122', channel: 'whatsapp', agent: null, bot: false, pauseReason: 'owner_reply', unread: 0, stage: 'calificado', status: 'open', tags: ['Coexistencia'], last: hm(9, 58),
+      msgs: [
+        { from: 'in', text: '¿Me pueden hacer el corte hoy a las 5?', t: hm(9, 50) },
+        { from: 'bot', text: 'Hola Valeria 👋 Hoy a las 17:00 está libre. ¿Te lo reservo?', t: hm(9, 50) },
+        { from: 'out', who: 'Tú · desde el celular', text: 'Valeria, te espero a las 5 y te hago el 10% por ser tu cumple 🎉', t: hm(9, 58) },
+      ] },
     { id: 6, name: 'Andrés Villacís', phone: '+593 95 612 3388', channel: 'instagram', agent: 'ana', bot: false, unread: 0, stage: 'ganado', status: 'resolved', tags: ['Pagado'], last: 'Ayer',
       msgs: [
         { from: 'in', text: 'Ya hice el pago, te mando el comprobante.', t: hm(17, 3) },
@@ -130,23 +136,6 @@
     { id: 3, name: 'Lanzamiento kit cuidado facial', tpl: 'lanzamiento_kit', channel: 'whatsapp', audience: 'Todos los contactos', sent: 0, delivered: 0, read: 0, replied: 0, status: 'scheduled', date: 'Vie 18:00' },
   ];
 
-  const products = [
-    { id: 1, name: 'Limpieza facial profunda', sku: 'SRV-001', price: 40, stock: null, cat: 'Servicios' },
-    { id: 2, name: 'Limpieza facial + masaje', sku: 'SRV-002', price: 50, stock: null, cat: 'Servicios' },
-    { id: 3, name: 'Corte + barba', sku: 'SRV-014', price: 12, stock: null, cat: 'Servicios' },
-    { id: 4, name: 'Kit cuidado facial', sku: 'PRD-101', price: 32, stock: 18, cat: 'Productos' },
-    { id: 5, name: 'Sérum vitamina C', sku: 'PRD-102', price: 24, stock: 7, cat: 'Productos' },
-    { id: 6, name: 'Crema hidratante 50 ml', sku: 'PRD-103', price: 18, stock: 0, cat: 'Productos' },
-    { id: 7, name: 'Paquete Novia', sku: 'PKG-020', price: 380, stock: null, cat: 'Paquetes' },
-    { id: 8, name: 'Tarjeta de regalo $50', sku: 'GFT-050', price: 50, stock: 40, cat: 'Paquetes' },
-  ];
-  const payMethods = [
-    { name: 'Payphone', note: 'Tarjeta y enlace de pago', on: true },
-    { name: 'Transferencia', note: 'Datos bancarios en el chat', on: true },
-    { name: 'Stripe', note: 'Tarjetas internacionales', on: false },
-    { name: 'De Una', note: 'Pago con código QR', on: true },
-  ];
-
   const templates = ['Saludo de bienvenida', 'Datos para transferencia', 'Horarios de atención', 'Dirección y cómo llegar', 'Gracias por tu compra'];
   const templateText = {
     'Saludo de bienvenida': '¡Hola! Gracias por escribirnos a Iguana 👋 ¿En qué te podemos ayudar?',
@@ -171,6 +160,48 @@
   const stageOf = (k) => stages.find((s) => s.key === k) || { label: 'Perdido', tone: 'danger' };
 
   /* ======================= CONVERSACIONES ======================= */
+  // Con la API real (sin demo-api.js) la bandeja usa conversaciones reales; en modo diseño, los datos de ejemplo.
+  const live = { get on() { return Boolean(window.IguanaApi && !window.demoFetch); }, loading: false };
+  const A = () => window.IguanaApi;
+  const clock = (iso) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const today = new Date().toDateString() === d.toDateString();
+    return today ? hm(d.getHours(), d.getMinutes()) : d.toLocaleDateString('es-EC', { day: 'numeric', month: 'short' });
+  };
+  const fromApiMsg = (m) => ({
+    from: m.direction === 'in' ? 'in' : m.author === 'bot' ? 'bot' : 'out',
+    who: m.author === 'staff' ? 'Equipo' : 'Tú', text: m.text || (m.media_type ? `[${m.media_type}]` : ''), t: clock(m.created_at),
+  });
+
+  async function loadLiveInbox() {
+    const rows = await A().parse(await A().fetch('/api/conversations'), 'No se pudieron cargar las conversaciones.');
+    const prev = new Map(convos.map((c) => [c.id, c]));
+    convos.splice(0, convos.length, ...rows.map((r) => ({
+      id: r.id, name: r.name, phone: r.phone ? `+${r.phone}` : '', channel: CHANNELS[r.kind] ? r.kind : 'whatsapp', agent: null,
+      bot: r.bot_active, pauseReason: r.bot_active ? '' : r.pause_reason, unread: r.unread, stage: r.stage, status: 'open',
+      tags: [r.is_owner ? 'Dueño' : null, r.pending_proofs ? 'Comprobante por revisar' : null].filter(Boolean), last: clock(r.last_message_at),
+      proofs: r.pending_proofs,
+      msgs: prev.get(r.id)?.loaded ? prev.get(r.id).msgs : [{ from: r.last_author === 'customer' ? 'in' : r.last_author === 'bot' ? 'bot' : 'out', who: 'Tú', text: r.last_text || '', t: clock(r.last_message_at) }],
+      loaded: prev.get(r.id)?.loaded || false, live: true,
+    })));
+    if (!convos.some((c) => c.id === ui.convoId)) ui.convoId = convos[0]?.id ?? null;
+  }
+
+  async function loadLiveThread(c) {
+    const data = await A().parse(await A().fetch(`/api/conversations/${c.id}/messages`), 'No se pudieron cargar los mensajes.');
+    c.msgs = data.messages.map(fromApiMsg);
+    c.loaded = true;
+    c.canReply = data.can_reply;
+    c.unread = 0;
+  }
+
+  const PAUSE_NOTE = {
+    owner_reply: 'Respondiste desde tu celular: el asistente se hizo a un lado en este chat. Vuelve solo en un rato o actívalo aquí.',
+    manual: 'Tu equipo tomó este chat. El asistente volverá cuando lo actives.',
+    handoff: 'El asistente pasó este chat a tu equipo. Revisa y responde.',
+    budget: 'Se alcanzó el límite mensual de IA: este chat lo atiende tu equipo.',
+  };
   function visibleConvos() {
     const q = ui.q.trim().toLowerCase();
     return convos.filter((c) => {
@@ -186,6 +217,20 @@
 
   function renderInbox() {
     const root = $('merc-conversaciones');
+    if (live.on && !live.loading && !convos.some((c) => c.live)) {
+      live.loading = true;
+      root.innerHTML = '<div class="card empty-big"><p>Cargando conversaciones…</p></div>';
+      loadLiveInbox().then(renderInbox).catch((err) => { root.innerHTML = `<div class="card empty-big"><p>${esc(err.message)}</p></div>`; }).finally(() => { live.loading = false; });
+      return;
+    }
+    if (live.on && !convos.length) {
+      root.innerHTML = `<div class="card empty-big">${icon('chat', 'ig-icon--xl')}<h2>Aún no hay conversaciones</h2><p>Conecta tu WhatsApp, Instagram o Facebook en <a href="#/asistente">Asistente IA</a> y aquí verás cada chat, con el asistente respondiendo por ti.</p></div>`;
+      return;
+    }
+    const pending = byId(ui.convoId);
+    if (pending?.live && !pending.loaded) {
+      loadLiveThread(pending).then(renderInbox).catch((err) => toast(err.message, 'error'));
+    }
     const list = visibleConvos();
     if (!list.some((c) => c.id === ui.convoId) && list.length && !ui.mobileThread) ui.convoId = list[0].id;
     const cur = byId(ui.convoId);
@@ -242,6 +287,8 @@
             <button class="icon-btn m-info-btn" type="button" id="mInfoBtn" aria-label="Ver datos del contacto" aria-pressed="${ui.info}">${icon('info')}</button>
           </div>
         </header>
+        ${!c.bot && c.pauseReason ? `<p class="m-paused">${icon('info')}<span>${PAUSE_NOTE[c.pauseReason] || PAUSE_NOTE.manual}</span></p>` : ''}
+        ${c.canReply === false ? `<p class="m-paused m-paused--warn">${icon('clock')}<span>Pasaron más de 24 h desde su último mensaje: Meta solo permite escribirle con una plantilla aprobada. Puedes escribirle desde tu celular.</span></p>` : ''}
         <div class="m-body" tabindex="0" aria-live="polite">
           <p class="m-day"><span>Hoy</span></p>
           ${c.msgs.map(msgHtml).join('')}
@@ -262,7 +309,7 @@
   function msgHtml(m) {
     if (m.from === 'in') return `<div class="m-msg m-msg--in"><p>${esc(m.text)}</p><time>${m.t}</time></div>`;
     if (m.from === 'bot') return `<div class="m-msg m-msg--bot"><span class="m-msg-who">${icon('bot')}Asistente IA</span><p>${esc(m.text)}</p><time>${m.t}</time></div>`;
-    return `<div class="m-msg m-msg--out"><span class="m-msg-who">${esc(AGENTS[m.agent || 'ana'].short)}</span><p>${esc(m.text)}</p><time>${m.t}</time></div>`;
+    return `<div class="m-msg m-msg--out"><span class="m-msg-who">${esc(m.who || AGENTS[m.agent || 'ana'].short)}</span><p>${esc(m.text)}</p><time>${m.t}</time></div>`;
   }
 
   function infoHtml(c) {
@@ -296,13 +343,20 @@
     root.querySelectorAll('.m-chip').forEach((b) => b.addEventListener('click', () => { ui.channel = b.dataset.ch; rerender(); }));
     root.querySelectorAll('.m-tab').forEach((b) => b.addEventListener('click', () => { ui.tab = b.dataset.tab; rerender(); }));
     root.querySelectorAll('.m-item').forEach((b) => b.addEventListener('click', () => {
-      ui.convoId = Number(b.dataset.id); ui.mobileThread = true; byId(ui.convoId).unread = 0; rerender();
+      ui.convoId = Number(b.dataset.id); ui.mobileThread = true; byId(ui.convoId).unread = 0;
+      if (byId(ui.convoId).live) byId(ui.convoId).loaded = false;
+      rerender();
     }));
     const cur = byId(ui.convoId);
     if (!cur) return;
     $('mBack')?.addEventListener('click', () => { ui.mobileThread = false; rerender(); });
     $('mInfoBtn')?.addEventListener('click', () => { ui.info = !ui.info; rerender(); });
-    $('mAiToggle')?.addEventListener('change', (e) => {
+    $('mAiToggle')?.addEventListener('change', async (e) => {
+      if (cur.live) {
+        try { await A().parse(await A().fetch(`/api/conversations/${cur.id}/bot`, A().json('POST', { active: e.target.checked })), 'No se pudo cambiar el asistente.'); }
+        catch (err) { toast(err.message, 'error'); e.target.checked = !e.target.checked; return; }
+        cur.pauseReason = e.target.checked ? '' : 'manual';
+      }
       cur.bot = e.target.checked;
       if (cur.bot) cur.agent = null;
       toast(cur.bot ? 'El asistente IA responderá este chat' : 'Tomaste el chat, el asistente se pausó');
@@ -329,10 +383,19 @@
     menu?.querySelectorAll('[data-tpl]').forEach((b) => b.addEventListener('click', () => {
       $('mInput').value = templateText[b.dataset.tpl]; menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); $('mInput').focus();
     }));
-    $('mComposer')?.addEventListener('submit', (e) => {
+    $('mComposer')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = $('mInput').value.trim();
       if (!text) return;
+      if (cur.live) {
+        try {
+          await A().parse(await A().fetch(`/api/conversations/${cur.id}/reply`, A().json('POST', { text })), 'No se pudo enviar el mensaje.');
+          cur.bot = false; cur.pauseReason = 'manual'; cur.loaded = false;
+          renderInbox();
+          $('mInput')?.focus();
+        } catch (err) { toast(err.message, 'error'); }
+        return;
+      }
       const now = new Date();
       cur.msgs.push({ from: 'out', agent: 'ana', text, t: hm(now.getHours(), now.getMinutes()) });
       cur.last = hm(now.getHours(), now.getMinutes());
@@ -491,68 +554,12 @@
   }
 
   /* ======================= CATÁLOGO ======================= */
-  function renderCatalog() {
-    const root = $('merc-catalogo');
-    const cats = ['Todo', ...new Set(products.map((p) => p.cat))];
-    const q = ui.catQ.trim().toLowerCase();
-    const list = products.filter((p) => (ui.catCat === 'Todo' || p.cat === ui.catCat) && (!q || p.name.toLowerCase().includes(q)));
-    root.innerHTML = `
-      <div class="m-cat-tools">
-        <div class="m-search">${icon('search')}<span class="sr-only">Buscar en el catálogo</span><input id="mCatQ" type="search" placeholder="Buscar producto o servicio" value="${esc(ui.catQ)}" autocomplete="off" /></div>
-        <div class="m-chips" role="group" aria-label="Categoría">${cats.map((c) => `<button class="m-chip" type="button" data-cat="${esc(c)}" aria-pressed="${ui.catCat === c}">${esc(c)}</button>`).join('')}</div>
-      </div>
-      <div class="m-cat-layout">
-        <ul class="m-products">
-          ${list.map((p) => `
-            <li class="card m-product">
-              <span class="m-product-img" aria-hidden="true">${icon(p.cat === 'Servicios' ? 'calendar' : p.cat === 'Paquetes' ? 'star' : 'receipt', 'ig-icon--lg')}</span>
-              <div class="m-product-body">
-                <span class="eyebrow">${esc(p.sku)} · ${esc(p.cat)}</span>
-                <strong>${esc(p.name)}</strong>
-                <span class="m-product-price">${usd(p.price)}</span>
-                ${p.stock === null ? '<span class="ig-chip ig-chip--brand">Servicio</span>' : p.stock === 0 ? '<span class="ig-chip ig-chip--danger ig-chip--dot">Agotado</span>' : p.stock < 10 ? `<span class="ig-chip ig-chip--warning ig-chip--dot">Quedan ${p.stock}</span>` : `<span class="ig-chip ig-chip--success ig-chip--dot">${p.stock} en stock</span>`}
-              </div>
-              <div class="m-product-actions">
-                <button class="btn btn-sm" type="button" data-send="${p.id}" ${p.stock === 0 ? 'disabled' : ''}>${icon('whatsapp')}<span>Enviar al chat</span></button>
-                <button class="btn btn-sm btn-quiet" type="button" data-pay="${p.id}" ${p.stock === 0 ? 'disabled' : ''}>${icon('wallet')}<span>Link de pago</span></button>
-              </div>
-            </li>`).join('') || '<li class="empty">No encontramos productos con ese nombre.</li>'}
-        </ul>
-        <aside class="card m-pay" aria-label="Métodos de pago">
-          <div class="card-head"><h2>Cobrar en el chat</h2></div>
-          <p class="card-lead">Tus clientes pagan sin salir de la conversación.</p>
-          <ul>
-            ${payMethods.map((m, i) => `
-              <li><span><strong>${esc(m.name)}</strong><small>${esc(m.note)}</small></span>
-              <label class="ig-switch"><input type="checkbox" data-pm="${i}" ${m.on ? 'checked' : ''} aria-label="Activar ${esc(m.name)}" /><span class="ig-switch__track"></span></label></li>`).join('')}
-          </ul>
-        </aside>
-      </div>`;
-    $('mCatQ').addEventListener('input', (e) => {
-      ui.catQ = e.target.value; const pos = e.target.selectionStart; renderCatalog();
-      const el = $('mCatQ'); el.focus(); el.setSelectionRange(pos, pos);
-    });
-    root.querySelectorAll('[data-cat]').forEach((b) => b.addEventListener('click', () => { ui.catCat = b.dataset.cat; renderCatalog(); }));
-    root.querySelectorAll('[data-send]').forEach((b) => b.addEventListener('click', () => {
-      const p = products.find((x) => x.id === Number(b.dataset.send));
-      toast(`«${p.name}» enviado a ${byId(ui.convoId).name}`);
-    }));
-    root.querySelectorAll('[data-pay]').forEach((b) => b.addEventListener('click', () => {
-      const p = products.find((x) => x.id === Number(b.dataset.pay));
-      const link = `https://pagos.iguana.ec/p/${p.sku.toLowerCase()}`;
-      if (navigator.clipboard) navigator.clipboard.writeText(link).catch(() => {});
-      toast(`Link de pago copiado: ${link}`);
-    }));
-    root.querySelectorAll('[data-pm]').forEach((i) => i.addEventListener('change', () => {
-      const m = payMethods[Number(i.dataset.pm)]; m.on = i.checked; toast(`${m.name} ${m.on ? 'activado' : 'desactivado'}`);
-    }));
-  }
-
   /* ---------------- Montaje ---------------- */
-  const renderers = { conversaciones: renderInbox, embudo: renderPipeline, chatbots: renderBots, campanas: renderCampaigns, catalogo: renderCatalog };
+  const renderers = { conversaciones: renderInbox, embudo: renderPipeline, chatbots: renderBots, campanas: renderCampaigns };
 
   function render(view) {
     if (!renderers[view]) return;
+    if (view === 'conversaciones' && live.on) convos.splice(0, convos.length); // recarga al entrar
     if (view === 'conversaciones' && !ui.mobileThread) ui.mobileThread = false;
     renderers[view]();
     if (!mounted.dialog) {

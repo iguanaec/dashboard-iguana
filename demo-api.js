@@ -9,6 +9,10 @@
      ?demo=acceso      pantalla de entrar / crear negocio
      ?demo=moderador   vista del super administrador
      ?demo=password    cambio de contraseña obligatorio
+     ?demo=onboarding  configuración inicial (elegir el tipo de negocio)
+     ?demo=canina      peluquería canina (citas + datos de la mascota)
+     ?demo=inmobiliaria  propiedades, prospectos y visitas
+     ?demo=tienda      catálogo, pedidos y comprobantes
    ========================================================= */
 (() => {
   'use strict';
@@ -138,6 +142,111 @@
   addExpense(0, expenseTemplates[3]);
   [-8, -11, -14, -17, -20, -23, -27, -31, -34, -38, -42, -47, -52, -58].forEach((day, k) => addExpense(day, expenseTemplates[(k + 1) % expenseTemplates.length]));
 
+
+  /* ----- Tipo de negocio (giro): define secciones y comportamiento del asistente ----- */
+  const BASE = ['inicio', 'clientes', 'dinero', 'mensajeria', 'asistente', 'ajustes'];
+  const MODES = {
+    citas: { label: 'Citas', modules: [...BASE, 'calendario', 'lista_espera', 'reactivar'], vocabulary: { booking: 'cita', bookings: 'citas', customer: 'cliente' } },
+    alto_flujo: { label: 'Citas de alto flujo', modules: [...BASE, 'calendario', 'lista_espera', 'reactivar'], vocabulary: { booking: 'turno', bookings: 'turnos', customer: 'cliente' } },
+    visitas_leads: { label: 'Visitas y prospectos', modules: [...BASE, 'calendario', 'leads', 'propiedades'], vocabulary: { booking: 'visita', bookings: 'visitas', customer: 'prospecto' } },
+    ventas: { label: 'Ventas', modules: [...BASE, 'catalogo', 'pedidos', 'reactivar'], vocabulary: { booking: 'pedido', bookings: 'pedidos', customer: 'cliente' } },
+    pedidos: { label: 'Pedidos y delivery', modules: [...BASE, 'catalogo', 'pedidos'], vocabulary: { booking: 'pedido', bookings: 'pedidos', customer: 'cliente' } },
+    servicios_profesionales: { label: 'Servicios profesionales', modules: [...BASE, 'calendario', 'leads'], vocabulary: { booking: 'cita', bookings: 'citas', customer: 'cliente' } },
+  };
+  const NICHES = [
+    ['peluqueria', 'Peluquería / salón de belleza', 'citas', 'scissors', 'Cortes, tintes, peinados y tratamientos con agenda por estilista.'],
+    ['barberia', 'Barbería', 'alto_flujo', 'scissors', 'Turnos rápidos de corte y barba con varios barberos.'],
+    ['unas', 'Uñas / nail bar', 'citas', 'sparkle', 'Manicure, pedicure, acrílicas y gel.'],
+    ['makeup', 'Maquillaje / estética', 'citas', 'sparkle', 'Maquillaje social, novias, cejas, pestañas y faciales.'],
+    ['spa', 'Spa / masajes', 'citas', 'leaf', 'Masajes, tratamientos corporales y paquetes.'],
+    ['peluqueria_canina', 'Peluquería canina / grooming', 'citas', 'paw', 'Baño, corte y spa para mascotas, con datos de cada mascota.'],
+    ['veterinaria', 'Veterinaria', 'citas', 'paw', 'Consultas, vacunas y desparasitación con historial por mascota.'],
+    ['consultorio', 'Consultorio médico', 'citas', 'heart', 'Agenda de consultas y controles.'],
+    ['odontologia', 'Odontología', 'citas', 'heart', 'Limpiezas, valoraciones, ortodoncia y urgencias dentales.'],
+    ['psicologia', 'Psicología / terapia', 'citas', 'heart', 'Sesiones presenciales y virtuales.'],
+    ['gimnasio', 'Gimnasio / entrenador / clases grupales', 'alto_flujo', 'bolt', 'Clases con cupos y entrenamientos personales.'],
+    ['academia', 'Academia / clases / tutorías', 'citas', 'book', 'Clases particulares, cursos e inscripciones.'],
+    ['inmobiliaria', 'Inmobiliaria / bienes raíces', 'visitas_leads', 'home', 'Califica prospectos, recomienda propiedades y agenda visitas.'],
+    ['tienda', 'Tienda online / ecommerce', 'ventas', 'bag', 'Catálogo, pedidos por chat, pagos por transferencia y envíos.'],
+    ['hospedaje', 'Hostal / hospedaje / glamping', 'ventas', 'bed', 'Consultas de disponibilidad, paquetes y reservas con anticipo.'],
+    ['restaurante', 'Restaurante / cafetería / delivery', 'pedidos', 'food', 'Menú, pedidos a domicilio o para retirar.'],
+    ['taller', 'Taller mecánico / lavadora de autos', 'servicios_profesionales', 'wrench', 'Diagnósticos, mantenimientos y turnos de lavado.'],
+    ['legal_contable', 'Abogados / contadores / asesorías', 'servicios_profesionales', 'briefcase', 'Califica el caso y agenda la consulta inicial.'],
+    ['fotografia', 'Fotografía / eventos', 'servicios_profesionales', 'camera', 'Sesiones, cobertura de eventos y cotizaciones.'],
+  ].map(([id, label, m, icon, description]) => ({ id, label, mode: m, icon, description, modeLabel: MODES[m].label }));
+  const FIELDS = {
+    peluqueria_canina: [
+      { key: 'mascota', label: 'Nombre de la mascota', required: true }, { key: 'raza', label: 'Raza', required: true },
+      { key: 'tamano', label: 'Tamaño', options: ['Pequeño', 'Mediano', 'Grande', 'Gigante'], required: true }, { key: 'temperamento', label: 'Temperamento / cuidados' },
+    ],
+    inmobiliaria: [
+      { key: 'operacion', label: 'Compra o arriendo', options: ['Compra', 'Arriendo'] }, { key: 'zona', label: 'Zona de interés' },
+      { key: 'presupuesto', label: 'Presupuesto' }, { key: 'financiamiento', label: 'Forma de pago', options: ['Contado', 'Crédito hipotecario', 'BIESS', 'Por definir'] },
+    ],
+    tienda: [{ key: 'ciudad', label: 'Ciudad de envío' }, { key: 'talla', label: 'Talla' }],
+    peluqueria: [{ key: 'tipo_cabello', label: 'Tipo de cabello', options: ['Liso', 'Ondulado', 'Rizado', 'Afro'] }],
+  };
+  const DEMO_NICHE = { canina: 'peluqueria_canina', inmobiliaria: 'inmobiliaria', tienda: 'tienda', onboarding: 'peluqueria' }[mode] || 'peluqueria';
+  const DEMO_NAME = { canina: 'Toby Grooming', inmobiliaria: 'Andes Propiedades', tienda: 'Moda Kuna', onboarding: 'Mi negocio' }[mode] || 'Salón Iguana';
+  let business = makeBusiness(DEMO_NICHE, mode !== 'onboarding');
+  settings.businessProfile.businessName = DEMO_NAME;
+  function makeBusiness(nicheId, locked) {
+    const n = NICHES.find((x) => x.id === nicheId);
+    const m = MODES[n.mode];
+    return {
+      id: 1, name: DEMO_NAME, status: locked ? 'active' : 'onboarding', niche: n.id, nicheLabel: n.label, mode: n.mode, modeLabel: m.label,
+      locked, onboarding: !locked, modules: m.modules, vocabulary: m.vocabulary, customerFields: FIELDS[n.id] || [],
+    };
+  }
+  if (business.niche === 'peluqueria_canina') {
+    const pets = [['Toby', 'Schnauzer', 'Pequeño'], ['Luna', 'Golden retriever', 'Grande'], ['Max', 'French poodle', 'Pequeño'], ['Nala', 'Husky', 'Grande']];
+    customers.slice(0, 4).forEach((c, i) => { c.extra = { mascota: pets[i][0], raza: pets[i][1], tamano: pets[i][2] }; });
+    Object.assign(services[0], { name: 'Baño', duration_minutes: 60, price: 12 });
+    Object.assign(services[1], { name: 'Baño y corte', duration_minutes: 90, price: 20 });
+    Object.assign(services[2], { name: 'Corte de uñas', duration_minutes: 15, price: 4 });
+    appointments.forEach((a) => { a.service_name = services.find((x) => x.id === a.service_id).name; });
+  }
+
+  let products = business.mode === 'ventas' ? [
+    { id: 1, name: 'Vestido lino arena', category: 'Vestidos', price: 42, stock: 6, description: 'Tallas S, M y L. Lino 100 %.', image_url: '', enabled: true },
+    { id: 2, name: 'Blusa bordada Otavalo', category: 'Blusas', price: 28, stock: 12, description: 'Bordado a mano.', image_url: '', enabled: true },
+    { id: 3, name: 'Poncho alpaca', category: 'Abrigos', price: 65, stock: 2, description: 'Hecho en Cotacachi.', image_url: '', enabled: true },
+    { id: 4, name: 'Bolso de paja toquilla', category: 'Accesorios', price: 35, stock: 0, description: '', image_url: '', enabled: true },
+  ] : [];
+  let orders = business.mode === 'ventas' ? [
+    { id: 41, customer_name: 'Marcela Vinueza', phone: '593991230045', status: 'nuevo', items: [{ qty: 1, name: 'Vestido lino arena' }], total: 42, paid: 0, delivery_address: 'Cumbayá, Quito', origin: 'whatsapp', created_at: at(0, 9, 12) },
+    { id: 40, customer_name: 'Daniela Ortiz', phone: '593975554433', status: 'pagado', items: [{ qty: 2, name: 'Blusa bordada Otavalo' }], total: 56, paid: 56, delivery_address: 'Guayaquil, Urdesa', origin: 'instagram', created_at: at(-1, 18, 40) },
+    { id: 39, customer_name: 'Rosa León', phone: '593975551111', status: 'enviado', items: [{ qty: 1, name: 'Poncho alpaca' }], total: 65, paid: 65, delivery_address: 'Cuenca centro', origin: 'whatsapp', created_at: at(-2, 11, 5) },
+    { id: 38, customer_name: 'Lucía Montalvo', phone: '593984441199', status: 'confirmado', items: [{ qty: 1, name: 'Bolso de paja toquilla' }, { qty: 1, name: 'Blusa bordada Otavalo' }], total: 63, paid: 30, delivery_address: 'Retiro en local', origin: 'messenger', created_at: at(-1, 10, 20) },
+  ] : [];
+  let properties = business.mode === 'visitas_leads' ? [
+    { id: 1, title: 'Departamento con vista al valle', operation: 'venta', type: 'departamento', zone: 'Cumbayá', price: 128000, bedrooms: 2, bathrooms: 2, area_m2: 96, status: 'disponible', url: '', description: '' },
+    { id: 2, title: 'Casa en conjunto cerrado', operation: 'venta', type: 'casa', zone: 'Samborondón', price: 245000, bedrooms: 4, bathrooms: 3, area_m2: 210, status: 'reservada', url: '', description: '' },
+    { id: 3, title: 'Suite amoblada cerca de la U', operation: 'arriendo', type: 'departamento', zone: 'La Floresta', price: 480, bedrooms: 1, bathrooms: 1, area_m2: 48, status: 'disponible', url: '', description: '' },
+  ] : [];
+  let leads = business.mode === 'visitas_leads' ? [
+    { id: 1, customer_name: 'Julián Paredes', phone: '593984441122', interest: 'Departamento 2 dormitorios', zone: 'Cumbayá', budget: 130000, financing: 'Crédito hipotecario', timeline: 'este mes', score: 90, stage: 'visita' },
+    { id: 2, customer_name: 'Carla Mejía', phone: '', interest: 'Suite para arrendar', zone: 'La Floresta', budget: 500, financing: 'Contado', timeline: '2 meses', score: 70, stage: 'calificado' },
+    { id: 3, customer_name: 'Pablo Ruiz', phone: '593975550000', interest: 'Terreno', zone: 'Tumbaco', budget: null, financing: '', timeline: '', score: 20, stage: 'nuevo' },
+  ] : [];
+  let waitlist = [
+    { id: 1, customer_name: 'Rosa León', phone: '593975551111', service_name: services[0].name, desired_date: dayString(1), status: 'offered', offered_at: at(1, 15) },
+    { id: 2, customer_name: 'Pablo Ruiz', phone: '593975550000', service_name: services[1].name, desired_date: null, status: 'waiting' },
+  ];
+  let reactivation = business.niche === 'peluqueria_canina' ? [
+    { customer_id: 2, name: 'Marcela Vinueza', phone: '593991230045', service_name: 'Baño', days_since: 41, message: 'Hola Marcela 🐶 Luna ya lleva 41 días desde su último baño. ¿Le agendamos su baño?' },
+    { customer_id: 4, name: 'Carla Mejía', phone: '', service_name: 'Baño y corte', days_since: 52, message: 'Hola Carla 🐶 Nala ya lleva 52 días desde su último baño y corte. ¿Le agendamos?' },
+  ] : [
+    { customer_id: 2, name: 'Marcela Vinueza', phone: '593991230045', service_name: services[0].name, days_since: 34, message: `Hola Marcela 💇 ya pasó un mes desde tu último ${services[0].name.toLowerCase()}. ¿Te reservo un espacio esta semana?` },
+    { customer_id: 5, name: 'Daniela Ortiz', phone: '593975554433', service_name: services[2].name, days_since: 47, message: `Hola Daniela ✨ ¿te agendo tu próximo ${services[2].name.toLowerCase()}?` },
+  ];
+  reactivation.forEach((r) => { r.whatsapp_link = r.phone ? `https://wa.me/${r.phone}?text=${encodeURIComponent(r.message)}` : null; });
+  let proofs = [
+    { id: 1, customer_name: business.mode === 'ventas' ? 'Lucía Montalvo' : 'Julián Paredes', amount: business.mode === 'ventas' ? 33 : 35, bank: 'Banco Pichincha', reference: '004512', status: 'pending', created_at: at(0, 8, 47) },
+  ];
+  let channels = mode === 'onboarding' ? [] : [{ id: 1, kind: 'whatsapp', external_id: '1', display_name: `${DEMO_NAME} · +593 99 942 0676`, coexistence: 1, status: 'active' }];
+  let agentConfig = { faqs: [{ keywords: ['parqueadero'], answer: 'Sí 🚗 tenemos parqueadero gratis para clientes.' }], ownerPhones: ['593987654321'] };
+
   let documents = [{ id: 1, name: 'precios-2026.pdf', size_bytes: 48210, created_at: `${dayString(-14)} 10:00:00` }];
   let nextId = 100;
 
@@ -219,7 +328,7 @@
           ],
         });
       }
-      return respond({ user: { id: 1, username: 'Esteban', role: 'admin', companyName: 'Salón Iguana', mustChangePassword: mode === 'password' } });
+      return respond({ user: { id: 1, username: 'Esteban', role: 'admin', companyName: business.name, mustChangePassword: mode === 'password' }, business });
     }
     if (route === '/api/auth/login') {
       if (body.password === 'bad') return respond({ error: 'Usuario o contraseña incorrectos.' }, 401);
@@ -313,6 +422,82 @@
     }
     const docMatch = route.match(/^\/api\/ai-documents\/(\d+)$/);
     if (docMatch && method === 'DELETE') { documents = documents.filter((d) => d.id !== Number(docMatch[1])); return respond({ ok: true }); }
+
+
+    // Giro y onboarding
+    if (route === '/api/niches') return respond(NICHES);
+    if (route === '/api/onboarding/niche') { business = makeBusiness(body.niche, false); return respond({ ok: true }); }
+    if (route === '/api/onboarding/complete') { business = { ...business, locked: true, onboarding: false, status: 'active' }; return respond({ ok: true }); }
+    if (route === '/api/onboarding') return respond({ status: business.status, locked: business.locked, niche: business.niche });
+
+    // Catálogo y pedidos
+    if (route === '/api/products') {
+      if (method === 'POST') { const p = { id: nextId += 1, ...body, price: Number(body.price), stock: body.stock === '' ? null : Number(body.stock), enabled: true }; products.push(p); return respond(p); }
+      return respond(products);
+    }
+    const productMatch = route.match(/^\/api\/products\/(\d+)$/);
+    if (productMatch) {
+      const id = Number(productMatch[1]);
+      if (method === 'DELETE') { products = products.filter((p) => p.id !== id); return respond({ ok: true }); }
+      const p = products.find((x) => x.id === id);
+      Object.assign(p, body, { price: Number(body.price), stock: body.stock === '' || body.stock == null ? null : Number(body.stock) });
+      return respond(p);
+    }
+    if (route === '/api/orders') return respond(orders);
+    const orderMatch = route.match(/^\/api\/orders\/(\d+)\/status$/);
+    if (orderMatch) { orders.find((o) => o.id === Number(orderMatch[1])).status = body.status; return respond({ ok: true }); }
+
+    // Propiedades y prospectos
+    if (route === '/api/properties') {
+      if (method === 'POST') { const p = { id: nextId += 1, ...body, price: Number(body.price) }; properties.unshift(p); return respond(p); }
+      return respond(properties);
+    }
+    const propMatch = route.match(/^\/api\/properties\/(\d+)$/);
+    if (propMatch) { const p = properties.find((x) => x.id === Number(propMatch[1])); Object.assign(p, body, { price: Number(body.price) }); return respond(p); }
+    if (route === '/api/leads') return respond(leads);
+    const leadMatch = route.match(/^\/api\/leads\/(\d+)$/);
+    if (leadMatch) { Object.assign(leads.find((l) => l.id === Number(leadMatch[1])), body); return respond({ ok: true }); }
+
+    // Lista de espera, reactivación y comprobantes
+    if (route === '/api/waitlist') return respond(waitlist);
+    const waitMatch = route.match(/^\/api\/waitlist\/(\d+)$/);
+    if (waitMatch) { waitlist = waitlist.filter((w) => w.id !== Number(waitMatch[1])); return respond({ ok: true }); }
+    if (route === '/api/reactivation') return respond(reactivation);
+    const reactMatch = route.match(/^\/api\/reactivation\/(\d+)\/done$/);
+    if (reactMatch) { reactivation = reactivation.filter((r) => r.customer_id !== Number(reactMatch[1])); return respond({ ok: true }); }
+    if (route === '/api/payment-proofs') return respond(proofs);
+    if (/^\/api\/payment-proofs\/\d+\/(approve|reject)$/.test(route)) { proofs = proofs.filter((p) => !route.includes(`/${p.id}/`)); return respond({ ok: true }); }
+
+    // Asistente: configuración, consumo, probador y canales
+    if (route === '/api/agent/config') {
+      if (method === 'PUT') Object.assign(agentConfig, body);
+      return respond({ ...agentConfig, niche: business.niche, mode: business.mode, locked: business.locked, monthlyBudgetUsd: 5, aiEnabled: true });
+    }
+    if (route === '/api/agent/usage') return respond({ month: dayString(0).slice(0, 7), calls: 412, freeReplies: 138, inputTokens: 391000, outputTokens: 26000, costUsd: 0.14, bookedUsd: 1260, budgetUsd: 5, budgetUsedPct: 3 });
+    if (route === '/api/agent/test') {
+      if (body.reset) return respond({ ok: true, replies: [] });
+      const text = String(body.message || '').toLowerCase();
+      let reply;
+      if (body.asOwner) reply = /gast/.test(text) ? 'Listo, registré el gasto de hoy. 💸' : 'Hoy cobraste $86, gastaste $14.80 y te quedan 3 citas por atender.';
+      else if (/parqueadero/.test(text)) reply = agentConfig.faqs[0].answer;
+      else if (business.mode === 'ventas') reply = 'Tenemos el vestido lino arena en talla M por $42 💛 ¿Te lo separo? Envío a todo el país.';
+      else if (business.mode === 'visitas_leads') reply = '¡Hola! Para recomendarte bien: ¿buscas comprar o arrendar, en qué zona y con qué presupuesto aproximado?';
+      else if (business.niche === 'peluqueria_canina') reply = '¡Hola! 🐶 ¿Cómo se llama tu peludito, qué raza es y de qué tamaño? Mañana tengo libre a las 10:00, 11:30 y 15:00.';
+      else reply = `¡Hola! Mañana tengo libre a las 10:00, 11:30 y 15:00 para ${services[0].name.toLowerCase()} ($${services[0].price}). ¿Cuál te acomoda?`;
+      return respond({ ok: true, replies: [reply] });
+    }
+    if (route === '/api/channels') return respond({ channels, meta: { appId: 'demo', waConfigId: 'demo', pagesConfigId: 'demo', graphVersion: 'v24.0' } });
+    if (route === '/api/channels/whatsapp/embedded-signup') {
+      channels = channels.filter((c) => c.kind !== 'whatsapp').concat({ id: 2, kind: 'whatsapp', display_name: `${business.name} · +593 99 942 0676`, coexistence: 1, status: 'active' });
+      return respond({ ok: true });
+    }
+    if (route === '/api/channels/pages/connect') {
+      channels = channels.filter((c) => c.kind === 'whatsapp').concat(
+        { id: 3, kind: 'instagram', display_name: '@' + business.name.toLowerCase().replace(/\s+/g, ''), coexistence: 0, status: 'active' },
+        { id: 4, kind: 'messenger', display_name: business.name, coexistence: 0, status: 'active' },
+      );
+      return respond({ ok: true });
+    }
 
     // Moderador
     if (route === '/api/moderator/ai-settings') return respond({ onboardingEnabled: true, firstStepsEnabled: false });

@@ -17,6 +17,7 @@
 
   const state = {
     user: null,
+    business: null,
     settings: null,
     services: [],
     servicesApi: true,
@@ -38,7 +39,12 @@
     inicio: 'Inicio', calendario: 'Calendario', clientes: 'Clientes', dinero: 'Dinero', asistente: 'Asistente IA',
     ajustes: 'Ajustes', facturar: 'Facturar', moderador: 'Empresas',
     conversaciones: 'Conversaciones', embudo: 'Embudo de ventas', chatbots: 'Chatbots', campanas: 'Campañas', catalogo: 'Catálogo',
+    pedidos: 'Pedidos', propiedades: 'Propiedades', prospectos: 'Prospectos', espera: 'Lista de espera', reactivar: 'Reactivar clientes',
   };
+  // Vistas que dibuja giro.js (dependen del tipo de negocio).
+  const GIRO_VIEWS = ['catalogo', 'pedidos', 'propiedades', 'prospectos', 'espera', 'reactivar'];
+  const giro = () => window.IguanaGiro;
+  const hasModule = (m) => !state.business || state.business.modules.includes(m);
   const MONEY_TABS = ['resumen', 'ingresos', 'gastos'];
   const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const APPT_STATUS = { confirmed: 'Confirmada', completed: 'Completada', cancelled: 'Cancelada', no_show: 'No asistió' };
@@ -167,7 +173,7 @@
 
   for (const dialog of document.querySelectorAll('dialog')) {
     dialog.addEventListener('click', (event) => {
-      if (event.target === dialog && dialog.id !== 'passwordDialog') dialog.close();
+      if (event.target === dialog && !['passwordDialog', 'onboardingDialog'].includes(dialog.id)) dialog.close();
     });
     dialog.querySelectorAll('[data-close]').forEach((button) => button.addEventListener('click', () => dialog.close()));
   }
@@ -278,6 +284,8 @@
   }
 
   async function loadAppointments() {
+    // Giros sin agenda (tienda, delivery) no tienen citas.
+    if (!hasModule('calendario')) { state.appointments = []; return state.appointments; }
     state.appointments = await parse(await apiFetch('/api/appointments?include_cancelled=true'), 'No se pudieron cargar las citas.');
     return state.appointments;
   }
@@ -559,6 +567,7 @@
       customer.telegram_username
         ? `${channel}: ${customer.contact_channel === 'telegram' ? '@' : ''}${customer.telegram_username}`
         : null,
+      ...(giro()?.customerExtraFacts(customer) || []).map(([label, value]) => `${label}: ${value}`),
     ].filter(Boolean);
 
     const history = customer.appointments.length
@@ -594,6 +603,7 @@
     $('customerCedulaRuc').value = customer?.cedula_ruc || '';
     $('customerAddress').value = customer?.address || '';
     $('customerPhone').value = customer?.phone || '';
+    giro()?.fillCustomerExtra(customer);
     $('customerFormError').textContent = '';
     openDialog($('customerDialog'), 'customerFirstName');
   }
@@ -633,6 +643,7 @@
     $('customerFormError').textContent = '';
     try {
       const body = Object.fromEntries(new FormData(event.currentTarget).entries());
+      body.extra = giro()?.readCustomerExtra() || {};
       const editing = state.editingCustomerId;
       const response = await apiFetch(editing ? `/api/customers/${editing}` : '/api/customers', json(editing ? 'PUT' : 'POST', body));
       const customer = await parse(response, editing ? 'No se pudo actualizar el cliente.' : 'No se pudo crear el cliente.');
@@ -1625,6 +1636,9 @@
     }, { passive: true });
   })();
 
+  // Lo que usan giro.js y merc.js para hablar con la API.
+  window.IguanaApi = { fetch: apiFetch, parse, json, toast, fail, confirmAction, openDialog, state };
+
   /* ---------- Rutas ---------- */
 
   let routeToken = 0;
@@ -1640,7 +1654,8 @@
     const isModerator = state.user.role === 'super_admin';
     let { view, tab } = parseRoute();
     if (isModerator) view = 'moderador';
-    else if (!VIEW_TITLES[view] || view === 'moderador') view = 'inicio';
+    else if (!VIEW_TITLES[view] || view === 'moderador') view = giro()?.firstAllowed() || 'inicio';
+    if (!isModerator && giro() && !giro().allowed(view)) view = giro().firstAllowed();
     if (view === 'dinero' && !MONEY_TABS.includes(tab)) tab = 'resumen';
     const canonical = `#/${view}${view === 'dinero' ? `/${tab}` : ''}`;
     if (location.hash !== canonical) history.replaceState(null, '', canonical);
@@ -1655,7 +1670,7 @@
       else link.removeAttribute('aria-current');
     });
     document.body.dataset.page = view;
-    $('navMore').classList.toggle('is-current', ['asistente', 'ajustes', 'facturar', 'embudo', 'chatbots', 'campanas', 'catalogo'].includes(view));
+    $('navMore').classList.toggle('is-current', ['asistente', 'ajustes', 'facturar', 'embudo', 'chatbots', 'campanas', ...GIRO_VIEWS].includes(view));
     document.title = `${VIEW_TITLES[view]} · ${$('brandName').textContent}`;
     if (changed) {
       window.scrollTo({ top: 0, behavior: 'auto' });
@@ -1687,7 +1702,8 @@
         if (token !== routeToken) return;
         fillSettingsForms(state.settings);
       }
-      if (['conversaciones', 'embudo', 'chatbots', 'campanas', 'catalogo'].includes(view)) window.IguanaMsg?.render(view);
+      if (['conversaciones', 'embudo', 'chatbots', 'campanas'].includes(view)) window.IguanaMsg?.render(view);
+      if ([...GIRO_VIEWS, 'inicio', 'asistente'].includes(view)) await giro()?.render(view);
       if (view === 'moderador') await Promise.all([loadCompanies(), loadModeratorSettings()]);
       stamp();
       const after = state.afterRoute;
@@ -1724,6 +1740,7 @@
     }
 
     state.user = session.user;
+    state.business = session.business || null;
     state.initialCompanies = Array.isArray(session.companies) ? session.companies : null;
     $('userName').textContent = state.user.username;
     $('logoutBtn').setAttribute('aria-label', `Salir (${state.user.username})`);
@@ -1746,6 +1763,7 @@
     }
 
     if (state.user.companyName) $('brandName').textContent = state.user.companyName;
+    giro()?.apply(session);
     try {
       await Promise.all([loadSettings(), loadAppointments(), loadServices()]);
       setBrand();

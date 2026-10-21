@@ -15,6 +15,7 @@
 <link href="design-system/components.css" rel="stylesheet" />
 <link href="styles.css" rel="stylesheet" />
 <link href="merc.css" rel="stylesheet" />
+<link href="giro.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/luxon3@6.1.11/index.global.min.js" defer></script>
@@ -22,6 +23,7 @@
 <script src="demo-api.js" defer></script>
 <script src="design-system/ig.js" defer></script>
 <script src="merc.js" defer></script>
+<script src="giro.js" defer></script>
 <script src="app.js" defer></script>
 </head>
 <body class="ig-root" data-state="loading">
@@ -98,18 +100,23 @@
 
   <nav class="nav" id="nav" aria-label="Principal">
     <ul>
-      <li><a href="#/inicio" data-route="inicio"><svg class="ig-icon"><use href="#i-home"/></svg><span>Inicio</span></a></li>
-      <li><a href="#/conversaciones" data-route="conversaciones"><svg class="ig-icon"><use href="#i-chat"/></svg><span><span class="nav-long">Conversaciones</span><span class="nav-short">Chats</span></span></a></li>
-      <li><a href="#/calendario" data-route="calendario"><svg class="ig-icon"><use href="#i-calendar"/></svg><span>Calendario</span></a></li>
-      <li><a href="#/clientes" data-route="clientes"><svg class="ig-icon"><use href="#i-users"/></svg><span>Clientes</span></a></li>
-      <li><a href="#/dinero" data-route="dinero"><svg class="ig-icon"><use href="#i-wallet"/></svg><span>Dinero</span></a></li>
-      <li class="nav-secondary nav-sep"><a href="#/embudo" data-route="embudo"><svg class="ig-icon"><use href="#i-trend"/></svg><span>Embudo de ventas</span></a></li>
-      <li class="nav-secondary"><a href="#/chatbots" data-route="chatbots"><svg class="ig-icon"><use href="#i-sliders"/></svg><span>Chatbots</span></a></li>
-      <li class="nav-secondary"><a href="#/campanas" data-route="campanas"><svg class="ig-icon"><use href="#i-whatsapp"/></svg><span>Campañas</span></a></li>
-      <li class="nav-secondary"><a href="#/catalogo" data-route="catalogo"><svg class="ig-icon"><use href="#i-receipt"/></svg><span>Catálogo</span></a></li>
-      <li class="nav-secondary nav-sep"><a href="#/asistente" data-route="asistente"><svg class="ig-icon"><use href="#i-bot"/></svg><span>Asistente IA</span></a></li>
-      <li class="nav-secondary"><a href="#/ajustes" data-route="ajustes"><svg class="ig-icon"><use href="#i-cog"/></svg><span>Ajustes</span></a></li>
-      <li class="nav-secondary nav-soon"><a href="#/facturar" data-route="facturar"><svg class="ig-icon"><use href="#i-receipt"/></svg><span>Facturar</span><em class="tag">Pronto</em></a></li>
+      <li data-module="inicio"><a href="#/inicio" data-route="inicio"><svg class="ig-icon"><use href="#i-home"/></svg><span>Inicio</span></a></li>
+      <li data-module="mensajeria"><a href="#/conversaciones" data-route="conversaciones"><svg class="ig-icon"><use href="#i-chat"/></svg><span><span class="nav-long">Conversaciones</span><span class="nav-short">Chats</span></span></a></li>
+      <li data-module="calendario"><a href="#/calendario" data-route="calendario"><svg class="ig-icon"><use href="#i-calendar"/></svg><span>Calendario</span></a></li>
+      <li data-module="clientes"><a href="#/clientes" data-route="clientes"><svg class="ig-icon"><use href="#i-users"/></svg><span>Clientes</span></a></li>
+      <li data-module="dinero"><a href="#/dinero" data-route="dinero"><svg class="ig-icon"><use href="#i-wallet"/></svg><span>Dinero</span></a></li>
+      <li class="nav-secondary nav-sep" data-module="pedidos"><a href="#/pedidos" data-route="pedidos"><svg class="ig-icon"><use href="#i-box"/></svg><span>Pedidos</span></a></li>
+      <li class="nav-secondary" data-module="catalogo"><a href="#/catalogo" data-route="catalogo"><svg class="ig-icon"><use href="#i-receipt"/></svg><span>Catálogo</span></a></li>
+      <li class="nav-secondary nav-sep" data-module="propiedades"><a href="#/propiedades" data-route="propiedades"><svg class="ig-icon"><use href="#i-house"/></svg><span>Propiedades</span></a></li>
+      <li class="nav-secondary" data-module="leads"><a href="#/prospectos" data-route="prospectos"><svg class="ig-icon"><use href="#i-target"/></svg><span>Prospectos</span></a></li>
+      <li class="nav-secondary nav-sep" data-module="lista_espera"><a href="#/espera" data-route="espera"><svg class="ig-icon"><use href="#i-hourglass"/></svg><span>Lista de espera</span></a></li>
+      <li class="nav-secondary" data-module="reactivar"><a href="#/reactivar" data-route="reactivar"><svg class="ig-icon"><use href="#i-spark"/></svg><span>Reactivar clientes</span></a></li>
+      <li class="nav-secondary nav-sep" data-module="demo"><a href="#/embudo" data-route="embudo"><svg class="ig-icon"><use href="#i-trend"/></svg><span>Embudo de ventas</span></a></li>
+      <li class="nav-secondary" data-module="demo"><a href="#/chatbots" data-route="chatbots"><svg class="ig-icon"><use href="#i-sliders"/></svg><span>Chatbots</span></a></li>
+      <li class="nav-secondary" data-module="demo"><a href="#/campanas" data-route="campanas"><svg class="ig-icon"><use href="#i-whatsapp"/></svg><span>Campañas</span></a></li>
+      <li class="nav-secondary nav-sep" data-module="asistente"><a href="#/asistente" data-route="asistente"><svg class="ig-icon"><use href="#i-bot"/></svg><span>Asistente IA</span></a></li>
+      <li class="nav-secondary" data-module="ajustes"><a href="#/ajustes" data-route="ajustes"><svg class="ig-icon"><use href="#i-cog"/></svg><span>Ajustes</span></a></li>
+      <li class="nav-secondary nav-soon" data-module="dinero"><a href="#/facturar" data-route="facturar"><svg class="ig-icon"><use href="#i-receipt"/></svg><span>Facturar</span><em class="tag">Pronto</em></a></li>
       <li class="nav-more"><button type="button" id="navMore" aria-haspopup="dialog"><svg class="ig-icon"><use href="#i-more"/></svg><span>Más</span></button></li>
       <li hidden id="moderatorNav"><a href="#/moderador" data-route="moderador"><svg class="ig-icon"><use href="#i-building"/></svg><span>Empresas</span></a></li>
     </ul>
@@ -130,6 +137,8 @@
         <button class="quick-btn" type="button" data-quick="customer"><span class="quick-icon"><svg class="ig-icon"><use href="#i-users"/></svg></span><span>Nuevo cliente</span></button>
         <button class="quick-btn" type="button" data-quick="calendar"><span class="quick-icon"><svg class="ig-icon"><use href="#i-calendar"/></svg></span><span>Ver calendario</span></button>
       </div>
+
+      <div id="giroHomeAlerts" class="giro-home" hidden></div>
 
       <div class="bento">
         <section class="card next-card b-next" aria-labelledby="nextLabel">
@@ -347,6 +356,8 @@
       <div class="view-head">
         <div><h1 tabindex="-1">Asistente IA</h1><p>Elige cómo conversa tu asistente y qué información comparte con tus clientes.</p></div>
       </div>
+      <div class="stack-lg giro-assistant" id="giroAssistant"></div>
+
       <form class="stack-lg" id="aiModeForm">
         <section class="card">
           <h2 class="card-title">1. ¿A quién atiende?</h2>
@@ -391,7 +402,7 @@
             <input id="knowledgeFile" type="file" accept=".pdf,.txt,.md,.markdown,.csv,.json,application/pdf,text/plain,text/markdown,text/csv,application/json" aria-label="Elegir documento" />
             <button class="btn" id="uploadKnowledge" type="button">Subir documento</button>
           </div>
-          <p class="field-help">PDF (hasta 2 MB), TXT, Markdown, CSV o JSON. Texto de hasta 100 KB por documento y 500 KB en total.</p>
+          <p class="field-help">PDF (hasta 2 MB), TXT, Markdown, CSV o JSON. Hasta 10 documentos; de cada uno se usan los primeros 20.000 caracteres.</p>
           <ul class="doc-list" id="knowledgeList"></ul>
         </section>
 
@@ -474,8 +485,40 @@
 
     <!-- Catálogo -->
     <section class="view" id="view-catalogo" data-view="catalogo" hidden>
-      <div class="view-head"><div><h1 tabindex="-1">Catálogo</h1><p>Comparte servicios y productos en el chat y cobra con un link de pago.</p></div></div>
-      <div id="merc-catalogo"></div>
+      <div class="view-head"><div><h1 tabindex="-1">Catálogo</h1><p>Tu asistente solo ofrece lo que está aquí, con precio y stock exactos.</p></div>
+        <button class="btn btn-primary" type="button" id="newProduct"><svg class="ig-icon"><use href="#i-plus"/></svg><span>Nuevo producto</span></button></div>
+      <div id="giroCatalog"></div>
+    </section>
+
+    <!-- Pedidos -->
+    <section class="view" id="view-pedidos" data-view="pedidos" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Pedidos</h1><p>Lo que tu asistente vendió por chat, del pedido a la entrega. Avanza cada tarjeta con un toque.</p></div></div>
+      <div id="giroOrders"></div>
+    </section>
+
+    <!-- Propiedades -->
+    <section class="view" id="view-propiedades" data-view="propiedades" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Propiedades</h1><p>Tu asistente recomienda solo propiedades disponibles de esta lista.</p></div>
+        <button class="btn btn-primary" type="button" id="newProperty"><svg class="ig-icon"><use href="#i-plus"/></svg><span>Nueva propiedad</span></button></div>
+      <div id="giroProperties"></div>
+    </section>
+
+    <!-- Prospectos -->
+    <section class="view" id="view-prospectos" data-view="prospectos" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Prospectos</h1><p>Tu asistente pregunta presupuesto, forma de pago y plazo, y los ordena del más caliente al más frío.</p></div></div>
+      <div id="giroLeads"></div>
+    </section>
+
+    <!-- Lista de espera -->
+    <section class="view" id="view-espera" data-view="espera" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Lista de espera</h1><p>Si alguien cancela, el cupo se ofrece automáticamente al primero de la lista.</p></div></div>
+      <div id="giroWaitlist"></div>
+    </section>
+
+    <!-- Reactivar -->
+    <section class="view" id="view-reactivar" data-view="reactivar" hidden>
+      <div class="view-head"><div><h1 tabindex="-1">Reactivar clientes</h1><p>Clientes que ya deberían volver según el ciclo de cada servicio. Envía el mensaje desde tu WhatsApp con un toque.</p></div></div>
+      <div id="giroReactivation"></div>
     </section>
 
     <!-- Facturar -->
@@ -535,6 +578,38 @@
   </form>
 </dialog>
 
+<!-- Onboarding: el tipo de negocio se elige aquí y queda fijo al terminar -->
+<dialog class="dialog onboarding" id="onboardingDialog" aria-labelledby="onboardingTitle">
+  <header class="ob-head">
+    <img src="images/logo-iguana.webp" alt="" width="36" height="36" />
+    <div><p class="eyebrow">Configura tu panel</p><h2 id="onboardingTitle">Bienvenido a Iguana</h2></div>
+    <ol class="ob-steps" id="onboardingSteps" aria-label="Pasos"></ol>
+  </header>
+  <div class="ob-body" id="onboardingBody"></div>
+  <footer class="ob-foot">
+    <p class="form-error" id="onboardingError" role="alert"></p>
+    <button class="btn btn-ghost" type="button" id="onboardingBack"><svg class="ig-icon"><use href="#i-back"/></svg><span>Atrás</span></button>
+    <button class="btn btn-primary" type="button" id="onboardingNext"><span>Continuar</span><svg class="ig-icon"><use href="#i-chevron-right"/></svg></button>
+  </footer>
+</dialog>
+
+<dialog class="dialog" id="giroFormDialog" aria-labelledby="giroFormTitle">
+  <form method="dialog">
+    <header class="dialog-head">
+      <h2 id="giroFormTitle"></h2>
+      <button class="icon-btn" type="button" data-close aria-label="Cerrar"><svg class="ig-icon"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="dialog-body stack">
+      <div id="giroFormFields"></div>
+      <p class="form-error" id="giroFormError" role="alert"></p>
+    </div>
+    <footer class="dialog-foot">
+      <button class="btn" type="button" data-close>Cancelar</button>
+      <button class="btn btn-primary" type="submit">Guardar</button>
+    </footer>
+  </form>
+</dialog>
+
 <dialog class="dialog dialog-sm" id="moreDialog" aria-labelledby="moreTitle">
   <header class="dialog-head">
     <h2 id="moreTitle">Más opciones</h2>
@@ -542,13 +617,18 @@
   </header>
   <div class="dialog-body">
     <ul class="more-list">
-      <li><a href="#/embudo"><svg class="ig-icon"><use href="#i-trend"/></svg><span><strong>Embudo de ventas</strong><small>Oportunidades por etapa</small></span></a></li>
-      <li><a href="#/chatbots"><svg class="ig-icon"><use href="#i-sliders"/></svg><span><strong>Chatbots</strong><small>Automatiza respuestas</small></span></a></li>
-      <li><a href="#/campanas"><svg class="ig-icon"><use href="#i-whatsapp"/></svg><span><strong>Campañas</strong><small>Mensajes masivos con plantillas</small></span></a></li>
-      <li><a href="#/catalogo"><svg class="ig-icon"><use href="#i-receipt"/></svg><span><strong>Catálogo</strong><small>Productos y links de pago</small></span></a></li>
-      <li><a href="#/asistente"><svg class="ig-icon"><use href="#i-bot"/></svg><span><strong>Asistente IA</strong><small>Cómo conversa con tus clientes</small></span></a></li>
-      <li><a href="#/ajustes"><svg class="ig-icon"><use href="#i-cog"/></svg><span><strong>Ajustes</strong><small>Servicios, horario y reservas</small></span></a></li>
-      <li><a href="#/facturar"><svg class="ig-icon"><use href="#i-receipt"/></svg><span><strong>Facturar</strong><small>Próximamente</small></span></a></li>
+      <li data-module="pedidos"><a href="#/pedidos"><svg class="ig-icon"><use href="#i-box"/></svg><span><strong>Pedidos</strong><small>Del chat a la entrega</small></span></a></li>
+      <li data-module="catalogo"><a href="#/catalogo"><svg class="ig-icon"><use href="#i-receipt"/></svg><span><strong>Catálogo</strong><small>Lo que vende tu asistente</small></span></a></li>
+      <li data-module="propiedades"><a href="#/propiedades"><svg class="ig-icon"><use href="#i-house"/></svg><span><strong>Propiedades</strong><small>Lo que recomienda tu asistente</small></span></a></li>
+      <li data-module="leads"><a href="#/prospectos"><svg class="ig-icon"><use href="#i-target"/></svg><span><strong>Prospectos</strong><small>Ordenados por qué tan listos están</small></span></a></li>
+      <li data-module="lista_espera"><a href="#/espera"><svg class="ig-icon"><use href="#i-hourglass"/></svg><span><strong>Lista de espera</strong><small>Se avisa cuando se libera un cupo</small></span></a></li>
+      <li data-module="reactivar"><a href="#/reactivar"><svg class="ig-icon"><use href="#i-spark"/></svg><span><strong>Reactivar clientes</strong><small>Quién ya debería volver</small></span></a></li>
+      <li data-module="demo"><a href="#/embudo"><svg class="ig-icon"><use href="#i-trend"/></svg><span><strong>Embudo de ventas</strong><small>Oportunidades por etapa</small></span></a></li>
+      <li data-module="demo"><a href="#/chatbots"><svg class="ig-icon"><use href="#i-sliders"/></svg><span><strong>Chatbots</strong><small>Automatiza respuestas</small></span></a></li>
+      <li data-module="demo"><a href="#/campanas"><svg class="ig-icon"><use href="#i-whatsapp"/></svg><span><strong>Campañas</strong><small>Mensajes masivos con plantillas</small></span></a></li>
+      <li data-module="asistente"><a href="#/asistente"><svg class="ig-icon"><use href="#i-bot"/></svg><span><strong>Asistente IA</strong><small>Canales, pruebas y respuestas</small></span></a></li>
+      <li data-module="ajustes"><a href="#/ajustes"><svg class="ig-icon"><use href="#i-cog"/></svg><span><strong>Ajustes</strong><small>Servicios, horario y reservas</small></span></a></li>
+      <li data-module="dinero"><a href="#/facturar"><svg class="ig-icon"><use href="#i-receipt"/></svg><span><strong>Facturar</strong><small>Próximamente</small></span></a></li>
     </ul>
   </div>
 </dialog>
@@ -614,6 +694,7 @@
       <label class="field"><span class="field-label">Teléfono</span><input id="customerPhone" name="phone" type="tel" maxlength="32" /></label>
       <label class="field"><span class="field-label">Cédula o RUC</span><input id="customerCedulaRuc" name="cedula_ruc" maxlength="20" /></label>
       <label class="field"><span class="field-label">Dirección</span><input id="customerAddress" name="address" maxlength="300" /></label>
+      <div class="stack" id="customerExtra" hidden></div>
       <p class="form-error" id="customerFormError" role="alert"></p>
     </div>
     <footer class="dialog-foot">

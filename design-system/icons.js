@@ -68,6 +68,14 @@
   };
 
   // Aliases del panel original
+  // v0.3: iconos de los giros (propiedades, pedidos, lista de espera, reactivar, prospectos, canales).
+  ICONS.house = t('M5.5 10.5 12 5l6.5 5.5V19h-13Z') + p('M3.5 11.2 12 4l8.5 7.2M5.8 9.6V19.5h12.4V9.6M10 19.5v-5h4v5');
+  ICONS.box = t('M4.5 8.5 12 12l7.5-3.5V16L12 19.8 4.5 16Z') + p('M4 8 12 4.2 20 8v8.4l-8 3.8-8-3.8ZM4 8l8 3.8L20 8M12 11.8v8.4M8 6l8 3.8');
+  ICONS.hourglass = t('M8 14.5h8l-1.5 4.5h-5Z') + p('M6.5 3.5h11M6.5 20.5h11M7.8 3.5c0 4.6 4.2 5.4 4.2 8.5s-4.2 3.9-4.2 8.5M16.2 3.5c0 4.6-4.2 5.4-4.2 8.5s4.2 3.9 4.2 8.5');
+  ICONS.spark = tc(12, 12, 4.2) + p('M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.6 2.6M15.8 15.8l2.6 2.6M18.4 5.6l-2.6 2.6M8.2 15.8l-2.6 2.6');
+  ICONS.target = tc(12, 12, 5.5) + circ(12, 12, 8) + circ(12, 12, 4.2) + dot(12, 12, 3.2) + p('M17.5 6.5 21 3M18 3h3v3');
+  ICONS.link = t('M9.5 14.5 14.5 9.5l2 2-5 5Z', 0, 0) + p('M10.2 13.8 13.8 10.2M8.6 11.2 6.4 13.4a3.4 3.4 0 0 0 4.8 4.8l2.2-2.2M15.4 12.8l2.2-2.2a3.4 3.4 0 0 0-4.8-4.8l-2.2 2.2');
+  ICONS.paw = tc(12, 15.5, 3.6) + p('M8.4 17.2c0-2.6 1.6-4.6 3.6-4.6s3.6 2 3.6 4.6c0 1.6-1.4 2.3-3.6 2.3s-3.6-.7-3.6-2.3Z') + circ(7, 10.5, 1.6) + circ(17, 10.5, 1.6) + circ(10, 6.8, 1.6) + circ(14, 6.8, 1.6);
   ICONS.note = ICONS.file; ICONS.label = ICONS.file; ICONS.value = ICONS.trend; ICONS.main = ICONS.home;
 
   function sprite() {
