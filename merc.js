@@ -325,10 +325,10 @@
               <option value="" ${!c.agent && !c.bot ? 'selected' : ''}>Sin asignar</option>
               ${Object.entries(AGENTS).map(([k, a]) => `<option value="${k}" ${c.agent === k && !c.bot ? 'selected' : ''}>${a.name}</option>`).join('')}
             </select></dd></div>
-          <div><dt>Etapa</dt><dd><span class="ig-chip ig-chip--${st.tone}">${st.label}</span></dd></div>
+          <div><dt>Etapa</dt><dd><span class="m-pill">${st.label}</span></dd></div>
           ${d ? `<div><dt>Oportunidad</dt><dd>${esc(d.title)}<br /><strong>${usd(d.value)}</strong></dd></div>` : ''}
         </dl>
-        <div class="m-info-block"><h4>Etiquetas</h4><div class="m-tags">${c.tags.map((t) => `<span class="ig-chip">${esc(t)}</span>`).join('')}<button class="m-addtag" type="button" id="mAddTag" aria-label="Agregar etiqueta">${icon('plus')}</button></div></div>
+        <div class="m-info-block"><h4>Etiquetas</h4><div class="m-tags">${c.tags.map((t) => `<span class="m-pill">${esc(t)}</span>`).join('')}<button class="m-addtag" type="button" id="mAddTag" aria-label="Agregar etiqueta">${icon('plus')}</button></div></div>
         <div class="m-info-block"><h4>Nota interna</h4><textarea id="mNote" rows="3" placeholder="Solo la ve tu equipo"></textarea></div>
         <div class="m-info-block"><a class="btn btn-sm btn-block" href="#/clientes">${icon('users')}<span>Ver ficha del cliente</span></a></div>
       </aside>`;
@@ -422,7 +422,7 @@
         ${stages.map((s, si) => {
           const list = deals.filter((d) => d.stage === s.key);
           return `<section class="m-col" role="listitem" data-stage="${s.key}" aria-label="${s.label}">
-            <header><span class="ig-chip ig-chip--${s.tone} ig-chip--dot">${s.label}</span><span class="m-col-sum">${usd(list.reduce((n, d) => n + d.value, 0))}</span></header>
+            <header><span class="m-pill m-pill--${s.tone}">${s.label}</span><span class="m-col-sum">${usd(list.reduce((n, d) => n + d.value, 0))}</span></header>
             <ul>
               ${list.map((d) => { const c = byId(d.convo); return `
                 <li class="m-deal" draggable="true" data-deal="${d.id}">
@@ -481,7 +481,7 @@
           <li><button class="btn btn-block" type="button" id="mNewBot">${icon('plus')}<span>Nueva automatización</span></button></li>
         </ul>
         <section class="card m-flow" aria-label="Flujo de ${esc(cur.name)}">
-          <div class="card-head"><div><p class="eyebrow">Flujo</p><h2>${esc(cur.name)}</h2></div><span class="ig-chip ig-chip--${cur.on ? 'success' : 'warning'} ig-chip--dot">${cur.on ? 'Activa' : 'Pausada'}</span></div>
+          <div class="card-head"><div><p class="eyebrow">Flujo</p><h2>${esc(cur.name)}</h2></div><span class="m-pill m-pill--${cur.on ? 'success' : 'warning'}">${cur.on ? 'Activa' : 'Pausada'}</span></div>
           <ol class="m-steps">
             ${cur.steps.map((s, i) => `
               <li class="m-step m-step--${s.type === 'IA' ? 'ai' : 'std'}">
@@ -533,7 +533,7 @@
         ${campaigns.map((c) => `
           <li class="card m-camp">
             <div class="m-camp-main">
-              <div class="m-camp-top"><strong>${esc(c.name)}</strong><span class="ig-chip ig-chip--${c.status === 'sent' ? 'success' : 'info'} ig-chip--dot">${c.status === 'sent' ? 'Enviada' : 'Programada'}</span></div>
+              <div class="m-camp-top"><strong>${esc(c.name)}</strong><span class="m-pill m-pill--${c.status === 'sent' ? 'success' : 'info'}">${c.status === 'sent' ? 'Enviada' : 'Programada'}</span></div>
               <p>${chBadge(c.channel)}<span>Plantilla <code>${esc(c.tpl)}</code></span><span>${esc(c.audience)}</span><time>${esc(c.date)}</time></p>
             </div>
             ${c.status === 'sent' ? `

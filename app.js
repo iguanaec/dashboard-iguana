@@ -1358,8 +1358,8 @@
       label: 'Cobrado por día este mes',
       values,
       labels: values.map((_, i) => `Día ${i + 1}`),
-      color: token('--ig-green-400'),
-      dotFill: token('--ig-green-900'),
+      color: token('--ig-gray-200'),
+      dotFill: token('--ig-gray-900'),
       height: 150,
       format: (n) => currency(n),
     });
