@@ -1,50 +1,34 @@
 /* =========================================================
    Tono sobrio · Iguana
-   Baja el protagonismo del verde lima: la acción principal pasa a grafito,
-   lo activo y lo destacado a grises, y el verde queda para marca y estados.
+   El lima deja de ser el color de todo: la acción principal usa el verde
+   oscuro de la marca, lo activo un verde muy pálido y el lima queda para
+   los detalles (iconos, tarjeta de cobrado, botón de WhatsApp).
    Se carga después de styles.css y solo reasigna tokens semánticos.
    ========================================================= */
 :root {
-  --ig-color-action: var(--ig-gray-800);
-  --ig-color-action-hover: var(--ig-gray-700);
-  --ig-color-action-text: #FFFFFF;
-  --ig-color-accent: var(--ig-gray-200);
-  --ig-color-accent-hover: var(--ig-gray-300);
-  --ig-color-surface-highlight: var(--ig-gray-100);
-  --ig-color-surface-inverse: var(--ig-gray-900);
-  --ig-icon-tint: var(--ig-gray-200);
+  --ig-color-action: var(--ig-green-900);
+  --ig-color-action-hover: var(--ig-green-800);
+  --ig-color-action-text: var(--ig-green-400);
+  --ig-color-accent: var(--ig-green-100);
+  --ig-color-accent-hover: var(--ig-green-200);
+  --ig-color-surface-highlight: var(--ig-green-100);
   --ig-color-focus: rgba(53, 62, 48, .28);
 }
 
-/* Navegación: el elemento activo es un gris suave, no una pastilla de color */
-.nav a[aria-current="page"], .nav button.is-current { background: var(--ig-gray-100); color: var(--ig-color-text); box-shadow: none; --ig-icon-tint: var(--ig-gray-300); font-weight: var(--ig-weight-bold); }
+/* Navegación: lo activo es un verde pálido con la mancha del icono oscura */
+.nav a[aria-current="page"], .nav button.is-current { background: var(--ig-green-100); color: var(--ig-color-text); box-shadow: none; --ig-icon-tint: rgba(23, 51, 11, .16); font-weight: var(--ig-weight-bold); }
 .nav a:hover, .nav button:hover { background: var(--ig-gray-50); }
 @media (max-width: 860px) {
-  .nav a[aria-current="page"] svg, .nav button.is-current svg { background: var(--ig-gray-100); }
+  .nav a[aria-current="page"] svg, .nav button.is-current svg { background: var(--ig-green-100); }
   .nav a[aria-current="page"], .nav button.is-current { background: transparent; }
 }
 
-/* Piezas con lima suelto en styles.css */
-.money-card .eyebrow, .tl-item.is-now .tl-time { color: var(--ig-gray-300); }
-.tl-item.is-now .tl-time { color: var(--ig-color-text); }
-.money-spark .ig-tooltip { background: var(--ig-gray-100); color: var(--ig-gray-900); }
-.quick-btn:hover .quick-icon { background: var(--ig-gray-200); }
-.fc .fc-day-today .fc-daygrid-day-frame { background: var(--ig-gray-50); box-shadow: inset 0 0 0 2px var(--ig-gray-400); }
-.fab { background: var(--ig-gray-800); color: #fff; --ig-icon-tint: rgba(255, 255, 255, .16); box-shadow: var(--ig-shadow-2); }
+/* Botón principal: verde oscuro con sombra neutra */
+.btn-primary { box-shadow: 0 4px 12px rgba(23, 51, 11, .18); }
+.btn-primary:hover { box-shadow: 0 8px 18px rgba(23, 51, 11, .24); }
 
-/* Interruptores en grafito */
-.ig-switch input:checked + .ig-switch__track { background: var(--ig-gray-800); }
+/* Interruptores en el verde de marca, más oscuro */
+.ig-switch input:checked + .ig-switch__track { background: var(--ig-green-700); }
 
-/* Iconos: la mancha de color pasa a gris */
-.ig-root { --ig-icon-tint: var(--ig-gray-200); }
-.next-card, .ig-btn--primary, .ig-btn--accent, .ig-card--highlight { --ig-icon-tint: var(--ig-gray-300); }
-.money-card { --ig-icon-tint: rgba(255, 255, 255, .16); }
-.money-card::after { background: rgba(255, 255, 255, .05); }
-.money-value { color: #fff; }
-.btn-dark { --_bg: var(--ig-gray-800); --_fg: #fff; --_hover: var(--ig-gray-700); }
-.btn-primary { --_bg: var(--ig-gray-800); --_fg: #fff; --_hover: var(--ig-gray-700); box-shadow: 0 4px 12px rgba(21, 27, 18, .16); }
-.btn-primary:hover { box-shadow: 0 8px 18px rgba(21, 27, 18, .22); }
-
-/* Atajos y variaciones: gris en lugar de verde pálido */
-.quick-icon { background: var(--ig-gray-100); }
-.ig-delta--up { background: var(--ig-gray-100); color: var(--ig-green-800); }
+/* El botón flotante de WhatsApp conserva el lima de marca */
+.fab { background: var(--ig-green-400); color: var(--ig-gray-900); }
