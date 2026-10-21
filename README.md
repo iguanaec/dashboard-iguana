@@ -56,19 +56,18 @@ Cada sección tiene su propia dirección, así el botón "atrás" y los enlaces 
 - `#/calendario` — vista diaria (principal): franja de la semana y línea de tiempo del día; la vista de mes está en el botón "Mes". En celular también se cambia de día deslizando
 - `#/clientes` — directorio e historial
 - `#/dinero/resumen`, `#/dinero/ingresos`, `#/dinero/gastos`
-- `#/conversaciones` — bandeja única de WhatsApp, Instagram y Messenger: filtros, asignación, asistente IA por chat, respuestas rápidas y ficha del contacto
-- `#/embudo` — oportunidades por etapa (arrastra o usa las flechas)
-- `#/chatbots` — automatizaciones con su flujo paso a paso
-- `#/campanas` — envíos con plantillas de WhatsApp y su embudo de lectura/respuesta
+- `#/conversaciones` — bandeja única de WhatsApp, Instagram y Messenger, con el asistente IA por chat; avisa cuando el asistente se pausó porque respondiste desde tu celular
+- `#/embudo` — (solo modo diseño) oportunidades por etapa (arrastra o usa las flechas)
+- `#/chatbots` — (solo modo diseño) automatizaciones con su flujo paso a paso
+- `#/campanas` — (solo modo diseño) envíos con plantillas de WhatsApp y su embudo de lectura/respuesta
 - `#/asistente` — configuración del asistente de IA
 - `#/ajustes` — servicios, horario y reglas de reserva
-- `#/conversaciones` — WhatsApp, Instagram y Messenger; avisa cuando el asistente se pausó porque respondiste desde tu celular
 - `#/catalogo`, `#/pedidos` — giros de venta y delivery
 - `#/propiedades`, `#/prospectos` — inmobiliarias y servicios profesionales
 - `#/espera`, `#/reactivar` — giros de citas
+- `#/facturar` — próximamente
 
 Si un giro no tiene una sección, su enlace se oculta y la dirección lleva a Inicio.
-- `#/facturar` — próximamente
 
 ## Más adelante: conectar la API real
 
