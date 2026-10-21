@@ -1,0 +1,226 @@
+/* =========================================================
+   Iguana Design System — tokens  ·  v0.2.0
+   Fuente única de verdad. Todo lo demás (components.css, tokens.json,
+   la documentación) se alimenta de estas variables.
+
+   Capas:  1) primitivos  →  2) semánticos  →  3) forma, tipografía, movimiento
+   Regla:  los componentes usan SOLO tokens semánticos (--ig-color-*),
+           nunca un primitivo ni un hex suelto.
+   ========================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* ---------------------------------------------------------
+     1. PRIMITIVOS
+     --------------------------------------------------------- */
+
+  /* Marca · verde lima Iguana (ancla #A8FF6C = 400).
+     Del 50 al 400 son fondos y resaltes; del 600 al 950, texto y superficies oscuras. */
+  --ig-green-50:  #F4FFEA;
+  --ig-green-100: #E6FFCF;
+  --ig-green-200: #CFFFA6;
+  --ig-green-300: #BDFF88;
+  --ig-green-400: #A8FF6C;   /* color principal */
+  --ig-green-500: #7FDB41;
+  --ig-green-600: #4EA11A;   /* ≥3:1 sobre blanco: iconos, gráficos, controles */
+  --ig-green-700: #38760F;   /* ≥4.5:1 sobre blanco: texto de marca, enlaces */
+  --ig-green-800: #29560C;
+  --ig-green-900: #17330B;   /* superficie oscura: hero, tarjeta inversa */
+  --ig-green-950: #0C1D06;
+
+  /* Resalte · lima. Es la misma familia que el verde (alias): se conserva el nombre
+     para las tarjetas y botones que "hay que ver primero". */
+  --ig-lime-50:  var(--ig-green-50);
+  --ig-lime-100: var(--ig-green-100);
+  --ig-lime-200: var(--ig-green-200);
+  --ig-lime-300: var(--ig-green-400);
+  --ig-lime-400: var(--ig-green-500);
+  --ig-lime-500: var(--ig-green-600);
+
+  /* Neutros "mist": gris con un toque lima. Sin tonos beige ni café. */
+  --ig-gray-0:   #FFFFFF;
+  --ig-gray-25:  #F9FBF5;
+  --ig-gray-50:  #F2F6EC;
+  --ig-gray-100: #E7EDDF;
+  --ig-gray-200: #D6DFCB;
+  --ig-gray-300: #B9C5AD;
+  --ig-gray-400: #7B8871;   /* ≥3:1 sobre blanco: bordes de controles */
+  --ig-gray-500: #5A6651;   /* ≥4.5:1 sobre blanco, fondo y tonal */
+  --ig-gray-600: #4A5543;
+  --ig-gray-700: #353E30;
+  --ig-gray-800: #222A1E;
+  --ig-gray-900: #151B12;
+  --ig-gray-950: #0C100A;
+
+  /* Semánticos que la gente ya reconoce en otras apps */
+  --ig-red-50:  #FEECEC;   /* error · pérdida · eliminar */
+  --ig-red-100: #FDD8D8;
+  --ig-red-500: #E5484D;
+  --ig-red-600: #D32F34;
+  --ig-red-700: #B42318;
+
+  --ig-amber-50:  #FFF6DD; /* atención · pendiente (nunca café) */
+  --ig-amber-100: #FFE9AA;
+  --ig-amber-400: #FFB224;
+  --ig-amber-500: #F5A100;
+
+  --ig-blue-50:  #EAF2FF;  /* información · enlaces externos */
+  --ig-blue-100: #D3E4FF;
+  --ig-blue-500: #2F7DF6;
+  --ig-blue-600: #1D63D6;
+  --ig-blue-700: #1A4FAE;
+
+  /* Apoyo para gráficos (análogo al verde) */
+  --ig-teal-100: #CFF3EC;
+  --ig-teal-500: #14A38B;
+  --ig-teal-600: #0E8774;
+
+  /* ---------------------------------------------------------
+     2. SEMÁNTICOS (lo que usan los componentes)
+     --------------------------------------------------------- */
+
+  /* Superficies */
+  --ig-color-bg:              var(--ig-gray-50);
+  --ig-color-surface:         var(--ig-gray-0);
+  --ig-color-surface-raised:  var(--ig-gray-0);
+  --ig-color-surface-tonal:   var(--ig-gray-100);   /* filas, chips, pistas */
+  --ig-color-surface-soft:    var(--ig-gray-25);    /* campos, filas sobre blanco */
+  --ig-color-surface-brand:   var(--ig-green-50);
+  --ig-color-surface-inverse: var(--ig-green-900);  /* hero oscuro, botón principal */
+  --ig-color-surface-highlight: var(--ig-green-400); /* tarjeta destacada */
+  --ig-color-scrim:           rgba(12, 29, 6, .55);
+
+  /* Texto */
+  --ig-color-text:            var(--ig-gray-900);
+  --ig-color-text-muted:      var(--ig-gray-600);
+  --ig-color-text-subtle:     var(--ig-gray-500);
+  --ig-color-text-inverse:    var(--ig-gray-0);
+  --ig-color-text-on-highlight: var(--ig-gray-900);
+  --ig-color-text-brand:      var(--ig-green-700);
+  --ig-color-link:            var(--ig-green-700);
+
+  /* Marca y acciones */
+  --ig-color-brand:           var(--ig-green-600);
+  --ig-color-brand-hover:     var(--ig-green-700);
+  --ig-color-action:          var(--ig-green-400);   /* botón principal: verde lima con tinta oscura */
+  --ig-color-action-hover:    var(--ig-green-500);
+  --ig-color-action-text:     var(--ig-gray-900);
+  --ig-color-action-dark:     var(--ig-green-900);   /* botón oscuro, sobre fondos lima */
+  --ig-color-action-dark-text: var(--ig-green-400);
+  --ig-color-accent:          var(--ig-green-400);   /* seleccionado, resalte */
+  --ig-color-accent-hover:    var(--ig-green-500);
+
+  /* Controles */
+  --ig-color-control-border:       var(--ig-gray-400);
+  --ig-color-control-border-hover: var(--ig-gray-500);
+  --ig-color-control-fill:         var(--ig-gray-25);
+  --ig-color-control-off:          var(--ig-gray-400);
+  --ig-color-focus:                rgba(78, 161, 26, .38);
+
+  /* Retroalimentación (siempre acompañada de icono o texto, nunca solo color) */
+  --ig-color-success:         var(--ig-green-700);
+  --ig-color-success-soft:    var(--ig-green-100);
+  --ig-color-danger:          var(--ig-red-700);
+  --ig-color-danger-solid:    var(--ig-red-600);
+  --ig-color-danger-soft:     var(--ig-red-50);
+  --ig-color-warning:         var(--ig-gray-900);    /* texto oscuro sobre ámbar */
+  --ig-color-warning-soft:    var(--ig-amber-100);
+  --ig-color-warning-solid:   var(--ig-amber-400);
+  --ig-color-info:            var(--ig-blue-700);
+  --ig-color-info-soft:       var(--ig-blue-50);
+
+  /* Datos (gráficos). Ingresos y gastos NO usan rojo: el rojo es "error". */
+  --ig-data-1: var(--ig-green-600);   /* ingresos, serie principal */
+  --ig-data-2: var(--ig-gray-800);    /* gastos, serie de contraste */
+  --ig-data-3: var(--ig-teal-500);
+  --ig-data-4: var(--ig-blue-500);
+  --ig-data-5: var(--ig-green-400);    /* solo resalte, con contorno oscuro */
+  --ig-data-6: var(--ig-amber-400);   /* solo resalte, con contorno oscuro */
+  --ig-data-track: var(--ig-gray-200);
+  --ig-data-heat-0: var(--ig-gray-100);
+  --ig-data-heat-1: var(--ig-green-200);
+  --ig-data-heat-2: var(--ig-green-500);
+  --ig-data-heat-3: var(--ig-green-800);
+
+  /* ---------------------------------------------------------
+     3. FORMA · TIPOGRAFÍA · MOVIMIENTO
+     --------------------------------------------------------- */
+
+  /* Forma: nada de esquinas rectas */
+  --ig-radius-xs:   8px;
+  --ig-radius-sm:   12px;
+  --ig-radius-md:   16px;
+  --ig-radius-lg:   24px;
+  --ig-radius-xl:   32px;
+  --ig-radius-pill: 999px;
+  --ig-radius-blob: 62% 38% 54% 46% / 48% 56% 44% 52%;   /* formas orgánicas decorativas */
+
+  /* Elevación: sombras suaves teñidas de verde, sin bordes duros */
+  --ig-shadow-1: 0 1px 2px rgba(23, 51, 11, .04), 0 4px 14px rgba(23, 51, 11, .06);
+  --ig-shadow-2: 0 2px 4px rgba(23, 51, 11, .04), 0 12px 32px rgba(23, 51, 11, .10);
+  --ig-shadow-3: 0 8px 16px rgba(23, 51, 11, .06), 0 28px 64px rgba(23, 51, 11, .18);
+  --ig-shadow-focus: 0 0 0 4px var(--ig-color-focus);
+
+  /* Espaciado (base 4px) */
+  --ig-space-1:  4px;
+  --ig-space-2:  8px;
+  --ig-space-3:  12px;
+  --ig-space-4:  16px;
+  --ig-space-5:  20px;
+  --ig-space-6:  24px;
+  --ig-space-8:  32px;
+  --ig-space-10: 40px;
+  --ig-space-12: 48px;
+  --ig-space-16: 64px;
+
+  /* Tipografía */
+  --ig-font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ig-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --ig-text-2xs:  11px;
+  --ig-text-xs:   12px;
+  --ig-text-sm:   13px;
+  --ig-text-base: 15px;
+  --ig-text-md:   16px;
+  --ig-text-lg:   18px;
+  --ig-text-xl:   22px;
+  --ig-text-2xl:  28px;
+  --ig-text-3xl:  36px;
+  --ig-text-4xl:  48px;
+  --ig-text-5xl:  64px;
+
+  --ig-weight-regular:   400;
+  --ig-weight-medium:    500;
+  --ig-weight-semibold:  600;
+  --ig-weight-bold:      700;
+  --ig-weight-extrabold: 800;
+
+  --ig-leading-tight:  1.05;
+  --ig-leading-snug:   1.25;
+  --ig-leading-normal: 1.5;
+
+  --ig-tracking-display: -.04em;
+  --ig-tracking-title:   -.02em;
+  --ig-tracking-label:   .06em;
+
+  /* Movimiento */
+  --ig-dur-instant: 90ms;
+  --ig-dur-fast:    160ms;
+  --ig-dur-base:    240ms;
+  --ig-dur-slow:    400ms;
+  --ig-dur-slower:  640ms;
+  --ig-ease-out:    cubic-bezier(.2, .7, .2, 1);
+  --ig-ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ig-ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+
+  /* Capas */
+  --ig-z-raised:   10;
+  --ig-z-nav:      20;
+  --ig-z-dropdown: 40;
+  --ig-z-dialog:   60;
+  --ig-z-toast:    80;
+
+  /* Tamaños táctiles */
+  --ig-target-min: 44px;
+}

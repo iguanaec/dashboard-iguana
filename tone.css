@@ -1,0 +1,34 @@
+/* =========================================================
+   Tono sobrio · Iguana
+   El lima deja de ser el color de todo: la acción principal usa el verde
+   oscuro de la marca, lo activo un verde muy pálido y el lima queda para
+   los detalles (iconos, tarjeta de cobrado, botón de WhatsApp).
+   Se carga después de styles.css y solo reasigna tokens semánticos.
+   ========================================================= */
+:root {
+  --ig-color-action: var(--ig-green-900);
+  --ig-color-action-hover: var(--ig-green-800);
+  --ig-color-action-text: var(--ig-green-400);
+  --ig-color-accent: var(--ig-green-100);
+  --ig-color-accent-hover: var(--ig-green-200);
+  --ig-color-surface-highlight: var(--ig-green-100);
+  --ig-color-focus: rgba(53, 62, 48, .28);
+}
+
+/* Navegación: lo activo es un verde pálido con la mancha del icono oscura */
+.nav a[aria-current="page"], .nav button.is-current { background: var(--ig-green-100); color: var(--ig-color-text); box-shadow: none; --ig-icon-tint: rgba(23, 51, 11, .16); font-weight: var(--ig-weight-bold); }
+.nav a:hover, .nav button:hover { background: var(--ig-gray-50); }
+@media (max-width: 860px) {
+  .nav a[aria-current="page"] svg, .nav button.is-current svg { background: var(--ig-green-100); }
+  .nav a[aria-current="page"], .nav button.is-current { background: transparent; }
+}
+
+/* Botón principal: verde oscuro con sombra neutra */
+.btn-primary { box-shadow: 0 4px 12px rgba(23, 51, 11, .18); }
+.btn-primary:hover { box-shadow: 0 8px 18px rgba(23, 51, 11, .24); }
+
+/* Interruptores en el verde de marca, más oscuro */
+.ig-switch input:checked + .ig-switch__track { background: var(--ig-green-700); }
+
+/* El botón flotante de WhatsApp conserva el lima de marca */
+.fab { background: var(--ig-green-400); color: var(--ig-gray-900); }
